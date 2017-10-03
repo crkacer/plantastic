@@ -1,0 +1,35 @@
+[23-Sep-2017 04:07:01 UTC] PHP Fatal error:  Uncaught exception 'UnexpectedValueException' with message 'The stream or file "/home/ubuntu/workspace/storage/logs/laravel.log" could not be opened: failed to open stream: Permission denied' in /home/ubuntu/workspace/vendor/monolog/monolog/src/Monolog/Handler/StreamHandler.php:107
+Stack trace:
+#0 /home/ubuntu/workspace/vendor/monolog/monolog/src/Monolog/Handler/AbstractProcessingHandler.php(37): Monolog\Handler\StreamHandler->write(Array)
+#1 /home/ubuntu/workspace/vendor/monolog/monolog/src/Monolog/Logger.php(337): Monolog\Handler\AbstractProcessingHandler->handle(Array)
+#2 /home/ubuntu/workspace/vendor/monolog/monolog/src/Monolog/Logger.php(616): Monolog\Logger->addRecord(400, Object(UnexpectedValueException), Array)
+#3 /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Log/Writer.php(202): Monolog\Logger->error(Object(UnexpectedValueException), Array)
+#4 /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Log/Writer.php(113): Illuminate\Log\Writer->writeLog('error', Object(Unexpected in /home/ubuntu/workspace/vendor/monolog/monolog/src/Monolog/Handler/StreamHandler.php on line 107
+[23-Sep-2017 04:07:07 UTC] PHP Fatal error:  Uncaught exception 'UnexpectedValueException' with message 'The stream or file "/home/ubuntu/workspace/storage/logs/laravel.log" could not be opened: failed to open stream: Permission denied' in /home/ubuntu/workspace/vendor/monolog/monolog/src/Monolog/Handler/StreamHandler.php:107
+Stack trace:
+#0 /home/ubuntu/workspace/vendor/monolog/monolog/src/Monolog/Handler/AbstractProcessingHandler.php(37): Monolog\Handler\StreamHandler->write(Array)
+#1 /home/ubuntu/workspace/vendor/monolog/monolog/src/Monolog/Logger.php(337): Monolog\Handler\AbstractProcessingHandler->handle(Array)
+#2 /home/ubuntu/workspace/vendor/monolog/monolog/src/Monolog/Logger.php(616): Monolog\Logger->addRecord(400, Object(UnexpectedValueException), Array)
+#3 /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Log/Writer.php(202): Monolog\Logger->error(Object(UnexpectedValueException), Array)
+#4 /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Log/Writer.php(113): Illuminate\Log\Writer->writeLog('error', Object(Unexpected in /home/ubuntu/workspace/vendor/monolog/monolog/src/Monolog/Handler/StreamHandler.php on line 107
+[23-Sep-2017 04:07:07 UTC] PHP Fatal error:  Uncaught exception 'UnexpectedValueException' with message 'The stream or file "/home/ubuntu/workspace/storage/logs/laravel.log" could not be opened: failed to open stream: Permission denied' in /home/ubuntu/workspace/vendor/monolog/monolog/src/Monolog/Handler/StreamHandler.php:107
+Stack trace:
+#0 /home/ubuntu/workspace/vendor/monolog/monolog/src/Monolog/Handler/AbstractProcessingHandler.php(37): Monolog\Handler\StreamHandler->write(Array)
+#1 /home/ubuntu/workspace/vendor/monolog/monolog/src/Monolog/Logger.php(337): Monolog\Handler\AbstractProcessingHandler->handle(Array)
+#2 /home/ubuntu/workspace/vendor/monolog/monolog/src/Monolog/Logger.php(616): Monolog\Logger->addRecord(400, Object(UnexpectedValueException), Array)
+#3 /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Log/Writer.php(202): Monolog\Logger->error(Object(UnexpectedValueException), Array)
+#4 /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Log/Writer.php(113): Illuminate\Log\Writer->writeLog('error', Object(Unexpected in /home/ubuntu/workspace/vendor/monolog/monolog/src/Monolog/Handler/StreamHandler.php on line 107
+[23-Sep-2017 04:07:58 UTC] PHP Fatal error:  Uncaught exception 'UnexpectedValueException' with message 'The stream or file "/home/ubuntu/workspace/storage/logs/laravel.log" could not be opened: failed to open stream: Permission denied' in /home/ubuntu/workspace/vendor/monolog/monolog/src/Monolog/Handler/StreamHandler.php:107
+Stack trace:
+#0 /home/ubuntu/workspace/vendor/monolog/monolog/src/Monolog/Handler/AbstractProcessingHandler.php(37): Monolog\Handler\StreamHandler->write(Array)
+#1 /home/ubuntu/workspace/vendor/monolog/monolog/src/Monolog/Logger.php(337): Monolog\Handler\AbstractProcessingHandler->handle(Array)
+#2 /home/ubuntu/workspace/vendor/monolog/monolog/src/Monolog/Logger.php(616): Monolog\Logger->addRecord(400, Object(UnexpectedValueException), Array)
+#3 /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Log/Writer.php(202): Monolog\Logger->error(Object(UnexpectedValueException), Array)
+#4 /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Log/Writer.php(113): Illuminate\Log\Writer->writeLog('error', Object(Unexpected in /home/ubuntu/workspace/vendor/monolog/monolog/src/Monolog/Handler/StreamHandler.php on line 107
+[23-Sep-2017 04:08:06 UTC] PHP Fatal error:  Uncaught exception 'UnexpectedValueException' with message 'The stream or file "/home/ubuntu/workspace/storage/logs/laravel.log" could not be opened: failed to open stream: Permission denied' in /home/ubuntu/workspace/vendor/monolog/monolog/src/Monolog/Handler/StreamHandler.php:107
+Stack trace:
+#0 /home/ubuntu/workspace/vendor/monolog/monolog/src/Monolog/Handler/AbstractProcessingHandler.php(37): Monolog\Handler\StreamHandler->write(Array)
+#1 /home/ubuntu/workspace/vendor/monolog/monolog/src/Monolog/Logger.php(337): Monolog\Handler\AbstractProcessingHandler->handle(Array)
+#2 /home/ubuntu/workspace/vendor/monolog/monolog/src/Monolog/Logger.php(616): Monolog\Logger->addRecord(400, Object(UnexpectedValueException), Array)
+#3 /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Log/Writer.php(202): Monolog\Logger->error(Object(UnexpectedValueException), Array)
+#4 /home/ubuntu/workspace/vendor/laravel/framework/src/Illuminate/Log/Writer.php(113): Illuminate\Log\Writer->writeLog('error', Object(Unexpected in /home/ubuntu/workspace/vendor/monolog/monolog/src/Monolog/Handler/StreamHandler.php on line 107
