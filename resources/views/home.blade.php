@@ -2,94 +2,84 @@
 
 @section('style')
 <style type="text/css">
-     body{
-         background-color: #FAFAFA;
-     }
-     .centered{
-        position: fixed;
-      top: 70%;
-      left: 50%;
-  /* bring your own prefixes */
-  transform: translate(-50%, -50%);
-      width: 500px;
-     }
+a {
+  text-decoration:none;
+}
+#title{
+  color:red;
+}
  </style>
 @stop
 
 @section('body')
- 
-  <v-app id="inspire" class="centered">
-    <v-form v-model="valid" ref="form" action="{{ url('/login') }}" method="post" lazy-validation>
-        {{ csrf_field() }}
-    <v-text-field
-      label="Email"
-      v-model="email"
-      :rules="emailRules"
-      name="email"
-      required
-    ></v-text-field>
-    <v-text-field
-      label="Password"
-      v-model="password"
-      name="password"
-      :rules="passwordRules"
-      :counter="8"
-      type="password"
-      required
-    ></v-text-field>
-    
-    <v-checkbox
-      label="I agree Terms and Conditions!."
-      v-model="checkbox"
-      :rules="[(v) => !!v || 'You must agree to continue!']"
-      required
-    ></v-checkbox>
-
-    <v-btn @click="submit" :class="{ green: valid, red: !valid }">login</v-btn>
-    <v-btn @click="clear">clear</v-btn>
-    <a class="btn btn-link" href="{{ url('/password/reset') }}">Forgot Your Password?</a>
-  </v-form>
-  </v-app>
-
+<v-container fluid class="grey lighten-4">
+<v-layout row>
+  <v-flex d-flex sm3 class="mr-5">
+    <v-layout column>
+      <v-flex d-flex>
+        <v-card class="blue grey" dark tile flat>
+          <v-card-text>Google map API here</v-card-text>
+        </v-card>
+      </v-flex>
+      <v-flex d-flex>
+        <v-card class="blue" dark tile flat>
+          <v-card-text>Event Type Expansion Panel</v-card-text>
+        </v-card>
+      </v-flex>
+  </v-flex>
+  <v-flex d-flex sm12 class="ml-5">
+    <v-layout column wrap>
+      <v-flex d-flex class="mb-5">
+        <v-card class="indigo" dark tile flat>
+          <v-card-text>Website Description</v-card-text>
+        </v-card>
+      </v-flex>
+      <v-flex d-flex>
+        <v-layout column wrap>
+          <v-flex d-flex>
+            <v-card class="amber lighten-2" tile flat>
+              <v-card-text>Event Cards here</v-card-text>
+            </v-card>
+          </v-flex>
+          <v-flex d-flex>
+            <div class="text-xs-center">
+              <v-pagination :length="4" v-model="page" circle></v-pagination>
+            </div>
+          </v-flex>
+        </v-layout>
+      </v-flex>
+    </v-layout>
+  </v-flex>
+</v-layout>
+</v-container>
 @stop
 
 @section('script')
  <script>
-   new Vue({
+  new Vue({
   el: '#app',
   data () {
       return {
-        valid: false,
-        password: '',
-        passwordRules: [
-          (v) => !!v || 'Password is required',
-          (v) => v && v.length >= 8 || 'Password must be more than 8 characters'
-        ],
-        email: '',
-        emailRules: [
-          (v) => !!v || 'E-mail is required',
-          (v) => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'
-        ],
-        select: null,
-        items: [
-          'Item 1',
-          'Item 2',
-          'Item 3',
-          'Item 4'
-        ],
-        checkbox: false
+        page: 1,
+        search:'',
+        buttons: [
+          {
+            text: 'Home',
+            url: '/'
+          },
+          {
+            text: 'Register',
+            url: '/'
+         }]
       }
     },
-    methods: {
-      submit () {
-        if (this.$refs.form.validate()) {
-          this.$refs.form.$el.submit()
-        }
-      },
-      clear () {
-        this.$refs.form.reset()
+  methods: {
+      submit: function (e){
+        axios.post('/api/submit',{
+          search:this.search
+        })
       }
-    }
+  }
 })
- </script>
+</script>
 @stop

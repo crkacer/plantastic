@@ -3,16 +3,12 @@
 <head>
  <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet">
  <link href="https://unpkg.com/vuetify/dist/vuetify.min.css" rel="stylesheet">
- <link href="/assets/css/main.css" rel="stylesheet">
-@yield('style')
- 
+ @yield('style')
 </head>
-
 <body>
-
-<div id="main">
- <v-app id="inspire" class="centered">
-    <v-toolbar class="white">
+<div id="app">
+ <v-app id="inspire"class="centered">
+   <v-toolbar class="white">
     <v-toolbar-title><a href="/home" id="title">Plantastic</a></v-toolbar-title>
     <v-spacer></v-spacer>
     <form method="post">
@@ -28,40 +24,13 @@
   </v-toolbar>
   @yield('body')
   <v-footer class="grey darken-4 pa-3">
-   <v-spacer></v-spacer>
-   <div style="color:white">© @{{ new Date().getFullYear() }}</div>
+    <v-spacer></v-spacer>
+    <div style="color:white">© @{{ new Date().getFullYear() }}</div>
   </v-footer>
- </v-app>
+  </v-app>
 </div>
 <script src="https://unpkg.com/vue/dist/vue.js"></script>
 <script src="https://unpkg.com/vuetify/dist/vuetify.js"></script>
-
 @yield('script')
- <script>
-  new Vue({
-  el: '#main',
-  data () {
-    return {
-     search:'',
-     buttons: [
-        {
-          text: 'Home',
-          url: '/'
-        },
-        {
-          text: 'Register',
-          url: '/'
-     }]
-    }
-   },
-  methods: {
-      submit: function (e){
-        axios.post('/api/submit',{
-          search:this.search
-        })
-      }
-  }
-  })
- </script>
 </body>
 </html>

@@ -7,7 +7,7 @@
 @stop
 
 @section('body')
- 
+ <div id="app">
   <v-app id="inspire" class="center">
     <v-form v-model="valid" ref="form" action="{{ url('/login') }}" method="post" lazy-validation>
         {{ csrf_field() }}
@@ -40,7 +40,7 @@
     <a class="btn btn-link" href="{{ url('/password/reset') }}">Forgot Your Password?</a>
   </v-form>
   </v-app>
-
+</div>
 @stop
 
 @section('script')
