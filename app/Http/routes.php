@@ -17,6 +17,7 @@ Route::get('/', function () {
 
 Route::get('/login', 'LoginController@index');
 
+Route::get('event/{id?}', 'EventController@getIndex');
 
 
 Route::auth();
