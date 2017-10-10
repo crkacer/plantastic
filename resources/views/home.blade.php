@@ -17,15 +17,28 @@ a {
   <v-flex d-flex sm3 class="mr-5">
     <v-layout column>
       <v-flex d-flex>
-        <v-card class="blue grey" dark tile flat>
+        <v-card class="grey lighten-4" tile flat >
           <v-card-text>Google map API here</v-card-text>
         </v-card>
       </v-flex>
-      <v-flex d-flex>
-        <v-card class="blue" dark tile flat>
-          <v-card-text>Event Type Expansion Panel</v-card-text>
-        </v-card>
-      </v-flex>
+      <v-expansion-panel style="height:4vh;" focusable>
+        <v-expansion-panel-content>
+          <div slot="header">Category</div>
+          <v-card>
+            <v-card-text v-for="category in categories" :key="category">
+              @{{ category.text }}
+            </v-card-text>
+          </v-card>
+        </v-expansion-panel-content>
+        <v-expansion-panel-content>
+          <div slot="header">Types</div>
+          <v-card>
+            <v-card-text v-for="type in types" :key="type">
+              @{{ type.text }}
+            </v-card-text>
+          </v-card>
+        </v-expansion-panel-content>
+      </v-expansion-panel>
   </v-flex>
   <v-flex d-flex sm12 class="ml-5">
     <v-layout column wrap>
@@ -70,7 +83,29 @@ a {
           {
             text: 'Register',
             url: '/'
-         }]
+          }],
+        categories: [
+          {
+            text: 'Conference',
+            url: '/'
+          },
+          {
+            text: 'Seminar',
+            url: '/'
+          },
+          {
+            text: 'Career Fair',
+            url: '/'
+          }],
+        types: [
+          {
+            text: 'Private',
+            url: '/'
+          },
+          {
+            text: 'Public',
+            url: '/'
+          }]
       }
     },
   methods: {
