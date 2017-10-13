@@ -15,11 +15,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/login', 'LoginController@index');
+Route::get('login', 'LoginController@index');
 
 Route::get('event/{id?}', 'EventController@getIndex');
 
 
 Route::auth();
 
-Route::get('/home', 'HomeController@index');
+Route::get('home', 'HomeController@index');

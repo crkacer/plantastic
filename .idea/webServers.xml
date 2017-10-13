@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="d050a4da-871f-4549-b80f-b7f194874fc8" name="Echelon development server" url="http://204.225.212.132">
+        <fileTransfer host="204.225.212.132" port="422" rootFolder="/home/ebbs/ebbs/vendor/web-feet/coasterframework/" accessType="SFTP">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="422" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

@@ -8,104 +8,230 @@ a {
 #title{
   color:red;
 }
- </style>
+#description{
+  font-family: 'Aclonica';
+}
+
+#map {
+  height: 400px;
+}
+
+</style>
 @stop
 
 @section('body')
-<v-container fluid class="grey lighten-4">
-<v-layout row>
-  <v-flex d-flex sm3 class="mr-5">
-    <v-layout column>
-      <v-flex d-flex>
-        <v-card class="grey lighten-4" tile flat >
-          <v-card-text>Google map API here</v-card-text>
-        </v-card>
-      </v-flex>
-      <v-expansion-panel style="height:4vh;" focusable>
-        <v-expansion-panel-content>
-          <div slot="header">Category</div>
-          <v-card>
-            <v-card-text v-for="category in categories" :key="category">
-              @{{ category.text }}
-            </v-card-text>
-          </v-card>
-        </v-expansion-panel-content>
-        <v-expansion-panel-content>
-          <div slot="header">Types</div>
-          <v-card>
-            <v-card-text v-for="type in types" :key="type">
-              @{{ type.text }}
-            </v-card-text>
-          </v-card>
-        </v-expansion-panel-content>
-      </v-expansion-panel>
-  </v-flex>
-  <v-flex d-flex sm12 class="ml-5">
-    <v-layout column wrap>
-      <v-flex d-flex class="mb-5">
-        <v-card class="indigo" dark tile flat>
-          <v-card-text>Website Description</v-card-text>
-        </v-card>
-      </v-flex>
-      <v-flex d-flex>
-        <v-layout column wrap>
-          <v-flex d-flex>
-            <v-card class="amber lighten-2" tile flat>
-              <v-card-text>Event Cards here</v-card-text>
-            </v-card>
+<main>
+  <v-content>
+    <section>
+      
+        <v-container fluid class="transparent" id="container">
+        <v-layout row>
+          <v-flex sm3 class="mr-5">
+            <v-layout column>
+              <v-flex>
+                <v-card class="transparent" tile flat >
+                  <v-card-text id="map"></v-card-text>
+                </v-card>
+              </v-flex>
+              <v-expansion-panel style="height:4vh; box-shadow:none;" focusable >
+                <v-expansion-panel-content>
+                  <div slot="header">Category</div>
+                  <v-card>
+                    <v-card-text v-for="category in categories" :key="category">
+                      @{{ category.text }}
+                    </v-card-text>
+                  </v-card>
+                </v-expansion-panel-content>
+                <v-expansion-panel-content>
+                  <div slot="header">Types</div>
+                  <v-card>
+                    <v-card-text v-for="type in types" :key="type">
+                      @{{ type.text }}
+                    </v-card-text>
+                  </v-card>
+                </v-expansion-panel-content>
+              </v-expansion-panel>
           </v-flex>
-          <v-flex d-flex>
-            <div class="text-xs-center">
-              <v-pagination :length="4" v-model="page" circle></v-pagination>
-            </div>
+          <v-flex sm12 class="ml-5">
+            <section>
+            <v-layout column wrap>
+              <v-flex d-flex class="mb-5">
+                <v-card class="transparent" tile flat>
+                  <v-card-text class="text-xs-center pb-0 mb-0"><h4><b>SIMPLIFYING EVENTS</b></h4></v-card-text>
+                  <v-card-text id="description"><span style="color:red;font-size:2.5em; font-weight:bold;">Plantastic</span> <span style="font-size:1.25em;">acts as a brand new, efficient and interactive event creation tool for George Brown College Faculty and Students. Our main goal is to <b>facilitate the event creation and management process</b> while creating and maintaining a high quality internal social network.</span></v-card-text>
+                </v-card>
+              </v-flex>
+              <v-flex>
+                <v-card raised>
+                  <v-container class="white ma-0 pa-0" fluid>
+                    <v-layout column>
+                      <v-flex xs12>
+                        <v-layout class="ma-0 pa-0"row>
+                          <v-flex xs4>
+                            <a href="/event/1">
+                            <v-card-media src="assets/img/dummyEvent.jpg" height="125px" contain></v-card-media>
+                            </a>
+                          </v-flex>
+                          <v-flex xs7>
+                              <div class="text-xs-left ma-0 pa-1">November 11, 2017</div>
+                              <div class="headline text-xs-left pl-1 pu-3 pd-3">Indie Game Hackathon</div>
+                              <div class="text-xs-left ma-0 pa-1">George Brown College (Casa Loma Campus)</div>
+                          </v-flex>
+                          <v-flex xs6>
+                                <v-card-text><v-progress-linear v-model="calcPercentage"></v-progress-linear>@{{ participant }}/@{{ capacity }} people has registered this event</v-card-text>
+                          </v-flex>
+                        </v-layout>
+                      </v-flex>
+                      <v-flex xs12>
+                        <v-layout row>
+                          <v-flex d-flex class="text-xs-center grey lighten-3" xs4>
+                            <v-card-text class=" pu-1">Free</v-card-text>
+                          </v-flex> 
+                          <v-flex class="text-xs-left" style="border-top-style:solid; border-top-width:1px" xs7>
+                            <a href="/home" class="pa-1 ma-1">#private</a>
+                            <a href="/home" class="pa-1 ma-1">#conference</a>
+                          </v-flex>
+                          <v-flex d-flex class="text-xs-right" style="border-top-style:solid; border-top-width:1px"  xs6>
+                            <v-tooltip bottom>
+                              <v-btn slot="activator" icon><v-icon>share</v-icon></v-btn>
+                              <span>Share</span>
+                            </v-tooltip>
+                          </v-flex>
+                        </v-layout>
+                      </v-flex>
+                    </v-layout>
+                  </v-container>
+                </v-card>
+              </v-flex>
+              <v-flex xs12>
+                <v-card raised>
+                  <v-container class="white ma-0 pa-0" fluid>
+                    <v-layout column>
+                      <v-flex xs12>
+                        <v-layout class="ma-0 pa-0"row>
+                          <v-flex xs4>
+                            <a href="/event/1">
+                            <v-card-media src="assets/img/dummyEvent.jpg" height="125px" contain></v-card-media>
+                            </a>
+                          </v-flex>
+                          <v-flex xs7>
+                              <div class="text-xs-left ma-0 pa-1">November 11, 2017</div>
+                              <div class="headline text-xs-left pl-1 pu-3 pd-3">Indie Game Hackathon</div>
+                              <div class="text-xs-left ma-0 pa-1">George Brown College (Casa Loma Campus)</div>
+                          </v-flex>
+                          <v-flex xs6>
+                                <v-card-text><v-progress-linear v-model="calcPercentage"></v-progress-linear>@{{ participant }}/@{{ capacity }} people has registered this event</v-card-text>
+                          </v-flex>
+                        </v-layout>
+                      </v-flex>
+                      <v-flex xs12>
+                        <v-layout row>
+                          <v-flex d-flex class="text-xs-center grey lighten-3" xs4>
+                            <v-card-text class=" pu-1">Free</v-card-text>
+                          </v-flex> 
+                          <v-flex class="text-xs-left" style="border-top-style:solid; border-top-width:1px" xs7>
+                            <a href="/home" class="pa-1 ma-1">#private</a>
+                            <a href="/home" class="pa-1 ma-1">#conference</a>
+                          </v-flex>
+                          <v-flex d-flex class="text-xs-right" style="border-top-style:solid; border-top-width:1px"  xs6>
+                            <v-tooltip bottom>
+                              <v-btn slot="activator" icon><v-icon>share</v-icon></v-btn>
+                              <span>Share</span>
+                            </v-tooltip>
+                          </v-flex>
+                        </v-layout>
+                      </v-flex>
+                    </v-layout>
+                  </v-container>
+                </v-card>
+              </v-flex>
+              <v-flex xs12>
+                <v-card raised>
+                  <v-container class="white ma-0 pa-0" fluid>
+                    <v-layout column>
+                      <v-flex xs12>
+                        <v-layout class="ma-0 pa-0"row>
+                          <v-flex xs4>
+                            <a href="/event/1">
+                            <v-card-media src="assets/img/dummyEvent.jpg" height="125px" contain></v-card-media>
+                            </a>
+                          </v-flex>
+                          <v-flex xs7>
+                              <div class="text-xs-left ma-0 pa-1">November 11, 2017</div>
+                              <div class="headline text-xs-left pl-1 pu-3 pd-3">Indie Game Hackathon</div>
+                              <div class="text-xs-left ma-0 pa-1">George Brown College (Casa Loma Campus)</div>
+                          </v-flex>
+                          <v-flex xs6>
+                                <v-card-text><v-progress-linear v-model="calcPercentage"></v-progress-linear>@{{ participant }}/@{{ capacity }} people has registered this event</v-card-text>
+                          </v-flex>
+                        </v-layout>
+                      </v-flex>
+                      <v-flex xs12>
+                        <v-layout row>
+                          <v-flex d-flex class="text-xs-center grey lighten-3" xs4>
+                            <v-card-text class=" pu-1">Free</v-card-text>
+                          </v-flex> 
+                          <v-flex class="text-xs-left" style="border-top-style:solid; border-top-width:1px" xs7>
+                            <a href="/home" class="pa-1 ma-1">#private</a>
+                            <a href="/home" class="pa-1 ma-1">#conference</a>
+                          </v-flex>
+                          <v-flex d-flex class="text-xs-right" style="border-top-style:solid; border-top-width:1px"  xs6>
+                            <v-tooltip bottom>
+                              <v-btn slot="activator" icon><v-icon>share</v-icon></v-btn>
+                              <span>Share</span>
+                            </v-tooltip>
+                          </v-flex>
+                        </v-layout>
+                      </v-flex>
+                    </v-layout>
+                  </v-container>
+                </v-card>
+              </v-flex>
+              <v-flex>
+                <div class="text-xs-center">
+                  <v-pagination :length="4" v-model="page" circle></v-pagination>
+                </div>
+              </v-flex>
+            </v-layout>
+            </section>
           </v-flex>
         </v-layout>
-      </v-flex>
-    </v-layout>
-  </v-flex>
-</v-layout>
-</v-container>
+      </v-container>
+    </section>
+  </v-content>
+</main>
+
+
 @stop
 
 @section('script')
+
  <script>
+  var allType = <?php echo json_encode($event_type); ?>;
+  var allCategory = <?php echo json_encode($category); ?>;
+
+  function initMap() {
+        var uluru = {lat: -25.363, lng: 131.044};
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 4,
+          center: uluru
+        });
+        var marker = new google.maps.Marker({
+          position: uluru,
+          map: map
+        });
+      }
+
   new Vue({
   el: '#app',
   data () {
       return {
         page: 1,
         search:'',
-        buttons: [
-          {
-            text: 'Home',
-            url: '/'
-          },
-          {
-            text: 'Register',
-            url: '/'
-          }],
-        categories: [
-          {
-            text: 'Conference',
-            url: '/'
-          },
-          {
-            text: 'Seminar',
-            url: '/'
-          },
-          {
-            text: 'Career Fair',
-            url: '/'
-          }],
-        types: [
-          {
-            text: 'Private',
-            url: '/'
-          },
-          {
-            text: 'Public',
-            url: '/'
-          }]
+        participant:50,
+        capacity:1000,
+        categories: allCategory,
+        types: allType
       }
     },
   methods: {
@@ -114,7 +240,17 @@ a {
           search:this.search
         })
       }
+  },
+  computed: {
+    calcPercentage: function(){
+      return (this.participant/this.capacity)*100
+    }
   }
 })
 </script>
+
+<script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuP7giqQQp4O8FE8oL41qjWLyFlcv3Ws8&callback=initMap">
+</script>
+
 @stop
