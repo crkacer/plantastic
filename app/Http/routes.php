@@ -18,8 +18,10 @@ Route::get('/', function () {
 Route::get('login', 'LoginController@index');
 
 Route::get('event/{id?}', 'EventController@getIndex');
-
+Route::get('view-event/{id?}', 'EventController@getIndexEvent');
 
 Route::auth();
 
 Route::get('home', 'HomeController@index');
+
+Route::get('user/manage-event', 'UserController@manageEvent');
