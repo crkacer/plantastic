@@ -2,8 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="58ee036f-9cd2-4b64-acd3-98fc10027e7e" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Http/Controllers/HomeController.php" afterPath="$PROJECT_DIR$/app/Http/Controllers/HomeController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/deployment.xml" afterPath="$PROJECT_DIR$/.idea/deployment.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/webServers.xml" afterPath="$PROJECT_DIR$/.idea/webServers.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Http/Controllers/EventController.php" afterPath="$PROJECT_DIR$/app/Http/Controllers/EventController.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Http/routes.php" afterPath="$PROJECT_DIR$/app/Http/routes.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/views/login.blade.php" afterPath="$PROJECT_DIR$/resources/views/login.blade.php" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -12,6 +16,7 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="ComposerSettings" doNotAsk="true" />
   <component name="DatabaseView">
     <option name="SHOW_INTERMEDIATE" value="true" />
     <option name="GROUP_SCHEMA" value="true" />
@@ -25,31 +30,31 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="accounts.blade.php" pinned="true" current-in-tab="false">
-        <entry file="remoteDeploymentFS://&lt;d050a4da-871f-4549-b80f-b7f194874fc8&gt;/resources/views/admin/pages/accounts.blade.php">
+      <file leaf-file-name="GICsController.php" pinned="true" current-in-tab="false">
+        <entry file="remoteDeploymentFS://&lt;5be21bb7-3a9f-4d91-b1c7-46110c3b93a0&gt;/ebbs/vendor/web-feet/coasterframework/src/Http/Controllers/AdminControllers/GICsController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2513">
-              <caret line="103" column="41" lean-forward="true" selection-start-line="103" selection-start-column="41" selection-end-line="103" selection-end-column="41" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="edit-staff.blade.php" pinned="true" current-in-tab="false">
-        <entry file="remoteDeploymentFS://&lt;d050a4da-871f-4549-b80f-b7f194874fc8&gt;/resources/views/admin/pages/users/edit-staff.blade.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-496">
-              <caret line="317" column="84" lean-forward="false" selection-start-line="317" selection-start-column="84" selection-end-line="317" selection-end-column="84" />
+            <state relative-caret-position="7247">
+              <caret line="663" column="37" lean-forward="true" selection-start-line="663" selection-start-column="37" selection-end-line="663" selection-end-column="37" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
       <file leaf-file-name="EWPUserController.php" pinned="true" current-in-tab="true">
-        <entry file="remoteDeploymentFS://&lt;d050a4da-871f-4549-b80f-b7f194874fc8&gt;/src/Http/Controllers/AdminControllers/EWPUserController.php">
+        <entry file="remoteDeploymentFS://&lt;5be21bb7-3a9f-4d91-b1c7-46110c3b93a0&gt;/advisor/fixed/AdmController/EWPUserController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="393">
-              <caret line="303" column="76" lean-forward="false" selection-start-line="303" selection-start-column="76" selection-end-line="303" selection-end-column="76" />
+            <state relative-caret-position="261">
+              <caret line="1065" column="47" lean-forward="true" selection-start-line="1065" selection-start-column="47" selection-end-line="1065" selection-end-column="47" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ClientController.php" pinned="true" current-in-tab="false">
+        <entry file="remoteDeploymentFS://&lt;d050a4da-871f-4549-b80f-b7f194874fc8&gt;/src/Http/Controllers/AdminControllers/ClientController.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="935">
+              <caret line="152" column="21" lean-forward="true" selection-start-line="143" selection-start-column="20" selection-end-line="152" selection-end-column="21" />
               <folding />
             </state>
           </provider>
@@ -59,22 +64,36 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>linkAccount</find>
-      <find>accounts</find>
-      <find>postAjaxTrick</find>
-      <find>img_click</find>
-      <find>exampleTable</find>
-      <find>accnt</find>
-      <find>generateTable</find>
-      <find>role</find>
-      <find>modal-content</find>
-      <find>changegroups</find>
-      <find>user/link</find>
-      <find>postRolepostRole</find>
-      <find>unam</find>
-      <find>arrAccount</find>
-      <find>postRole</find>
-      <find>update-role</find>
+      <find>iTableCounter</find>
+      <find>tab3</find>
+      <find>arr10_3</find>
+      <find>fnFormat2</find>
+      <find>gics/post5</find>
+      <find>post-res2</find>
+      <find>chCategory2</find>
+      <find>selectedCategory2</find>
+      <find>gics/post</find>
+      <find>initDatatable</find>
+      <find>bodyTable</find>
+      <find>bodyTable2</find>
+      <find>exampleTable2</find>
+      <find>detailsTable5_1</find>
+      <find>detailsTable5_2</find>
+      <find>oTable10</find>
+      <find>checkAllCategory3</find>
+      <find>checkAllCategory2</find>
+      <find>post10</find>
+      <find>post5</find>
+      <find>export-button</find>
+      <find>post-res3</find>
+      <find>selectedDeposit2[arrayDeposit2[i]]</find>
+      <find>exampleTable3</find>
+      <find>generateTable2</find>
+      <find>generateTable3</find>
+      <find>initDatatables3</find>
+      <find>oInnerTable10</find>
+      <find>$t</find>
+      <find>getEdit</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -84,9 +103,20 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="&lt;d050a4da-871f-4549-b80f-b7f194874fc8&gt;/resources/views/admin/pages/accounts.blade.php" />
-        <option value="&lt;d050a4da-871f-4549-b80f-b7f194874fc8&gt;/src/Http/routes/admin.php" />
-        <option value="&lt;d050a4da-871f-4549-b80f-b7f194874fc8&gt;/resources/views/admin/pages/users/edit-staff.blade.php" />
         <option value="&lt;d050a4da-871f-4549-b80f-b7f194874fc8&gt;/src/Http/Controllers/AdminControllers/EWPUserController.php" />
+        <option value="&lt;5be21bb7-3a9f-4d91-b1c7-46110c3b93a0&gt;/advisor/fixed/gics_test.blade.php" />
+        <option value="&lt;d050a4da-871f-4549-b80f-b7f194874fc8&gt;/resources/views/admin/pages/users/edit-staff.blade.php" />
+        <option value="&lt;5be21bb7-3a9f-4d91-b1c7-46110c3b93a0&gt;/advisor/fixed/edit-staff.blade.php" />
+        <option value="&lt;5be21bb7-3a9f-4d91-b1c7-46110c3b93a0&gt;/advisor/fixed/clients/edit-investor.blade.php" />
+        <option value="&lt;d050a4da-871f-4549-b80f-b7f194874fc8&gt;/src/Http/routes/admin.php" />
+        <option value="&lt;d050a4da-871f-4549-b80f-b7f194874fc8&gt;/src/Http/Controllers/AdminControllers/GICsController.php" />
+        <option value="&lt;d050a4da-871f-4549-b80f-b7f194874fc8&gt;/resources/views/admin/pages/gics.blade.php" />
+        <option value="&lt;5be21bb7-3a9f-4d91-b1c7-46110c3b93a0&gt;/advisor/fixed/AdmController/GICsController.php" />
+        <option value="&lt;5be21bb7-3a9f-4d91-b1c7-46110c3b93a0&gt;/advisor/fixed/gics.blade.php" />
+        <option value="&lt;d050a4da-871f-4549-b80f-b7f194874fc8&gt;/resources/views/admin/pages/clients/edit-investor.blade.php" />
+        <option value="&lt;d050a4da-871f-4549-b80f-b7f194874fc8&gt;/src/Http/Controllers/AdminControllers/ClientController.php" />
+        <option value="&lt;5be21bb7-3a9f-4d91-b1c7-46110c3b93a0&gt;/advisor/fixed/AdmController/ClientController.php" />
+        <option value="&lt;5be21bb7-3a9f-4d91-b1c7-46110c3b93a0&gt;/advisor/fixed/AdmController/EWPUserController.php" />
       </list>
     </option>
   </component>
@@ -103,14 +133,18 @@
     </gulpfiles>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
+  <component name="PackageJsonUpdateNotifier">
+    <dismissed value="$PROJECT_DIR$/package.json" />
+  </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="y" value="22" />
-    <option name="width" value="1400" />
-    <option name="height" value="873" />
+  <component name="ProjectFrameBounds">
+    <option name="x" value="402" />
+    <option name="y" value="24" />
+    <option name="width" value="1988" />
+    <option name="height" value="1413" />
   </component>
   <component name="ProjectView">
-    <navigator currentView="ProjectPane" proportions="" version="1">
+    <navigator proportions="" version="1">
       <flattenPackages />
       <showMembers />
       <showModules />
@@ -123,21 +157,7 @@
       <manualOrder />
       <foldersAlwaysOnTop value="true" />
     </navigator>
-    <panes>
-      <pane id="Scratches" />
-      <pane id="Scope" />
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="plantastic" type="b2602c69:ProjectViewProjectNode" />
-              <item name="plantastic" type="2a2b976b:PhpTreeStructureProvider$1" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
-    </panes>
+    <panes />
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="true" />
@@ -148,7 +168,7 @@
     <property name="WebServerToolWindowPanel.toolwindow.show.permissions" value="false" />
     <property name="WebServerToolWindowPanel.toolwindow.highlight.symlinks" value="true" />
     <property name="WebServerToolWindowPanel.toolwindow.highlight.mappings" value="true" />
-    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.General" />
+    <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -190,14 +210,22 @@
       <updated>1507879285938</updated>
       <workItem from="1507879287826" duration="3534000" />
       <workItem from="1507883114057" duration="4815000" />
+      <workItem from="1508125043094" duration="4554000" />
+      <workItem from="1508160563820" duration="502000" />
+      <workItem from="1508164035290" duration="5617000" />
+      <workItem from="1508173484864" duration="443000" />
+      <workItem from="1508175687688" duration="6851000" />
+      <workItem from="1508197589302" duration="10085000" />
+      <workItem from="1508243849726" duration="12494000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="8349000" />
+    <option name="totallyTimeSpent" value="48895000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="22" width="1440" height="873" extended-state="6" />
+    <frame x="402" y="24" width="1988" height="1413" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32904884" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
@@ -205,7 +233,7 @@
       <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.20600858" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32904884" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32904884" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Remote Host" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21030043" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Remote Host" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18910585" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Gulp" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.17095852" sideWeight="0.5" order="3" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.18168813" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -216,10 +244,34 @@
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="File Transfer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.17992277" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
     </layout>
+    <layout-to-restore>
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32904884" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="File Transfer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.17994858" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.20600858" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32904884" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32904884" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Remote Host" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20457797" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Gulp" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.17095852" sideWeight="0.5" order="3" side_tool="false" content_ui="combo" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="combo" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.18168813" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24964234" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+    </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
