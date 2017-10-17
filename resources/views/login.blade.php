@@ -52,7 +52,7 @@
 
 @section('script')
  <script>
-   new Vue({
+  new Vue({
   el: '#app',
   data () {
       return {
