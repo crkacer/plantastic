@@ -18,8 +18,8 @@
 <v-container class="mt-4">
   <v-layout align-center justify-center column>
     <v-flex xs12 class="text-xs-center">
-      <h4>Welcome back</h4>
-      <p>Please enter your email and password to log in.</p>
+      <h4>Welcome</h4>
+      <p>Create an account.</p>
     </v-flex>
     <v-flex xs12>
       <v-form v-model="valid" ref="form" action="{{ url('/login') }}" method="post">
@@ -29,6 +29,20 @@
         v-model="email"
         :rules="emailRules"
         name="email"
+        required
+      ></v-text-field>
+      <v-text-field
+        label="First Name"
+        v-model="firstName"
+        :rules="firstNameRules"
+        name="firstName"
+        required
+      ></v-text-field>
+      <v-text-field
+        label="Last Name"
+        v-model="lastName"
+        :rules="lastNameRules"
+        name="lastName"
         required
       ></v-text-field>
       <v-text-field
@@ -68,7 +82,17 @@
   el: '#app',
   data () {
       return {
-        e1:false,
+        e1:true,
+        firstName:'',
+        firstNameRules: [
+          (v) => !!v || 'First Name is required',
+          (v) => v && isNaN(v) || 'First name must not be a number'
+        ],
+        lastName:'',
+        lastNameRules: [
+          (v) => !!v || 'Last Name is required',
+          (v) => v && isNaN(v) || 'Last name must not be a number'
+        ],
         search:'',
         buttons: [
           {
@@ -97,7 +121,9 @@
           'Item 3',
           'Item 4'
         ],
-        checkbox: false
+        checkbox: false,
+        invalidCharacter: ['+','-','*','/']
+        invalidWord: ['nigga','jesus']
       }
     },
     methods: {
@@ -114,6 +140,52 @@
         axios.post('/api/submit',{
           search:this.search
         })
+      },
+      firstNameValidation: function(){
+        for(var i=0; i<this.firstName.length; i++){
+          if(this.invalid.indexOf(this.firstName.charAt(i)) === -1 && i == this.firstName.length-1 && this.firstNameRules.length >= 3){
+            this.firstNameRules.pop()
+          }else if (this.invalid.indexOf(this.firstName.charAt(i)) != -1){
+            if(this.firstNameRules.length >= 3){
+              this.firstNameRules.pop()
+              this.firstNameRules.push(() => 'Your input contains illegal character(s)')
+            }else{
+              this.firstNameRules.push(() => 'Your input contains illegal character(s)')
+            }
+          }
+        }
+      },
+      lastNameValidation: function(){
+        for(var i=0; i<this.lastName.length; i++){
+          if(this.invalid.indexOf(this.lastName.charAt(i)) === -1 && i == this.lastName.length-1 && this.lastNameRules.length >= 3){
+            this.lastNameRules.pop()
+          }else if (this.invalid.indexOf(this.lastName.charAt(i)) != -1){
+            if(this.lastNameRules.length >= 3){
+              this.lastNameRules.pop()
+              this.lastNameRules.push(() => 'Your input contains illegal character(s) or inappropriate word(s)')
+            }else{
+              this.lastNameRules.push(() => 'Your input contains illegal character(s) or inappropriate word(s)')
+            }
+          }
+        }
+      }
+    },
+    watch: {
+      firstName: function (e){
+        if(e == null){
+          return 
+        }
+        else{
+          this.firstNameValidation()  
+        }
+      },
+      lastName: function (e){
+        if(e == null){
+          return
+        }
+        else{
+          this.lastNameValidation()
+        }
       }
     }
 })
