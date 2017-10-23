@@ -86,12 +86,10 @@
         firstName:'',
         firstNameRules: [
           (v) => !!v || 'First Name is required',
-          (v) => v && isNaN(v) || 'First name must not be a number'
         ],
         lastName:'',
         lastNameRules: [
           (v) => !!v || 'Last Name is required',
-          (v) => v && isNaN(v) || 'Last name must not be a number'
         ],
         search:'',
         buttons: [
@@ -107,7 +105,7 @@
         password: '',
         passwordRules: [
           (v) => !!v || 'Password is required',
-          (v) => v && v.length >= 8 || 'Password must be more than 8 characters'
+          (v) => v && v.length >= 8 || 'Minimum 8 characters'
         ],
         email: '',
         emailRules: [
@@ -122,8 +120,7 @@
           'Item 4'
         ],
         checkbox: false,
-        invalidCharacter: ['+','-','*','/']
-        invalidWord: ['nigga','jesus']
+        invalidCharacter: ['+','-','*','/','*','1','2','3','4','5','6','7','8','9','0'],
       }
     },
     methods: {
@@ -142,29 +139,39 @@
         })
       },
       firstNameValidation: function(){
+        if(this.firstNameRules.length >= 2){
+          this.firstNameRules.pop()
+        }
         for(var i=0; i<this.firstName.length; i++){
-          if(this.invalid.indexOf(this.firstName.charAt(i)) === -1 && i == this.firstName.length-1 && this.firstNameRules.length >= 3){
+          if(this.invalidCharacter.indexOf(this.firstName.charAt(i)) === -1 && i == this.firstName.length-1 && this.firstNameRules.length >= 2){
             this.firstNameRules.pop()
-          }else if (this.invalid.indexOf(this.firstName.charAt(i)) != -1){
-            if(this.firstNameRules.length >= 3){
+          }else if (this.invalidCharacter.indexOf(this.firstName.charAt(i)) != -1){
+            if(this.firstNameRules.length >= 2){
               this.firstNameRules.pop()
               this.firstNameRules.push(() => 'Your input contains illegal character(s)')
+              break
             }else{
               this.firstNameRules.push(() => 'Your input contains illegal character(s)')
+              break
             }
           }
         }
       },
       lastNameValidation: function(){
+        if(this.lastNameRules.length >= 2){
+          this.lastNameRules.pop()
+        }
         for(var i=0; i<this.lastName.length; i++){
-          if(this.invalid.indexOf(this.lastName.charAt(i)) === -1 && i == this.lastName.length-1 && this.lastNameRules.length >= 3){
+          if(this.invalidCharacter.indexOf(this.lastName.charAt(i)) === -1 && i == this.lastName.length-1 && this.lastNameRules.length >= 2){
             this.lastNameRules.pop()
-          }else if (this.invalid.indexOf(this.lastName.charAt(i)) != -1){
-            if(this.lastNameRules.length >= 3){
+          }else if (this.invalidCharacter.indexOf(this.lastName.charAt(i)) != -1){
+            if(this.lastNameRules.length >= 2){
               this.lastNameRules.pop()
-              this.lastNameRules.push(() => 'Your input contains illegal character(s) or inappropriate word(s)')
+              this.lastNameRules.push(() => 'Your input contains illegal character(s)')
+              break
             }else{
-              this.lastNameRules.push(() => 'Your input contains illegal character(s) or inappropriate word(s)')
+              this.lastNameRules.push(() => 'Your input contains illegal character(s)')
+              break
             }
           }
         }
