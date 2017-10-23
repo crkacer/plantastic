@@ -2,60 +2,83 @@
 
 @section('style')
 <style type="text/css">
-     body{
-         background-color: #FAFAFA;
-     }
-     .centered{
-        position: fixed;
-      top: 70%;
-      left: 50%;
-  /* bring your own prefixes */
-  transform: translate(-50%, -50%);
-      width: 500px;
-     }
+  a {
+    text-decoration:none;
+  }
+  #title{
+    color:red;
+  }
+  #background{
+    background-color:white;
+  }
  </style>
 @stop
 
 @section('body')
- <div id="app">
-  <v-app id="inspire" class="centered">
-    <v-form v-model="valid" ref="form" action="/test/" method="post">
-    <v-text-field
-      label="Email"
-      v-model="email"
-      :rules="emailRules"
+<v-container class="mt-4">
+  <v-layout align-center justify-center column>
+    <v-flex xs12 class="text-xs-center">
+      <h4>Welcome back</h4>
+      <p>Please enter your email and password to log in.</p>
+    </v-flex>
+    <v-flex xs12>
+      <v-form v-model="valid" ref="form" action="{{ url('/login') }}" method="post">
+      {{ csrf_field() }}
+      <v-text-field
+        label="Email"
+        v-model="email"
+        :rules="emailRules"
+        name="email"
+        required
+      ></v-text-field>
+      <v-text-field
+        label="Password"
+        v-model="password"
+        name="password"
+        :rules="passwordRules"
+        :counter="8"
+        :append-icon="e1 ? 'visibility' : 'visibility_off'"
+        :append-icon-cb="() => (e1 = !e1)"
+        :type="e1 ? 'password' : 'text'"
+        required
+      ></v-text-field>
       
-      required
-    ></v-text-field>
-    <v-text-field
-      label="Password"
-      v-model="password"
-      :rules="passwordRules"
-      :counter="8"
-      type="password"
-      required
-    ></v-text-field>
+      <v-checkbox
+        label="I agree Terms and Conditions!."
+        v-model="checkbox"
+        :rules="[(v) => !!v || 'You must agree to continue!']"
+        required
+      ></v-checkbox>
     
-    <v-checkbox
-      label="I agree Terms and Conditions!."
-      v-model="checkbox"
-      :rules="[(v) => !!v || 'You must agree to continue!']"
-      required
-    ></v-checkbox>
-
-    <v-btn @click="submit" :class="{ green: valid, red: !valid }">submit</v-btn>
-    <v-btn @click="clear">clear</v-btn>
-  </v-form>
-  </v-app>
-</div>
+      <v-btn round @click="FormSubmit" :class="{ green: valid, red: !valid }">login</v-btn>
+      <v-btn round @click="clear">clear</v-btn>
+      <a class="btn btn-link transparent" href="{{ url('/password/reset') }}">Forgot Your Password?</a>
+    </v-form>
+    </v-flex>
+    <v-flex xs12 class="text-xs-center">
+      <a class="btn btn-link transparent" href="/" style="text-decoration:underline;">Don't have an account? Register now.</a>
+    </v-flex>
+  </v-layout>
+</v-container>
 @stop
 
 @section('script')
  <script>
-  new Vue({
+   new Vue({
   el: '#app',
   data () {
       return {
+        e1:false,
+        search:'',
+        buttons: [
+          {
+            text: 'Home',
+            url: '/home'
+          },
+          {
+            text: 'Register',
+            url: '/'
+          }],
         valid: false,
         password: '',
         passwordRules: [
@@ -78,13 +101,19 @@
       }
     },
     methods: {
-      submit () {
+      FormSubmit () {
         if (this.$refs.form.validate()) {
           this.$refs.form.$el.submit()
         }
       },
       clear () {
+        this.valid=false
         this.$refs.form.reset()
+      },
+      submit: function (e){
+        axios.post('/api/submit',{
+          search:this.search
+        })
       }
     }
 })
