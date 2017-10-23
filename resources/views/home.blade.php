@@ -157,7 +157,7 @@ a {
           },
           {
             text: 'Register',
-            url: '/'
+            url: '/register'
           }],
         events: [
           {

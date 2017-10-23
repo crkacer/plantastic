@@ -168,11 +168,11 @@ a {
         buttons: [
           {
             text: 'Home',
-            url: '/'
+            url: '/home'
           },
           {
             text: 'Register',
-            url: '/'
+            url: '/register'
           }],
         suggestions: [
           [

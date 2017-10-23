@@ -36,7 +36,7 @@
         v-model="password"
         name="password"
         :rules="passwordRules"
-        :counter="8"
+        counter="8"
         :append-icon="e1 ? 'visibility' : 'visibility_off'"
         :append-icon-cb="() => (e1 = !e1)"
         :type="e1 ? 'password' : 'text'"
@@ -56,7 +56,7 @@
     </v-form>
     </v-flex>
     <v-flex xs12 class="text-xs-center">
-      <a class="btn btn-link transparent" href="/" style="text-decoration:underline;">Don't have an account? Register now.</a>
+      <a class="btn btn-link transparent" href="/register" style="text-decoration:underline;">Don't have an account? Register now.</a>
     </v-flex>
   </v-layout>
 </v-container>
@@ -68,7 +68,7 @@
   el: '#app',
   data () {
       return {
-        e1:false,
+        e1:true,
         search:'',
         buttons: [
           {
@@ -77,13 +77,13 @@
           },
           {
             text: 'Register',
-            url: '/'
+            url: '/register'
           }],
         valid: false,
         password: '',
         passwordRules: [
           (v) => !!v || 'Password is required',
-          (v) => v && v.length >= 8 || 'Password must be more than 8 characters'
+          (v) => v && v.length >= 8 || 'Minimum 8 characters'
         ],
         email: '',
         emailRules: [
