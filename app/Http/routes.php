@@ -20,7 +20,7 @@ Route::get('login', 'LoginController@index');
 Route::get('event/{id?}', 'EventController@getIndex');
 Route::get('view-event/{id?}', 'EventController@getIndexEvent');
 
-Route::auth();
+Route::get('register', 'LoginController@getRegister');
 
 Route::get('home', 'HomeController@index');
 

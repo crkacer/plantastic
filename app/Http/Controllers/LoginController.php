@@ -12,4 +12,8 @@ class LoginController extends Controller
     public function index() {
         return View::make('login');
     }
+
+    public function getRegister() {
+    	return View::make('register');
+    }
 }
