@@ -64,13 +64,10 @@
         required
       ></v-checkbox>
     
-      <v-btn round @click="FormSubmit" :class="{ green: valid, red: !valid }">login</v-btn>
+      <v-btn round @click="FormSubmit" :class="{ green: valid, red: !valid }">Register</v-btn>
       <v-btn round @click="clear">clear</v-btn>
       <a class="btn btn-link transparent" href="{{ url('/password/reset') }}">Forgot Your Password?</a>
     </v-form>
-    </v-flex>
-    <v-flex xs12 class="text-xs-center">
-      <a class="btn btn-link transparent" href="/" style="text-decoration:underline;">Don't have an account? Register now.</a>
     </v-flex>
   </v-layout>
 </v-container>

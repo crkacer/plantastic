@@ -97,7 +97,7 @@ a {
                           </v-flex>
                           <v-flex d-flex class="text-xs-right" style="border-top-style:solid; border-top-width:1px"  xs6>
                             <v-tooltip bottom>
-                              <v-btn slot="activator" icon><v-icon>share</v-icon></v-btn>
+                              <v-btn slot="activator" icon @click.native.stop="getShareLink(i)"><v-icon>share</v-icon></v-btn>
                               <span>Share</span>
                             </v-tooltip>
                           </v-flex>
@@ -105,6 +105,26 @@ a {
                       </v-flex>
                     </v-layout>
                   </v-container>
+                  <v-dialog v-model="share" max-width="400" persistent>
+                    <v-card>
+                      <v-container fluid>
+                        <v-layout column wrap>
+                          <v-flex xs12>
+                            <v-card-title class="headline">Copy this link to share</v-card-title>
+                          </v-flex>
+                          <v-flex xs12>
+                            <v-text-field v-model="shareLink" readonly autofocus></v-text-field>
+                          </v-flex>
+                          <v-flex xs12>
+                            <v-card-actions>
+                              <v-spacer></v-spacer>
+                              <v-btn color="green darken-1" flat="flat" @click="share=false">Done</v-btn>
+                            </v-card-actions>
+                          </v-flex>
+                        </v-layout>
+                      </v-container>
+                    </v-card>
+                  </v-dialog>
                 </v-card>
               </v-flex>
               <v-flex>
@@ -146,6 +166,8 @@ a {
   el: '#app',
   data () {
       return {
+        shareLink:'',
+        share: false,
         page: 1,
         search:'',
         categories: allCategory,
@@ -180,12 +202,12 @@ a {
               }]
           },
           {
-            url: '/event/1',
+            url: '/event/3',
             src: '/assets/img/dummyEvent.jpg',
             date: 'November 11, 2017',
             title: 'Indie Game Hackathon',
             locationName: 'George Brown College (Casa Loma Campus)',
-            participant: 50,
+            participant: 500,
             capacity: 1000,
             price: 'Free',
             tags: [
@@ -208,10 +230,11 @@ a {
       },
       calcPercentage: function(e){
         return (e.participant/e.capacity)*100
+      },
+      getShareLink: function(index){
+        this.shareLink = "https://php-project-willieduke.c9users.io" + this.events[index].url
+        this.share = true
       }
-  },
-  computed: {
-    
   }
 })
 </script>
