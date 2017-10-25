@@ -127,13 +127,33 @@ a {
                               </v-flex>
                               <v-flex class="text-xs-center" style="border-top: solid 1px #E8E8E8; border-left: solid 1px #E8E8E8;" xs2>
                                 <v-tooltip bottom>
-                                  <v-btn slot="activator" icon><v-icon>share</v-icon></v-btn>
+                                  <v-btn slot="activator" icon  @click.native.stop="getShareLink(i,k)"><v-icon>share</v-icon></v-btn>
                                   <span>Share</span>
                                 </v-tooltip>
                               </v-flex>
                             </v-layout>
                           </v-container>
                         </v-card-actions>
+                        <v-dialog v-model="share" max-width="400" persistent>
+                          <v-card>
+                            <v-container fluid>
+                              <v-layout column wrap>
+                                <v-flex xs12>
+                                  <v-card-title class="headline">Copy this link to share</v-card-title>
+                                </v-flex>
+                                <v-flex xs12>
+                                  <v-text-field v-model="shareLink" readonly focus></v-text-field>
+                                </v-flex>
+                                <v-flex xs12>
+                                  <v-card-actions>
+                                    <v-spacer></v-spacer>
+                                    <v-btn color="green darken-1" flat="flat" @click="share=false">Done</v-btn>
+                                  </v-card-actions>
+                                </v-flex>
+                              </v-layout>
+                            </v-container>
+                          </v-card>
+                        </v-dialog>
                     </v-card>
                   </v-flex>
                 </v-layout>
@@ -164,6 +184,8 @@ a {
   el: '#app',
   data () {
       return {
+        share:false,
+        shareLink:'',
         search:'',
         buttons: [
           {
@@ -194,7 +216,7 @@ a {
                 }]
             },
             {
-              url: '/event/1',
+              url: '/event/2',
               src: '/assets/img/dummyEvent.jpg',
               date: 'November 11, 2017',
               title: 'Indie Game Hackathon',
@@ -211,7 +233,7 @@ a {
                 }]
             },
             {
-              url: '/event/1',
+              url: '/event/3',
               src: '/assets/img/dummyEvent.jpg',
               date: 'November 11, 2017',
               title: 'Indie Game Hackathon',
@@ -231,7 +253,7 @@ a {
           //Next Carousel
           [ 
             {
-              url: '/event/1',
+              url: '/event/4',
               src: '/assets/img/dummyEvent.jpg',
               date: 'November 11, 2017',
               title: 'Indie Game Hackathon',
@@ -248,7 +270,7 @@ a {
                 }]
             },
             {
-              url: '/event/1',
+              url: '/event/5',
               src: '/assets/img/dummyEvent.jpg',
               date: 'November 11, 2017',
               title: 'Indie Game Hackathon',
@@ -265,7 +287,7 @@ a {
                 }]
             },
             {
-              url: '/event/1',
+              url: '/event/6',
               src: '/assets/img/dummyEvent.jpg',
               date: 'November 11, 2017',
               title: 'Indie Game Hackathon',
@@ -289,6 +311,10 @@ a {
         axios.post('/api/submit',{
           search:this.search
         })
+      },
+    getShareLink: function(row,column){
+        this.shareLink = "https://php-project-willieduke.c9users.io" + this.suggestions[row][column].url
+        this.share = true
       }
   }
 })

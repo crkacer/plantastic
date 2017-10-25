@@ -7,7 +7,7 @@
 </head>
 <body>
 <div id="app">
- <v-app id="inspire" class=" grey lighten-2 centered">
+ <v-app id="inspire" class="centered" id="background">
    <v-toolbar class="white">
     <v-toolbar-title><a href="/home" id="title">Plantastic</a></v-toolbar-title>
     <v-spacer></v-spacer>
@@ -19,7 +19,7 @@
       <v-btn flat :href=button.url class="button">@{{ button.text }}</v-btn> 
     </v-toolbar-items>
     <v-toolbar-items class="hidden-sm-and-down">
-      <v-btn flat href="/home">Create Event</v-btn>
+      <v-btn flat href="/login">Create Event</v-btn>
     </v-toolbar-items>
   </v-toolbar>
   @yield('body')

@@ -12,7 +12,6 @@
 */
 
 Route::get('/', 'HomeController@index');
-});
 
 Route::get('login', 'LoginController@index');
 
