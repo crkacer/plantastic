@@ -46,8 +46,8 @@ class HomeController extends Controller
     public function generateData () {
 
         $event = new Event();
-        $event->location = "";
-        $event->title = "";
+        $event->location = "12 Bloor Street";
+        $event->title = "Game Meetings";
         $event->startdate = "";
         $event->enddate = "";
         $event->starttime = "";
