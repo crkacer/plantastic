@@ -33,14 +33,47 @@ class HomeController extends Controller
         $all_categories = Category::all();
         $types = [];
         $categories = [];
+        $pag = [];
         foreach ($all_events_types as $t) {
             array_push($types, ['text' => $t->name, 'url' => "event-type/" . $t->name]);
         }
         foreach ($all_categories as $c) {
             array_push($categories, ['text' => $c->name, 'url' => "category/" . $c->name]);
         }
-        $this->generateData();
-        return view('home', ['event' => $all_events, 'event_type' => $types, 'category' => $categories]);
+        $temp = [];
+        for ($i = 0; $i<count($all_events); $i++) {
+            if ($i % 5 == 0) {
+                if ($i > 0) array_push($pag, $temp);
+                $temp = [];
+            }
+            array_push($temp, [
+                'id' => $all_events[$i]['id'],
+                'location' => $all_events[$i]['location'],
+                'title' => $all_events[$i]['title'],
+                'startdate' => $all_events[$i]['startdate'],
+                'endate' => $all_events[$i]['endate'],
+                'starttime' => $all_events[$i]['starttime'],
+                'endtime' => $all_events[$i]['endtime'],
+                'description' => $all_events[$i]['description'],
+                'user_id' => $all_events[$i]['user_id'],
+                'organizer_description' => $all_events[$i]['organizer_description'],
+                'event_type_id' => $all_events[$i]['event_type_id'],
+                'background_photo' => $all_events[$i]['background_photo'],
+                'template' => $all_events[$i]['template'],
+                'category_id' => $all_events[$i]['category_id'],
+                'url' => $all_events[$i]['url'],
+                'registered_amount' => $all_events[$i]['registered_amount'],
+                'capacity' => $all_events[$i]['capacity'],
+                'code' => $all_events[$i]['code'],
+                'price' => $all_events[$i]['price']
+            ]);
+        }
+        return view('home', [
+            'event' => $all_events,
+            'pagi' => $pag,
+            'event_type' => $types,
+            'category' => $categories
+        ]);
     }
 
     public function generateData () {
