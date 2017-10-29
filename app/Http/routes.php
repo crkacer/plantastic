@@ -13,6 +13,7 @@
 
 Route::get('/', 'HomeController@index');
 
+
 Route::get('login', 'LoginController@index');
 
 Route::get('event/{id?}', 'EventController@getIndex');
@@ -23,3 +24,5 @@ Route::get('register', 'LoginController@getRegister');
 Route::get('home', 'HomeController@index');
 
 Route::get('user/manage-event', 'UserController@manageEvent');
+
+Route::get('generate', "HomeController@generateData");

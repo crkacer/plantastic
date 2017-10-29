@@ -9,7 +9,7 @@ return array(
     'CreateCategoryTable' => $baseDir . '/database/migrations/2017_10_11_022418_create_category_table.php',
     'CreateEventTypeTable' => $baseDir . '/database/migrations/2017_10_11_022248_create_event_type_table.php',
     'CreateEventsTable' => $baseDir . '/database/migrations/2017_10_11_015402_create_events_table.php',
-    'CreatePasswordResetTable' => $baseDir . '/database/migrations/2017_10_11_023839_create_password_reset_table.php',
+    'CreateTableAttendance' => $baseDir . '/database/migrations/2017_10_27_204050_create_table_attendance.php',
     'CreateUsersTable' => $baseDir . '/database/migrations/2014_10_12_000000_create_users_table.php',
     'DatabaseSeeder' => $baseDir . '/database/seeds/DatabaseSeeder.php',
     'File_Iterator' => $vendorDir . '/phpunit/php-file-iterator/src/Iterator.php',
