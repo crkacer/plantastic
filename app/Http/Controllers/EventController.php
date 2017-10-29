@@ -15,4 +15,9 @@ class EventController extends Controller
 	public function getIndexEvent($id) {
 		return view('view-event2');
 	}
+
+	public function getDashboard($id) {
+
+	    return view('event.dashboard');
+    }
 }
