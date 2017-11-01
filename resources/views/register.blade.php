@@ -15,11 +15,11 @@
 @stop
 
 @section('body')
-  <v-container class="mt-4">
+  <v-container class="mt-5 pt-5">
     <v-layout align-center justify-center column>
       <v-flex xs12 class="text-xs-center">
-        <h4>Welcome</h4>
-        <p>Create an account.</p>
+        <h4 style="font-family: 'Merriweather', serif;" >Welcome</h4>
+        <p style="font-family: 'Alegreya', serif; font-size:1.5em;">Create an account.</p>
       </v-flex>
       <v-flex xs12>
         <v-form v-model="valid" ref="form" action="{{ url('/login') }}" method="post">
@@ -79,44 +79,45 @@
           el: '#app',
           data: {
               e1:true,
+              
               firstName:'',
               firstNameRules: [
                   (v) => !!v || 'First Name is required',
-      ],
-      lastName:'',
-          lastNameRules: [
-          (v) => !!v || 'Last Name is required',
-      ],
-      search:'',
-          buttons: [
-          {
-              text: 'Home',
-              url: '/home'
-          },
-          {
-              text: 'Register',
-              url: '/'
-          }],
-          valid: false,
-          password: '',
-          passwordRules: [
-          (v) => !!v || 'Password is required',
-          (v) => v && v.length >= 8 || 'Minimum 8 characters'
-      ],
-      email: '',
-          emailRules: [
-          (v) => !!v || 'E-mail is required',
-          (v) => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'
-      ],
-      select: null,
-          items: [
-          'Item 1',
-          'Item 2',
-          'Item 3',
-          'Item 4'
-      ],
-          checkbox: false,
-          invalidCharacter: ['+','-','*','/','*','1','2','3','4','5','6','7','8','9','0']
+              ],
+              lastName:'',
+                  lastNameRules: [
+                  (v) => !!v || 'Last Name is required',
+              ],
+              search:'',
+              buttons: [
+                {
+                    text: 'Home',
+                    url: '/home'
+                },
+                {
+                    text: 'Register',
+                    url: '/register'
+                }],
+              valid: false,
+              password: '',
+              passwordRules: [
+                (v) => !!v || 'Password is required',
+                (v) => v && v.length >= 8 || 'Minimum 8 characters'
+              ],
+              email: '',
+              emailRules: [
+                (v) => !!v || 'E-mail is required',
+                (v) => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'
+              ],
+              select: null,
+                  items: [
+                  'Item 1',
+                  'Item 2',
+                  'Item 3',
+                  'Item 4'
+              ],
+              checkbox: false,
+              invalidCharacter: ['+','-','*','/','*','1','2','3','4','5','6','7','8','9','0']
       },
       methods: {
           FormSubmit () {
