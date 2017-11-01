@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Roboto|Material+Icons' rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Kaushan+Script" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Belleza" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Cinzel" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Lora" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Merriweather" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Alegreya" rel="stylesheet">
     <link href="https://unpkg.com/vuetify/dist/vuetify.min.css" rel="stylesheet">
+    
     <style type="text/css">
         a {
             text-decoration:none;
@@ -21,7 +24,7 @@
 </head>
 <body>
 <div id="app">
-    <v-app id="inspire" class="centered" id="background">
+    <v-app>
         <v-toolbar class="white">
             <v-toolbar-title><a href="/home" id="title">Plantastic</a></v-toolbar-title>
             <v-spacer></v-spacer>

@@ -15,11 +15,11 @@
 @stop
 
 @section('body')
-  <v-container class="mt-4">
+  <v-container class="mt-5 pt-5">
     <v-layout align-center justify-center column>
       <v-flex xs12 class="text-xs-center">
-        <h4>Welcome back</h4>
-        <p>Please enter your email and password to log in.</p>
+        <h4 style="font-family: 'Merriweather', serif;" >Welcome back</h4>
+        <p style="font-family: 'Alegreya', serif; font-size:1.25em;">Please enter your email and password to log in.</p>
       </v-flex>
       <v-flex xs12>
         <v-form v-model="valid" ref="form" action="{{ url('/login') }}" method="post">
@@ -44,10 +44,8 @@
           ></v-text-field>
 
           <v-checkbox
-                  label="I agree Terms and Conditions!."
-                  v-model="checkbox"
-                  :rules="[(v) => !!v || 'You must agree to continue!']"
-                  required
+                  label="Remember Me"
+                  v-model="checkbox" 
           ></v-checkbox>
 
           <v-btn round @click="FormSubmit" :class="{ green: valid, red: !valid }">login</v-btn>
@@ -82,21 +80,21 @@
               password: '',
               passwordRules: [
                   (v) => !!v || 'Password is required',
-          (v) => v && v.length >= 8 || 'Minimum 8 characters'
-      ],
-      email: '',
-          emailRules: [
-          (v) => !!v || 'E-mail is required',
-          (v) => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'
-      ],
-      select: null,
-          items: [
-          'Item 1',
-          'Item 2',
-          'Item 3',
-          'Item 4'
-      ],
-          checkbox: false
+                  (v) => v && v.length >= 8 || 'Minimum 8 characters'
+              ],
+              email: '',
+                  emailRules: [
+                  (v) => !!v || 'E-mail is required',
+                  (v) => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'
+              ],
+              select: null,
+                  items: [
+                  'Item 1',
+                  'Item 2',
+                  'Item 3',
+                  'Item 4'
+              ],
+                  checkbox: false
       },
       methods: {
           FormSubmit () {
