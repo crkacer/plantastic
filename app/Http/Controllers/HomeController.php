@@ -40,6 +40,7 @@ class HomeController extends Controller
         foreach ($all_categories as $c) {
             array_push($categories, ['text' => $c->name, 'url' => "category/" . $c->name]);
         }
+        // Push event item to array, 5 items per page
         $temp = [];
         for ($i = 0; $i<count($all_events); $i++) {
             if ($i % 5 == 0) {
