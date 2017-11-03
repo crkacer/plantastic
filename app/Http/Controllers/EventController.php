@@ -5,15 +5,24 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use App\Event;
 
 class EventController extends Controller
 {
 	public function getIndex($id) {
-		return view('view-event');
+	    $event = Event::where('id', $id)->get();
+
+		return view('view-event', [
+		    'event' => $event
+        ]);
 	}
 
 	public function getIndexEvent($id) {
-		return view('view-event2');
+	    $event = Event::where('id', $id)->get();
+
+		return view('view-event2', [
+		    'event' => $event
+        ]);
 	}
 
 	public function getDashboard($id) {

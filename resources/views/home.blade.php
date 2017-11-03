@@ -14,9 +14,6 @@
             padding-right:30px;
             padding-left:30px;
         }
-        #footer{
-            margin-top:400px;
-        }
         #app{
             background-color:#ededed;
         }
@@ -67,35 +64,36 @@
                                             <v-card-text id="description"><span style="color:red;font-size:2.5em; font-weight:bold; font-family: Kaushan Script', cursive;">Plantastic</span><span style="font-size:1.5em; font-family: 'Lora', serif;">&nbsp; acts as a brand new, efficient and interactive event creation tool for George Brown College Faculty and Students. Our main goal is to <b>facilitate the event creation and management process</b> while creating and maintaining a high quality internal social network.</span></v-card-text>
                                         </v-card>
                                     </v-flex>
-                                    <v-flex v-for="(event,i) in events" :key="i">
+                                    <v-flex v-for="(e,i) in event[page-1]" :key="i">
                                         <v-card raised class="mb-4">
                                             <v-container class="white ma-0 pa-0" fluid>
                                                 <v-layout column>
                                                     <v-flex xs12>
                                                         <v-layout class="ma-0 pa-0" row>
                                                             <v-flex xs4>
-                                                                <a :href=event.url>
-                                                                    <v-card-media :src= event.src height="125px" contain></v-card-media>
+                                                                <a :href="link(e)">
+                                                                    <v-card-media height="125px" contain></v-card-media>
                                                                 </a>
                                                             </v-flex>
                                                             <v-flex xs7>
-                                                                <div class="text-xs-left ma-0 pa-1" style="font-family: 'Lora', serif;">@{{ event.date }}</div>
-                                                                <div class="headline text-xs-left pl-1" style="font-family: 'Cinzel', serif;"><b>@{{ event.title }}</b></div>
-                                                                <div class="text-xs-left ma-0 pa-1" style="font-family: 'Lora', serif;">@{{ event.locationName }}</div>
+                                                                <div class="text-xs-left ma-0 pa-1" style="font-family: 'Lora', serif;">@{{ e.startdate }}</div>
+                                                                <div class="headline text-xs-left pl-1" style="font-family: 'Cinzel', serif;"><b>@{{ e.title }}</b></div>
+                                                                <div class="text-xs-left ma-0 pa-1" style="font-family: 'Lora', serif;">@{{ e.location }}</div>
                                                             </v-flex>
                                                             <v-flex xs6>
-                                                                <v-card-text style="font-family: 'Lora', serif;" v-if="calcPercentage(event) == 100"><v-progress-linear v-model="calcPercentage(event)" v-bind:color="getColor(event)"></v-progress-linear> Event is full</v-card-text>
-                                                                <v-card-text style="font-family: 'Lora', serif;" v-else><v-progress-linear v-model="calcPercentage(event)" v-bind:color="getColor(event)"></v-progress-linear> @{{ event.participant }} / @{{ event.capacity }} people has registered</v-card-text>
+                                                                <v-card-text style="font-family: 'Lora', serif;" v-if="calcPercentage(e) == 100"><v-progress-linear v-model="calcPercentage(e)" v-bind:color="getColor(e)"></v-progress-linear> Event is full</v-card-text>
+                                                                <v-card-text style="font-family: 'Lora', serif;" v-else><v-progress-linear v-model="calcPercentage(e)" v-bind:color="getColor(e)"></v-progress-linear> @{{ e.registered_amount }} / @{{ e.capacity }} people has registered</v-card-text>
                                                             </v-flex>
                                                         </v-layout>
                                                     </v-flex>
                                                     <v-flex xs12>
                                                         <v-layout row>
                                                             <v-flex d-flex class="text-xs-center grey lighten-3" xs4>
-                                                                <v-card-text class=" pt-1" style="font-family: 'Lora', serif;">@{{ event.price }}</v-card-text>
+                                                                <v-card-text class=" pt-1" style="font-family: 'Lora', serif;">@{{ e.price }}</v-card-text>
                                                             </v-flex>
                                                             <v-flex class="text-xs-left" style="border-top-style:solid; border-top-width:1px" xs7>
-                                                                <a v-for="(tag,j) in event.tags" :key="j" :href= tag.link class="pa-1 ma-1" style="font-family: 'Lora', serif;"><strong>@{{ tag.name }}</strong></a>
+                                                                <a href="#" class="pa-1 ma-1" style="font-family: 'Lora', serif;"><strong>#@{{ types[e.event_type_id].text }}</strong></a>
+                                                                <a href="#" class="pa-1 ma-1" style="font-family: 'Lora', serif;"><strong>#@{{ categories[e.category_id].text }}</strong></a>
                                                             </v-flex>
                                                             <v-flex d-flex class="text-xs-right" style="border-top-style:solid; border-top-width:1px"  xs6>
                                                                 <v-tooltip bottom>
@@ -131,7 +129,7 @@
                                     </v-flex>
                                     <v-flex>
                                         <div class="text-xs-center">
-                                            <v-pagination :length="4" v-model="page" circle></v-pagination>
+                                            <v-pagination :length="pages" v-model="page" :total-visible="7" circle></v-pagination>
                                         </div>
                                     </v-flex>
                                 </v-layout>
@@ -152,6 +150,7 @@
         var allType = <?php echo json_encode($event_type); ?>;
         var allCategory = <?php echo json_encode($category); ?>;
         var allEvent = <?php echo json_encode($pagi); ?>;
+        console.log(event);
         function initMap() {
             var uluru = {lat: 43.6532, lng: -79.3832};
             var map = new google.maps.Map(document.getElementById('map'), {
@@ -167,6 +166,8 @@
         new Vue({
             el: '#app',
             data: {
+
+                event: allEvent,
                 message:'hii',
                 shareLink:'',
                 share: false,
@@ -182,46 +183,8 @@
                     {
                         text: 'Register',
                         url: '/register'
-                    }],
-                events: [
-                    {
-                        url: '/event/1',
-                        src: '/assets/img/dummyEvent.jpg',
-                        date: 'November 11, 2017',
-                        title: 'Indie Game Hackathon',
-                        locationName: 'George Brown College (Casa Loma Campus)',
-                        participant: 50,
-                        capacity: 1000,
-                        price: 'Free',
-                        tags: [
-                            {
-                                name: '#private',
-                                link: '/home'
-                            },
-                            {
-                                name: "#conference",
-                                link: '/home'
-                            }]
-                    },
-                    {
-                        url: '/event/3',
-                        src: '/assets/img/dummyEvent.jpg',
-                        date: 'November 11, 2017',
-                        title: 'Indie Game Hackathon',
-                        locationName: 'George Brown College (Casa Loma Campus)',
-                        participant: 1000,
-                        capacity: 1000,
-                        price: 'Free',
-                        tags: [
-                            {
-                                name: '#private',
-                                link: '/home'
-                            },
-                            {
-                                name: "#conference",
-                                link: '/home'
-                            }]
                     }]
+
             },
             methods: {
                 submit: function (e){
@@ -230,10 +193,10 @@
                     })
                 },
                 calcPercentage: function(e){
-                    return (e.participant/e.capacity)*100
+                    return (e.registered_amount/e.capacity)*100
                 },
                 getShareLink: function(index){
-                    this.shareLink = "https://php-project-willieduke.c9users.io" + this.events[index].url
+                    this.shareLink = "https://php-project-willieduke.c9users.io/event/" + this.event[this.page-1][index].id
                     this.share = true
                 },
                 getColor: function(event){
@@ -244,7 +207,16 @@
                     }else {
                         return "red"
                     }
+                },
+                link: function(event) {
+                    return '/event/'+ event.id
                 }
+            },
+            computed:{
+                pages: function() {
+                    return this.event.length
+                }
+
             }
         })
     </script>
