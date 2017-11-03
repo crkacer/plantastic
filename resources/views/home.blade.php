@@ -17,6 +17,9 @@
         #footer{
             margin-top:400px;
         }
+        #app{
+            background-color:#ededed;
+        }
     </style>
 @stop
 
@@ -27,30 +30,33 @@
                 <v-container fluid class="transparent" id="container">
                     <v-layout row>
                         <v-flex sm3 class="mr-5">
-                            <v-layout column>
+                            <v-layout column wrap>
                                 <v-flex>
                                     <v-card class="transparent" tile flat >
                                         <v-card-text id="map"></v-card-text>
                                     </v-card>
                                 </v-flex>
-                                <v-expansion-panel style="height:4vh; box-shadow:none;" focusable >
-                                    <v-expansion-panel-content>
-                                        <div slot="header" style="font-family: 'Belleza', sans-serif; font-size:1.25em;">Category</div>
-                                        <v-card>
-                                            <v-card-text v-for="(category,i) in categories" :key="i" style="font-family: 'Belleza', sans-serif; font-size:1.25em;">
-                                                <a :href=category.url>@{{ category.text }}</a>
-                                            </v-card-text>
-                                        </v-card>
-                                    </v-expansion-panel-content>
-                                    <v-expansion-panel-content>
-                                        <div slot="header" style="font-family: 'Belleza', sans-serif; font-size:1.25em;">Types</div>
-                                        <v-card>
-                                            <v-card-text v-for="(type,k) in types" :key="k" style="font-family: 'Belleza', sans-serif; font-size:1.25em;">
-                                                <a :href=type.url>@{{ type.text }}</a>
-                                            </v-card-text>
-                                        </v-card>
-                                    </v-expansion-panel-content>
-                                </v-expansion-panel>
+                                <v-flex>
+                                    <v-expansion-panel style="height:4vh; box-shadow:none;">
+                                        <v-expansion-panel-content>
+                                            <div slot="header" style="font-family: 'Belleza', sans-serif; font-size:1.25em;">Category</div>
+                                            <v-card>
+                                                <v-card-text v-for="(category,i) in categories" :key="i" style="font-family: 'Belleza', sans-serif; font-size:1.25em;">
+                                                    <a :href=category.url>@{{ category.text }}</a>
+                                                </v-card-text>
+                                            </v-card>
+                                        </v-expansion-panel-content>
+                                        <v-expansion-panel-content>
+                                            <div slot="header" style="font-family: 'Belleza', sans-serif; font-size:1.25em;">Types</div>
+                                            <v-card>
+                                                <v-card-text v-for="(type,k) in types" :key="k" style="font-family: 'Belleza', sans-serif; font-size:1.25em;">
+                                                    <a :href=type.url>@{{ type.text }}</a>
+                                                </v-card-text>
+                                            </v-card>
+                                        </v-expansion-panel-content>
+                                    </v-expansion-panel>
+                                </v-flex>
+                            </v-layout>
                         </v-flex>
                         <v-flex sm12 class="ml-5">
                             <section>
@@ -61,8 +67,8 @@
                                             <v-card-text id="description"><span style="color:red;font-size:2.5em; font-weight:bold; font-family: Kaushan Script', cursive;">Plantastic</span><span style="font-size:1.5em; font-family: 'Lora', serif;">&nbsp; acts as a brand new, efficient and interactive event creation tool for George Brown College Faculty and Students. Our main goal is to <b>facilitate the event creation and management process</b> while creating and maintaining a high quality internal social network.</span></v-card-text>
                                         </v-card>
                                     </v-flex>
-                                    <v-flex xs12 v-for="(event,i) in events" :key="i">
-                                        <v-card raised>
+                                    <v-flex v-for="(event,i) in events" :key="i">
+                                        <v-card raised class="mb-4">
                                             <v-container class="white ma-0 pa-0" fluid>
                                                 <v-layout column>
                                                     <v-flex xs12>
@@ -145,7 +151,7 @@
     <script>
         var allType = <?php echo json_encode($event_type); ?>;
         var allCategory = <?php echo json_encode($category); ?>;
-
+        var allEvent = <?php echo json_encode($pagi); ?>;
         function initMap() {
             var uluru = {lat: 43.6532, lng: -79.3832};
             var map = new google.maps.Map(document.getElementById('map'), {

@@ -11,13 +11,13 @@
 |
 */
 
+// Guest routes
 Route::get('/', 'HomeController@index');
 
-
-Route::get('login', 'LoginController@index');
+Route::get('login/{error?}', 'LoginController@index');
 
 Route::get('event/{id?}', 'EventController@getIndex');
-Route::get('event/dashboard/{id?}', 'EventController@getDashboard');
+
 Route::get('view-event/{id?}', 'EventController@getIndexEvent');
 
 
@@ -25,7 +25,19 @@ Route::get('register', 'LoginController@getRegister');
 
 Route::get('home', 'HomeController@index');
 
-Route::get('user/manage-event', 'UserController@manageEvent');
+
+
+
+// User routes
+
+
+Route::group(['middleware' => ['web', 'auth.user']], function () {
+
+    Route::get('user/manage-event', ['as' => 'get-event-manage', 'uses' => 'UserController@manageEvent']);
+    Route::get('event/dashboard/{id?}', ['as' => 'get-event-dashboard', 'uses' => 'EventController@getDashboard']);
+
+});
+
+// Dummy routes
 
 Route::get('generate', "HomeController@generateData");
-
