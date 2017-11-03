@@ -8,6 +8,7 @@ use App\Event;
 use App\EventType;
 use App\Category;
 use App\User;
+use Image;
 
 class HomeController extends Controller
 {
@@ -69,6 +70,7 @@ class HomeController extends Controller
                 'price' => $all_events[$i]['price']
             ]);
         }
+
         return view('home', [
             'event' => $all_events,
             'pagi' => $pag,

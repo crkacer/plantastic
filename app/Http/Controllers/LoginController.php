@@ -6,6 +6,8 @@ use Request;
 
 use App\Http\Requests;
 use View;
+use Symfony\Component\Console\Input;
+use Illuminate\Validation;
 
 class LoginController extends Controller
 {
@@ -70,5 +72,32 @@ class LoginController extends Controller
         }
 
     	return View::make('register');
+    }
+
+    public function postRegister(Request $request) {
+
+        $data = $request->all();
+        $email = $data['email'];
+        // validator
+
+        $user = new User();
+        $user->profile_image = "/assets/image/default.jpg";
+        if (Input::file('photo')) {
+            Image::make(Input::file('photo'))->resize(300, 200)->save('image.jpg');
+            $currentTime = date('YmdGis');
+            $user->profile_image = "/assets/image/" . $data['email'] . "/" . $currentTime;
+        }
+
+        $user->name = $data['fname'] + $data['lname'];
+        $user->firstname = $data['fname'];
+        $user->lastname = $data['lname'];
+        $user->DOB = $data['dob'];
+        $user->social_network = $data['social_network'];
+        $user->gender = $data['gender'];
+        $user->password = Hash::make($data['password']);
+
+        $user->save();
+
+        return redirect('/login');
     }
 }
