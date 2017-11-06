@@ -8,129 +8,155 @@
         #title{
             color:red;
         }
-        #background{
-            background-color:white;
+        #app{
+            background-color:#f9fbff;
         }
         input[type=file] {
             position: absolute;
             left: -99999px;
         }
-
+        .fade-enter-active, .fade-leave-active {
+            transition: opacity .5s
+        }
+        .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+            opacity: 0
+        }
     </style>
 @stop
 
 @section('body')
     <v-container class="mt-5">
-        <v-layout align-center justify-center column>
+        <v-layout align-center  column wrap>
             <v-flex xs12 class="text-xs-center">
                 <h4 style="font-family: 'Merriweather', serif;" >Welcome</h4>
                 <p style="font-family: 'Alegreya', serif; font-size:1.5em;">Create an account.</p>
             </v-flex>
             <v-flex xs12>
-                <v-alert color="error" icon="warning" v-model="getError">
-                    Email has been taken.
-                </v-alert>
-                <v-form v-model="valid" ref="form" action="{{ url('/login') }}" method="post">
-                    {{ csrf_field() }}
-                    <v-text-field
-                            label="Email"
-                            v-model="email"
-                            :rules="emailRules"
-                            name="email"
-                            required
-                    ></v-text-field>
-                    <v-text-field
-                            label="Password"
-                            v-model="password"
-                            name="password"
-                            :rules="passwordRules"
-                            :counter="8"
-                            :append-icon="e1 ? 'visibility' : 'visibility_off'"
-                            :append-icon-cb="() => (e1 = !e1)"
-                            :type="e1 ? 'password' : 'text'"
-                            required
-                    ></v-text-field>
+                <transition name="fade" appear>
+                    <v-alert color="error" icon="warning" v-model="isError">
+                        Email has been taken.
+                    </v-alert>
+                </transition>
+                <v-stepper v-model="s">
+                    <v-stepper-header>
+                        <v-stepper-step step="1" :complete="s > 1">Setting Up</v-stepper-step>
+                        <v-divider></v-divider>
+                        <v-stepper-step step="2" :complete="s > 2">Addtional Info</v-stepper-step>
+                        <v-divider></v-divider>
+                        <v-stepper-step step="3">Complete</v-stepper-step>
+                    </v-stepper-header>
+                    <v-stepper-content step="1">
+                        <v-form v-model="valid" ref="form" action="{{ url('/login') }}" method="post">
+                            {{ csrf_field() }}
+                            <v-text-field
+                                    label="Email"
+                                    v-model="email"
+                                    :rules="emailRules"
+                                    name="email"
+                                    required
+                            ></v-text-field>
+                            <v-text-field
+                                    label="Password"
+                                    v-model="password"
+                                    name="password"
+                                    :rules="passwordRules"
+                                    :counter="8"
+                                    :append-icon="e1 ? 'visibility' : 'visibility_off'"
+                                    :append-icon-cb="() => (e1 = !e1)"
+                                    :type="e1 ? 'password' : 'text'"
+                                    required
+                            ></v-text-field>
+                            <v-btn round @click="FormSubmit" :class="{ green: valid, red: !valid }">Continue</v-btn>
+                            <v-btn round @click="clear">Clear</v-btn>
+                    </v-stepper-content>
+                    <v-stepper-content step="2">
+                        <v-form v-model="valid1" ref="form1" action="{{ url('/login') }}" method="post">
+                            {{ csrf_field() }}
+                            <v-text-field
+                                    label="First Name"
+                                    v-model="firstName"
+                                    :rules="firstNameRules"
+                                    name="firstName"
+                                    required
+                            ></v-text-field>
+                            <v-text-field
+                                    label="Last Name"
+                                    v-model="lastName"
+                                    :rules="lastNameRules"
+                                    name="lastName"
+                                    required
+                            ></v-text-field>
+                            <v-menu
+                                    lazy
+                                    :close-on-content-click="false"
+                                    v-model="menu"
+                                    transition="scale-transition"
+                                    offset-x
+                                    full-width
+                                    :nudge-right="40"
+                                    max-width="290px"
+                                    min-width="290px"
+                                    allow-overflow
 
-                    <v-text-field
-                            label="First Name"
-                            v-model="firstName"
-                            :rules="firstNameRules"
-                            name="firstName"
-                            required
-                    ></v-text-field>
-                    <v-text-field
-                            label="Last Name"
-                            v-model="lastName"
-                            :rules="lastNameRules"
-                            name="lastName"
-                            required
-                    ></v-text-field>
-                    <v-menu
-                            lazy
-                            :close-on-content-click="false"
-                            v-model="menu"
-                            transition="scale-transition"
-                            offset-x
-                            full-width
-                            :nudge-right="40"
-                            max-width="290px"
-                            min-width="290px"
-                            allow-overflow
-
-                    >
-                        <v-text-field
-                                slot="activator"
-                                label="Date of Birth"
-                                v-model="dateofbirth"
-                                :rules="dobRules"
-                                name="dateofbirth"
-                                append-icon="event"
-                                readonly
-                                required
-                        ></v-text-field>
-                        <v-date-picker v-model="dateofbirth" no-title scrollable actions>
-                            <template slot-scope="{ save, cancel }">
-                                <v-card-actions>
-                                    <v-spacer></v-spacer>
-                                    <v-btn flat color="primary" @click.native="cancel">Cancel</v-btn>
-                                    <v-btn flat color="primary" @click.native="save">OK</v-btn>
-                                </v-card-actions>
-                            </template>
-                        </v-date-picker>
-                    </v-menu>
-                    <label style="font-size:1.25em;">Select Your Gender: </label>
-                    <v-radio-group row v-model="gender" :rules="[(v) => !!v || 'You must select one to continue!']">
-                        <v-radio label="Male" value="male"></v-radio>
-                        <v-radio label="Female" value="female"></v-radio>
-                    </v-radio-group>
-                    <v-text-field
-                            append-icon="attach_file"
-                            :append-icon-cb="onFocus"
-                            single-line
-                            v-model="filename"
-                            label="Choose your profile image"
-                            :rules="[(v) => !!v || 'You must have a profile image']"
-                            required
-                            :disabled = "disabled"
-                            ref="fileTextField"
-                            readonly
-                    ></v-text-field>
-                    <input type="file" :accept="accept" :disabled="disabled"
-                           ref="fileInput" @change="changeFile" name='profile'>
-                    <div class="text-xs-center"><img id='image' style="max-width:100px; max-height:100px;"/></div>
-                    <br/>
-                    <br/>
-                    <v-checkbox
-                            label="I agree Terms and Conditions!."
-                            v-model="checkbox"
-                            :rules="[(v) => !!v || 'You must agree to continue!']"
-                            required
-                    ></v-checkbox>
-
-                    <v-btn round @click="FormSubmit" :class="{ green: valid, red: !valid }">Register</v-btn>
-                    <v-btn round @click="clear">clear</v-btn>
-                    <a class="btn btn-link transparent" href="{{ url('/password/reset') }}">Forgot Your Password?</a>
-                </v-form>
+                            >
+                                <v-text-field
+                                        slot="activator"
+                                        label="Date of Birth"
+                                        v-model="dateofbirth"
+                                        :rules="dobRules"
+                                        name="dateofbirth"
+                                        append-icon="event"
+                                        readonly
+                                        required
+                                ></v-text-field>
+                                <v-date-picker v-model="dateofbirth" no-title scrollable actions>
+                                    <template slot-scope="{ save, cancel }">
+                                        <v-card-actions>
+                                            <v-spacer></v-spacer>
+                                            <v-btn flat color="primary" @click.native="cancel">Cancel</v-btn>
+                                            <v-btn flat color="primary" @click.native="save">OK</v-btn>
+                                        </v-card-actions>
+                                    </template>
+                                </v-date-picker>
+                            </v-menu>
+                            <label style="font-size:1.25em;">Select Your Gender: </label>
+                            <v-radio-group row v-model="gender" :rules="[(v) => !!v || 'You must select one to continue!']">
+                                <v-radio label="Male" value="male"></v-radio>
+                                <v-radio label="Female" value="female"></v-radio>
+                            </v-radio-group>
+                            <v-text-field
+                                    append-icon="attach_file"
+                                    :append-icon-cb="onFocus"
+                                    single-line
+                                    v-model="filename"
+                                    label="Choose your profile image"
+                                    :rules="[(v) => !!v || 'Profile image is required']"
+                                    required
+                                    :disabled = "disabled"
+                                    ref="fileTextField"
+                                    readonly
+                            ></v-text-field>
+                            <input type="file" :accept="accept" :disabled="disabled"
+                                   ref="fileInput" @change="changeFile" name='profile'>
+                            <div class="text-xs-center"><img id='image' style="max-width:100px; max-height:100px;"/></div>
+                            <br/>
+                            <br/>
+                            <v-checkbox
+                                    label="I agree Terms and Conditions!."
+                                    v-model="checkbox"
+                                    :rules="[(v) => !!v || 'You must agree to continue!']"
+                                    required
+                            ></v-checkbox>
+                            <v-btn round @click="FormSubmit2" :class="{ green: valid1, red: !valid1 }">Register</v-btn>
+                            <v-btn round @click="clear">Clear</v-btn>
+                            <v-btn round @click="GoBack">Go Back</v-btn>
+                        </v-form>
+                    </v-stepper-content>
+                    <v-stepper-content step="3">
+                        <v-card-text class="headline">Congratulation! You're ready</v-card-text>
+                        <v-btn color="primary" @click.native="s = 1">Awesome</v-btn>
+                    </v-stepper-content>
+                </v-stepper>
             </v-flex>
         </v-layout>
     </v-container>
@@ -156,6 +182,7 @@
             data: {
                 isError: true,
                 filename:'',
+                s:0,
                 gender: 'male',
                 e1:true,
                 preview: '',
@@ -172,17 +199,8 @@
             dobRules: [
             (v) => !!v || 'Date of birth is required',
         ],
-        search:'',
-            buttons: [
-            {
-                text: 'Home',
-                url: '/home'
-            },
-            {
-                text: 'Register',
-                url: '/register'
-            }],
-            valid: false,
+        valid: false,
+            valid1: false,
             password: '',
             passwordRules: [
             (v) => !!v || 'Password is required',
@@ -206,17 +224,22 @@
         methods: {
             FormSubmit () {
                 if (this.$refs.form.validate()) {
-                    this.$refs.form.$el.submit()
+                    this.s=2
+                    //this.$refs.form.$el.submit()
                 }
+
+            },
+            FormSubmit2 () {
+                if(this.$refs.form1.validate()){
+                    this.s=3
+                }
+            },
+            GoBack: function() {
+                this.s--
             },
             clear () {
                 this.valid=false
                 this.$refs.form.reset()
-            },
-            submit: function (e){
-                axios.post('/api/submit',{
-                    search:this.search
-                })
             },
             firstNameValidation: function(){
                 if(this.firstNameRules.length >= 2){
@@ -295,12 +318,12 @@
             }
         },
         computed:{
-            getError: function(){
-                setTimeout(()=>{this.isError=false},4000)
-                return this.isError
-            }
+
         },
         watch: {
+            email: function(){
+                setTimeout(()=>{this.isError=false},1500)
+            },
             firstName: function (e){
                 if(e == null){
                     return

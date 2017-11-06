@@ -8,6 +8,10 @@ use App\Http\Requests;
 use View;
 use Symfony\Component\Console\Input;
 use Illuminate\Validation;
+use Auth;
+use Cookie;
+use Session;
+
 
 class LoginController extends Controller
 {
@@ -16,8 +20,7 @@ class LoginController extends Controller
         if (Request::input('email') && Request::input('password')) {
             $userData = [
                 'email' => Request::input('email'),
-                'password' => Request::input('password'),
-                'type' => 'client'
+                'password' => Request::input('password')
             ];
 
             if (Auth::attempt($userData, true)) {
@@ -34,6 +37,7 @@ class LoginController extends Controller
         }
 
         return view('login', [
+            'user_login' => Auth::user()
         ]);
 
         return null;
@@ -71,7 +75,9 @@ class LoginController extends Controller
             }
         }
 
-    	return View::make('register');
+    	return View::make('register', [
+            'user_login' => Auth::user()
+        ]);
     }
 
     public function postRegister(Request $request) {
@@ -100,4 +106,34 @@ class LoginController extends Controller
 
         return redirect('/login');
     }
+
+    public function checkEmail(Request $request) {
+
+        $data = $request->all();
+        $email = $data['email'];
+        $user = User::where('email', $email)->first();
+        if ($user === null) {
+            return true;
+        }
+        return false;
+
+    }
+
+
+    public function resetPassword() {
+
+        $error = null;
+
+        return view('reset', [
+
+            'error' => $error
+        ]);
+    }
+
+    public function logout() {
+        Auth::logout();
+        Session::flush();
+        return redirect("/login");
+    }
+
 }

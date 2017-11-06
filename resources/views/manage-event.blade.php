@@ -9,7 +9,7 @@
             color:red;
         }
         #app{
-            background-color:#ffffff;
+            background-color:#f9fbff;
         }
     </style>
 @stop
@@ -38,7 +38,7 @@
                                     <v-text-field append-icon="search" label="Enter any keyword to filter" single-line hide-details v-model="filter"></v-text-field>
                                 </v-card-title>
                             </v-card>
-                            <v-data-table v-bind:headers="headers" v-bind:items="items" v-bind:search="filter" v-bind:pagination.sync="pagination" hide-actions class="elevation-1">
+                            <v-data-table v-bind:headers="headers" v-bind:items="items" v-bind:search="filter" v-bind:pagination.sync="pagination" hide-actions class="elevation-1"  >
                                 <template slot="items" slot-scope="props">
                                     <td>@{{ props.item.name }}</td>
                                     <td class="text-xs-right">@{{ props.item.attend }}</td>
@@ -98,16 +98,6 @@
                 filter:'',
                 attendedPagination:{attendRowsPerPage: 5, attendPage:1},
                 pagination: {rowsPerPage:5, page:1},
-                search:'',
-                buttons: [
-                    {
-                        text: 'Home',
-                        url: '/home'
-                    },
-                    {
-                        text: 'Register',
-                        url: '/register'
-                    }],
                 active:null,
                 tabs: ['Created','Attended'],
                 headers: [
@@ -268,11 +258,6 @@
                     }]
             },
             methods: {
-                submit: function (e){
-                    axios.post('/api/submit',{
-                        search:this.search
-                    })
-                },
                 convertToDateObject : function (dateString){
                     return (
                         dateString.constructor === Date ? dateString :

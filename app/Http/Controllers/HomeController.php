@@ -9,6 +9,8 @@ use App\EventType;
 use App\Category;
 use App\User;
 use Image;
+use Auth;
+
 
 class HomeController extends Controller
 {
@@ -29,6 +31,7 @@ class HomeController extends Controller
      */
     public function index()
     {
+//        dump(Auth::user());
         $all_events = Event::all();
         $all_events_types = EventType::all();
         $all_categories = Category::all();
@@ -75,7 +78,8 @@ class HomeController extends Controller
             'event' => $all_events,
             'pagi' => $pag,
             'event_type' => $types,
-            'category' => $categories
+            'category' => $categories,
+            'user_login' => Auth::user()
         ]);
     }
 
