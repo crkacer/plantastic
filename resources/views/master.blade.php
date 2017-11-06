@@ -35,9 +35,10 @@
             <v-text-field style="width:150%;" append-icon="search" v-bind:append-icon-cb="submit" v-model="search" hide-details single-line placeholder="Enter any search events" required></v-text-field>
         </form>
         <v-spacer></v-spacer>
-        <v-toolbar-items class="hidden-sm-and-down" v-for="button in buttons" :key="button.text">
-            <v-btn flat :href=button.url class="button">@{{ button.text }}</v-btn>
+        <v-toolbar-items class="hidden-sm-and-down">
+            <v-btn flat href="/home" class="button">Home</v-btn>
         </v-toolbar-items>
+
         <v-toolbar-items>
             <v-menu open-on-hover offset-y>
                 <v-btn flat slot="activator" v-if="user_login">@{{ user_login.firstname }}</v-btn>
@@ -48,6 +49,12 @@
                 </v-list>
             </v-menu>
         </v-toolbar-items>
+
+        <v-toolbar-items class="hidden-sm-and-down" v-if="!user_login">
+            <v-btn flat href="/register" class="button">Register</v-btn>
+        </v-toolbar-items>
+
+
 
         <v-toolbar-items class="hidden-sm-and-down">
             <v-btn flat href="/login">Create Event</v-btn>
@@ -67,7 +74,7 @@
 <script>
     //axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     var user_login = <?php echo json_encode($user_login); ?>;
-
+    console.log(user_login);
     new Vue({
         el: '#navbar',
         data: {

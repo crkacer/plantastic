@@ -185,16 +185,6 @@
             data: {
                 share:false,
                 shareLink:'',
-                search:'',
-                buttons: [
-                    {
-                        text: 'Home',
-                        url: '/home'
-                    },
-                    {
-                        text: 'Register',
-                        url: '/register'
-                    }],
                 suggestions: [
                     [
                         {
@@ -305,11 +295,6 @@
                     ]]
             },
             methods: {
-                submit: function() {
-                    axios.post('/api/submit',{
-                        search:this.search
-                    })
-                },
                 getShareLink: function(row,column){
                     this.shareLink = "https://php-project-willieduke.c9users.io" + this.suggestions[row][column].url
                     this.share = true

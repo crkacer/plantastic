@@ -14,27 +14,34 @@
 // Guest routes
 Route::get('/', 'HomeController@index');
 
-Route::get('login/{error?}', 'LoginController@index');
+Route::any('login/{error?}', 'LoginController@index');
+Route::get('logout', 'LoginController@logout');
 
 Route::get('event/{id?}', 'EventController@getIndex');
 
 Route::get('view-event/{id?}', 'EventController@getIndexEvent');
 
+Route::get('event/dashboard/{id?}', 'EventController@getDashboard');
 
 Route::get('register', 'LoginController@getRegister');
 
 Route::get('home', 'HomeController@index');
 
+Route::any('/password/reset', 'LoginController@resetPassword');
 
+Route::post('search', 'SearchController@index');
+Route::post('check-email', 'LoginController@checkEmail');
 
-
+// {'email': "gab@gmail.com"} => true, false
 // User routes
 
 
 Route::group(['middleware' => ['web', 'auth.user']], function () {
 
     Route::get('user/manage-event', ['as' => 'get-event-manage', 'uses' => 'UserController@manageEvent']);
+    Route::get('user/profile', ['as' => 'get-user-profile', 'uses' => 'UserController@userProfile']);
     Route::get('event/dashboard/{id?}', ['as' => 'get-event-dashboard', 'uses' => 'EventController@getDashboard']);
+    Route::any('event/create', ['as' => 'get-create-event', 'uses' => 'EventController@createEvent']);
 
 });
 

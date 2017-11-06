@@ -15,7 +15,7 @@
             padding-left:30px;
         }
         #app{
-            background-color:#ededed;
+            background-color:#f9fbff;
         }
     </style>
 @stop
@@ -23,19 +23,19 @@
 @section('body')
     <main>
         <v-content>
-            <section>
+            <section >
                 <v-container fluid class="transparent" id="container">
                     <v-layout row>
                         <v-flex sm3 class="mr-5">
                             <v-layout column wrap>
                                 <v-flex>
-                                    <v-card class="transparent" tile flat >
+                                    <v-card class="transparent elevation-1" tile flat >
                                         <v-card-text id="map"></v-card-text>
                                     </v-card>
                                 </v-flex>
                                 <v-flex>
                                     <v-expansion-panel style="height:4vh; box-shadow:none;">
-                                        <v-expansion-panel-content>
+                                        <v-expansion-panel-content class="elevation-1">
                                             <div slot="header" style="font-family: 'Belleza', sans-serif; font-size:1.25em;">Category</div>
                                             <v-card>
                                                 <v-card-text v-for="(category,i) in categories" :key="i" style="font-family: 'Belleza', sans-serif; font-size:1.25em;">
@@ -43,7 +43,7 @@
                                                 </v-card-text>
                                             </v-card>
                                         </v-expansion-panel-content>
-                                        <v-expansion-panel-content>
+                                        <v-expansion-panel-content class="elevation-1">
                                             <div slot="header" style="font-family: 'Belleza', sans-serif; font-size:1.25em;">Types</div>
                                             <v-card>
                                                 <v-card-text v-for="(type,k) in types" :key="k" style="font-family: 'Belleza', sans-serif; font-size:1.25em;">
@@ -140,8 +140,6 @@
             </section>
         </v-content>
     </main>
-
-
 @stop
 
 @section('script')
@@ -166,32 +164,14 @@
         new Vue({
             el: '#app',
             data: {
-
                 event: allEvent,
-                message:'hii',
                 shareLink:'',
                 share: false,
                 page: 1,
-                search:'',
                 categories: allCategory,
-                types: allType,
-                buttons: [
-                    {
-                        text: 'Home',
-                        url: '/home'
-                    },
-                    {
-                        text: 'Register',
-                        url: '/register'
-                    }]
-
+                types: allType
             },
             methods: {
-                submit: function (e){
-                    axios.post('/api/submit',{
-                        search:this.search
-                    })
-                },
                 calcPercentage: function(e){
                     return (e.registered_amount/e.capacity)*100
                 },
