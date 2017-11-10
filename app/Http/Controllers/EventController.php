@@ -82,8 +82,11 @@ class EventController extends Controller
 
     public function getDashboard($id) {
 
+        $event = Event::where('id', $id)->first();
+
         return view('event.dashboard', [
-            'user_login' => Auth::user()
+            'user_login' => Auth::user(),
+            'event' => $event
         ]);
     }
 
