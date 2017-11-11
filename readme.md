@@ -6,7 +6,6 @@
   <a href="https://packagist.org/packages/laravel/framework"><img src="https://laravel.com/assets/img/components/logo-laravel.svg" alt="Laravel" height="100"></a>
 </p>  
 <p align="center">
-  [![VueJS 2]]()
   <a href="https://vuejs.org/">
     <img src="https://img.shields.io/badge/vuejs-2.5.x-green.svg" alt="VueJS">
   </a> 
@@ -16,5 +15,4 @@
   <a href="https://packagist.org/packages/laravel/framework">
     <img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="">
   </a>  
-  
 </p>
