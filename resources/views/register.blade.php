@@ -46,13 +46,14 @@
                         <v-stepper-step step="3">Complete</v-stepper-step>
                     </v-stepper-header>
                     <v-stepper-content step="1">
-                        <v-form v-model="valid" ref="form" action="{{ url('/login') }}" method="post">
+                        <v-form v-model="valid" ref="form" action="{{ url('/login') }}" method="post" enctype="multipart/form-data">
                             {{ csrf_field() }}
                             <v-text-field
                                     label="Email"
                                     v-model="email"
                                     :rules="emailRules"
                                     name="email"
+                                    @focus ="isError = false"
                                     required
                             ></v-text-field>
                             <v-text-field
@@ -66,11 +67,11 @@
                                     :type="e1 ? 'password' : 'text'"
                                     required
                             ></v-text-field>
-                            <v-btn round @click="FormSubmit" :class="{ green: valid, red: !valid }">Continue</v-btn>
+                            <v-btn round @click="sendEmail" :class="{ green: valid, red: !valid }">Continue</v-btn>
                             <v-btn round @click="clear">Clear</v-btn>
                     </v-stepper-content>
                     <v-stepper-content step="2">
-                        <v-form v-model="valid1" ref="form1" action="{{ url('/login') }}" method="post">
+                        <v-form v-model="valid1" ref="form1" action="{{ url('/login') }}" method="post" enctype="multipart/form-data">
                             {{ csrf_field() }}
                             <v-text-field
                                     label="First Name"
@@ -109,7 +110,7 @@
                                         readonly
                                         required
                                 ></v-text-field>
-                                <v-date-picker v-model="dateofbirth" no-title scrollable actions>
+                                <v-date-picker v-model="dateofbirth" no-title scrollable actions :allowed-dates="allowedDates">
                                     <template slot-scope="{ save, cancel }">
                                         <v-card-actions>
                                             <v-spacer></v-spacer>
@@ -124,21 +125,6 @@
                                 <v-radio label="Male" value="male"></v-radio>
                                 <v-radio label="Female" value="female"></v-radio>
                             </v-radio-group>
-                            <v-text-field
-                                    append-icon="attach_file"
-                                    :append-icon-cb="onFocus"
-                                    single-line
-                                    v-model="filename"
-                                    label="Choose your profile image"
-                                    :rules="[(v) => !!v || 'Profile image is required']"
-                                    required
-                                    :disabled = "disabled"
-                                    ref="fileTextField"
-                                    readonly
-                            ></v-text-field>
-                            <input type="file" :accept="accept" :disabled="disabled"
-                                   ref="fileInput" @change="changeFile" name='profile'>
-                            <div class="text-xs-center"><img id='image' style="max-width:100px; max-height:100px;"/></div>
                             <br/>
                             <br/>
                             <v-checkbox
@@ -147,14 +133,14 @@
                                     :rules="[(v) => !!v || 'You must agree to continue!']"
                                     required
                             ></v-checkbox>
-                            <v-btn round @click="FormSubmit2" :class="{ green: valid1, red: !valid1 }">Register</v-btn>
+                            <v-btn round @click="sendForm" :class="{ green: valid1, red: !valid1 }">Register</v-btn>
                             <v-btn round @click="clear">Clear</v-btn>
                             <v-btn round @click="GoBack">Go Back</v-btn>
                         </v-form>
                     </v-stepper-content>
                     <v-stepper-content step="3">
                         <v-card-text class="headline">Congratulation! You're ready</v-card-text>
-                        <v-btn color="primary" @click.native="s = 1">Awesome</v-btn>
+                        <v-btn color="primary" href="/login">Awesome</v-btn>
                     </v-stepper-content>
                 </v-stepper>
             </v-flex>
@@ -164,7 +150,8 @@
 
 @section('script')
     <script>
-        new Vue({
+        var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        var vm = new Vue({
             el: '#app',
             props: {
                 accept: {
@@ -180,12 +167,11 @@
                 }
             },
             data: {
-                isError: true,
-                filename:'',
+                token: token,
+                isError: false,
                 s:0,
                 gender: 'male',
                 e1:true,
-                preview: '',
                 menu:false,
                 firstName:'',
                 firstNameRules: [
@@ -222,24 +208,35 @@
             invalidCharacter: ['+','-','*','/','*','1','2','3','4','5','6','7','8','9','0']
         },
         methods: {
-            FormSubmit () {
-                if (this.$refs.form.validate()) {
-                    this.s=2
-                    //this.$refs.form.$el.submit()
-                }
-
-            },
-            FormSubmit2 () {
-                if(this.$refs.form1.validate()){
-                    this.s=3
-                }
-            },
             GoBack: function() {
                 this.s--
             },
             clear () {
                 this.valid=false
                 this.$refs.form.reset()
+            },
+            allowedDates: function(date){
+                const day = new Date()
+                const d = new Date()
+                d.setFullYear(day.getFullYear() - 17)
+                return this.compare(d,date) == 1 ? date : null 
+            },
+            convertToDateObject : function (dateString){
+                    return (
+                        dateString.constructor === Date ? dateString :
+                            dateString.constructor === Number ? new Date(dateString) :
+                                dateString.constructor === String ? new Date(dateString) :
+                                    typeof dateString === "object" ? new Date(dateString.year, dateString.month, dateString.date) :
+                                        NaN
+                    )
+            },
+            compare: function(a,b){
+                return (
+                    isFinite(a=this.convertToDateObject(a).valueOf()) &&
+                    isFinite(b=this.convertToDateObject(b).valueOf()) ?
+                        (a>b)-(a<b):
+                        NaN
+                )
             },
             firstNameValidation: function(){
                 if(this.firstNameRules.length >= 2){
@@ -279,51 +276,54 @@
                     }
                 }
             },
-            getFormData(files){
-                const data = new FormData()
-                for (let file of files) {
-                    data.append('files[]', file, file.name)
+            sendEmail: function(){
+                if (this.$refs.form.validate()) {
+                    axios.post('/check-email', {
+                        email: this.email,
+                        password: this.password
+                      })
+                      .then(function (response) {
+                        
+                        if(response.data == 1){
+                            vm.isError = true;
+                        }else{
+                            vm.s++
+                        }
+                      })
+                      .catch(function (error) {
+                        console.log(error);
+                      });
                 }
-                return data
+                
             },
-            onFocus(){
-                if (!this.disabled) {
-                    debugger
-                    this.$refs.fileInput.click()
+            sendForm: function(){
+                var form = new FormData()
+                form.append("email",vm.email);
+                form.append("password",vm.password);
+                form.append("firstname",vm.firstName);
+                form.append("lastname",vm.lastName);
+                form.append("dob",vm.dateofbirth);
+                form.append("gender",vm.gender);
+                const config = { headers: { 'Content-Type': 'multipart/form-data' } };
+                if (this.$refs.form.validate()) {
+                    axios.post('/register', form,config)
+                      .then(function (response) {
+                        console.log(response.data)
+                        if(response.data == 0){
+                            vm.s++
+                        }
+                      })
+                      .catch(function (error) {
+                        console.log(error);
+                      });
+                    //this.$refs.form.$el.submit()
                 }
-            },
-            changeFile($event){
-                const files = $event.target.files || $event.dataTransfer.files
-                const form = this.getFormData(files)
-                var reader = new FileReader()
-                reader.onload = function (e) {
-                    // get loaded data and render thumbnail.
-
-                    document.getElementById("image").src = e.target.result
-                }
-                if (files) {
-                    if (files.length > 0) {
-                        this.filename = [...files].map(file => file.name).join(', ')
-                    } else {
-                        this.filename = null
-                    }
-                } else {
-                    this.filename = $event.target.value.split('\\').pop()
-                }
-                // read the image file as a data URL.
-                reader.readAsDataURL(files[0])
-
-                this.$emit('input', this.filename)
-                this.$emit('formData', form)
             }
         },
         computed:{
 
         },
         watch: {
-            email: function(){
-                setTimeout(()=>{this.isError=false},1500)
-            },
             firstName: function (e){
                 if(e == null){
                     return
@@ -339,14 +339,14 @@
                 else{
                     this.lastNameValidation()
                 }
-            },
-            fileValue: function (fv){
-                this.filename = fv;
-            },
+            }
 
         },
         mounted() {
-            this.filename = this.fileValue;
+            const day = new Date()
+            const d = new Date()
+            d.setFullYear(day.getFullYear() - 17)
+            this.dateofbirth = d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
         }
         })
     </script>
