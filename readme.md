@@ -1,4 +1,4 @@
-# Laravel|VueJS|Vuetify
+# Laravel | VueJS | Vuetify
 
 <p align="center">
   <a href="https://packagist.org/packages/laravel/framework"><img src="http://vuejs.org/images/logo.png" height="100" alt="Vue.JS"></a>
@@ -6,9 +6,15 @@
   <a href="https://packagist.org/packages/laravel/framework"><img src="https://laravel.com/assets/img/components/logo-laravel.svg" alt="Laravel" height="100"></a>
 </p>  
 <p align="center">
-  [![VueJS 2]](https://img.shields.io/badge/vuejs-2.5.x-green.svg)
-  [![Latest Stable Version](https://poser.pugx.org/laravel/framework/v/stable.svg)](https://packagist.org/packages/laravel/framework)
+  [![VueJS 2]]()
+  <a href="https://vuejs.org/">
+    <img src="https://img.shields.io/badge/vuejs-2.5.x-green.svg" alt="VueJS">
+  </a> 
   <a href="https://www.npmjs.com/package/vuetify">
     <img src="https://img.shields.io/npm/v/vuetify.svg" alt="Version">
   </a>
+  <a href="https://packagist.org/packages/laravel/framework">
+    <img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="">
+  </a>  
+  
 </p>
