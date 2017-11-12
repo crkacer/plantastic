@@ -11,7 +11,7 @@ use App\Category;
 use App\Attendance;
 use App\User;
 use Auth;
-
+use DB;
 
 class EventController extends Controller
 {
@@ -191,25 +191,6 @@ class EventController extends Controller
         ]);
     }
 
-    public function getEventCode($id) {
-        // A-Z 65-90 0-9
-
-        $allowedChar = [];
-        $randomStr = "";
-        for ($i = 0; $i<10; $i++) {
-            array_push($allowedChar, $i);
-        }
-        for ($i = 65; $i<91; $i++) {
-            array_push($allowedChar, $i);
-        }
-        for ($i = 1; $i<5; $i++) {
-            $temp = rand(0,count($allowedChar)-1);
-            if ($temp > 64) $randomStr += chr($temp);
-            else $randomStr += $temp;
-        }
-        $randomStr += $id;
-        return $randomStr;
-    }
 
     public function createEvent() {
         
@@ -239,9 +220,24 @@ class EventController extends Controller
  
        
         // generate unique code
-        $code = "000000";
+        $code = "0000000";
+        
         if ($_POST['uniqueCode'] == "Y") {
-            
+            $nextID = DB::table('events')->max('id') + 1;
+            $code = "";
+            $allowedChar = [];
+            for ($i = 0; $i<10; $i++) {
+                array_push($allowedChar, $i);
+            }
+            for ($i = 65; $i<91; $i++) {
+                array_push($allowedChar, $i);
+            }
+            for ($i = 1; $i<5; $i++) {
+                $temp = rand(0,count($allowedChar)-1);
+                if ($allowedChar[$temp] > 64) $code .= chr($allowedChar[$temp]);
+                else $code .= $allowedChar[$temp];
+            }
+            $code .= $nextID;
         }  
         $event = new Event();
         $event->location = $_POST['location'];
@@ -253,17 +249,37 @@ class EventController extends Controller
         $event->description = $_POST['description'];
         $event->user_id = Auth::user()->id;
         $event->organizer_description = $_POST['organizerDescription'];
-        $event->event_type_id = $_POST['type'];
-        $event->category_id = $_POST['category'];
+        $event->event_type_id = intval($_POST['type']);
+        $event->category_id = intval($_POST['category']);
         $event->url = "";
         $event->template = $_POST['layoutID'];
         $event->registered_amount = 0;
-        $event->capacity = $_POST['capacity'];
+        $event->capacity = intval($_POST['capacity']);
         $event->code = $code;
         $event->price = $_POST['price'];
-        
+        $event->background_photo = "/assets/img/blur.jpg";
         $event->save();
         
-        return $photo;
+        
+        return 0;
+    }
+    
+    
+    public function deleteEvent(Request $request) {
+        
+        $data = $request->all();
+        $event = Event::where('id', intval($data['id']))->first();
+        if ($event == null) {
+            return 1;
+        }
+        // delete attendances of that event
+        $attendances = Attendance::where('event_id', intval($event->id))->get();
+        foreach ($attendances as $at) {
+            $at->delete();
+        }
+        // delete that event
+        $event->delete();
+        
+        return 0;
     }
 }

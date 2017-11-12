@@ -46,6 +46,7 @@
                             label="Password"
                             v-model="password"
                             name="password"
+                            @focus ="isError = false"
                             :rules="passwordRules"
                             counter="8"
                             :append-icon="e1 ? 'visibility' : 'visibility_off'"
@@ -74,10 +75,12 @@
 
 @section('script')
     <script>
-        new Vue({
+    var error = <?php echo $error; ?>;
+    console.log(error);
+        var vm = new Vue({
             el: '#app',
             data: {
-                isError:true,
+                isError:false,
                 e1:true,
                 valid: false,
                 password: '',
@@ -104,9 +107,10 @@
                 this.$refs.form.reset()
             }
         },
-        watch: {
-            password: function(){
-                setTimeout(()=>{this.isError=false},1500)
+        
+        mounted: function(){
+            if(error != "correct"){
+                this.isError = true
             }
         }
         })

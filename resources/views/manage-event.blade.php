@@ -30,7 +30,7 @@
                     </v-tabs-bar>
                     <hr/>
                     <v-tabs-items>
-                        <v-tabs-content id="Created" style="min-width:40vw; max-width:70vw;">
+                        <v-tabs-content id="Created" style="min-width:40vw; max-width:90vw;">
                             <v-card flat class="transparent">
                                 <v-card-title>
                                     <span style="font-family: 'Merriweather', serif;" class="headline">Event Log</span>
@@ -46,6 +46,7 @@
                                     <td class="text-xs-right">@{{ props.item.startdate }}</td>
                                     <td class="text-xs-right"><a :href=linkDashboard(props.item)>Manage</a></td>
                                     <td class="text-xs-right"><a :href=link(props.item)>View</a></td>
+                                    <td class="text-xs-right"><a href="" v-on:click.prevent="deleteEvent(props.item)">Delete</a></td>
                                     <td class="green--text text-xs-right" v-if="props.item.status == 'Ongoing'">@{{ props.item.status }}</td>
                                     <td class="red--text text-xs-right" v-else>@{{ props.item.status }}</td>
                                 </template>
@@ -53,7 +54,16 @@
                             <div class="text-xs-center pt-2">
                                 <v-pagination v-model="pagination.page" :length="pages" circle :total-visible="5"></v-pagination>
                             </div>
-
+                            <v-dialog v-model="confirmModal" persistent max-width="500">
+                                <v-card>
+                                    <v-card-title class="text-xs-center headline">Are you sure you want to delete this event?</v-card-title>
+                                    <v-card-actions>
+                                        <v-spacer></v-spacer>
+                                      <v-btn color="primary" flat @click.native="decline">No</v-btn>
+                                      <v-btn color="primary" flat @click.native="accept">Yes</v-btn>
+                                    </v-card-actions>
+                                  </v-card>
+                            </v-dialog>
                         </v-tabs-content>
                         <v-tabs-content id="Attended" class="transparent" style="min-width:40vw; max-width:50vw;">
                             <v-layout column class="mt-4" align-center>
@@ -65,6 +75,7 @@
                                                     <v-flex xs7 style="width: 40vw;">
                                                         <div class="headline text-xs-left pl-1" style="font-family: 'Cinzel', serif;"><b>@{{ attend.title }}</b></div>
                                                         <div class="text-xs-left ma-0 pa-1" style="font-family: 'Lora', serif;">@{{ attend.startdate }}&nbsp; @{{attend.starttime}}</div>
+                                                        <div class="text-xs-left ma-0 pa-1" style="font-family: 'Lora', serif;" v-if="attend.code != '0000000'">Event Code: <b>@{{attend.code}}</b></div>
                                                     </v-flex>
                                                     <v-flex xs5>
                                                         <v-card-text style="font-family: 'Lora', serif;" v-if="calcPercentage(attend) == 100"><v-progress-linear v-model="calcPercentage(attend)" v-bind:color="getColor(attend)"></v-progress-linear> Event is full</v-card-text>
@@ -96,10 +107,13 @@
     var created = <?php echo json_encode($created); ?>;
     console.log(created);
     console.log(attended);
-        new Vue({
+        var vm = new Vue({
             el: '#app',
             data: {
                 filter:'',
+                confirmModal: false,
+                confirm: false,
+                pendingEvent: {},
                 attendedPagination:{attendRowsPerPage: 5, attendPage:1},
                 pagination: {rowsPerPage:5, page:1},
                 active:null,
@@ -133,6 +147,11 @@
                         value: 'viewLink'
                     },
                     {
+                        text: 'Delete',
+                        sortable: false,
+                        value: 'deleteLink'
+                    },
+                    {
                         text: 'Status',
                         value: 'status'
                     }],
@@ -148,6 +167,18 @@
                                     typeof dateString === "object" ? new Date(dateString.year, dateString.month, dateString.date) :
                                         NaN
                     )
+                },
+                decline: function(){
+                    this.confirm = false
+                    this.confirmModal = false
+                },
+                accept: function(){
+                    this.confirm = true
+                    this.confirmModal = false
+                },
+                deleteEvent: function(item){
+                    this.pendingEvent = item
+                    this.confirmModal = true
                 },
                 compare: function(a,b){
                     return (
@@ -205,6 +236,28 @@
                     return this.attends.length
                 }
 
+            },
+            watch: {
+                confirm: function(isConfirm){
+                    console.log(isConfirm)
+                    if(isConfirm == true){
+                        axios.post('/event/delete',{
+                            id: this.pendingEvent.id
+                        })
+                        .then(function(response){
+                            vm.pendingEvent = {}
+                            this.confirm = false
+                            console.log(response.data)
+                            if(response.data == 0){
+                                window.location.reload(true)
+                            }
+                            
+                        })
+                        .catch(function(error){
+                            console.log(error)
+                        })
+                    }
+                }
             },
             updated: function() {
                 for(var i = 0; i < this.items.length; i++){

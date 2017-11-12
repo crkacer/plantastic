@@ -82,9 +82,7 @@
                 </v-navigation-drawer>
             </v-flex>
             <v-flex xs9>
-                <transition name="fade" mode="out-in">
-
-                </transition>
+                
                 <v-container v-if="showResponse == 'dashboard'" fluid>
                     <v-layout row wrap>
                         <v-flex xs12 class="text-xs-left">
@@ -107,7 +105,7 @@
                                         </v-card-text>
                                     </v-flex>
                                     <v-flex xs4 style="border:1px solid black;" class="mr-4">
-                                        <v-card-text style="font-family: 'Lora', serif;" v-if="event.type=='Public'">
+                                        <v-card-text style="font-family: 'Lora', serif;" v-if="type=='Public'">
                                             <v-icon>&#xE80B;</v-icon> Public
                                             <br/>
                                             <br/>
@@ -121,13 +119,13 @@
                                         </v-card-text>
                                     </v-flex>
                                     <v-flex xs4 style="border:1px solid black;">
-                                        <v-card-text style="font-family: 'Lora', serif;" v-if="calcPercentage(event) == 100">Event is full <br/><v-progress-linear v-model="calcPercentage(event)" v-bind:color="getColor(event)"></v-progress-linear></v-card-text>
-                                        <v-card-text style="font-family: 'Lora', serif;" v-else>@{{ event.participant }} / @{{ event.capacity }} people has registered <br/><v-progress-linear v-model="calcPercentage(event)" v-bind:color="getColor(event)"></v-progress-linear></v-card-text>
+                                        <v-card-text style="font-family: 'Lora', serif;" v-if="calcPercentage(event) >= 100">Event is full <br/><v-progress-linear v-model="calcPercentage(event)" v-bind:color="getColor(event)"></v-progress-linear></v-card-text>
+                                        <v-card-text style="font-family: 'Lora', serif;" v-else>@{{ event.registered_amount }} / @{{ event.capacity }} people has registered <br/><v-progress-linear v-model="calcPercentage(event)" v-bind:color="getColor(event)"></v-progress-linear></v-card-text>
                                     </v-flex>
                                     <v-flex xs7 style="border:1px solid black;" class="mt-3 text-xs-center">
                                         <v-card-text><b>Percentage of attendants</b></v-card-text>
                                         <v-progress-circular
-                                                :size="200"
+                                                :size="150"
                                                 :width="15"
                                                 :rotate=-"-90"
                                                 v-model="calcPercentage(event)"
@@ -136,7 +134,16 @@
                                             @{{ calcPercentage(event) }}%
                                         </v-progress-circular>
                                     </v-flex>
-                                    <v-flex xs12 class="mt-3" v-if="event.type=='Private'">
+                                    <v-flex xs4 style="border:1px solid black;" class="mt-4 ml-5 text-xs-center" v-if="event.code != '0000000'">
+                                        <v-card-text style="font-family: 'Lora', serif;">
+                                            <v-icon>&#xE32A;</v-icon>Event Code: 
+                                            <br/>
+                                            <br/>
+                                            <b>@{{event.code}}</b>
+                                            </v-card-text>
+                                        
+                                    </v-flex>
+                                    <v-flex xs12 class="mt-3" v-if="type=='Private'">
                                         <v-card flat class="transparent">
                                             <v-card-title>
                                                 <span style="font-family: 'Merriweather', serif;" class="headline">Attendants List</span>
@@ -146,7 +153,7 @@
                                         </v-card>
                                         <v-data-table v-bind:headers="headers" v-bind:items="attendants" v-bind:search="filter" v-bind:pagination.sync="pagination" hide-actions class="elevation-1">
                                             <template slot="items" slot-scope="props">
-                                                <td class="text-xs-center"><v-avatar><img :src=props.item.icon></v-avatar></td>
+                                                <td class="text-xs-center"><v-avatar><img :src=props.item.profile_picture></v-avatar></td>
                                                 <td class="text-xs-right">@{{ props.item.firstname }}</td>
                                                 <td class="text-xs-right">@{{ props.item.lastname }}</td>
                                                 <td class="text-xs-right"><a href="#" v-on:click.prevent="getDetails(props.item)">View Details</a></td>
@@ -171,7 +178,7 @@
                                                         <v-flex xs12 class="text-xs-center">
                                                             <v-card-text>Date of Birth: @{{ tempDetails.dateofbirth }}</v-card-text>
                                                         </v-flex>
-                                                        <v-flex xs12 class="text-xs-center">
+                                                        <v-flex xs12 class="text-xs-center" style="text-transform:capitalize;">
                                                             <v-card-text>Sex: @{{ tempDetails.sex }}</v-card-text>
                                                         </v-flex>
                                                         <v-flex xs12 class="text-xs-center">
@@ -191,7 +198,7 @@
                                     </v-flex>
                                     <v-flex xs12 class="mt-3">
                                         <h6>Your event URL:</h6>
-                                        <v-text-field v-model="shareLink" readonly></v-text-field>
+                                        <v-text-field v-model="event.viewLink" readonly></v-text-field>
                                     </v-flex>
                                 </v-layout>
                             </v-container>
@@ -243,7 +250,41 @@
                                                         readonly
                                                         required
                                                 ></v-text-field>
-                                                <v-date-picker v-model="tempEvent.startDate" no-title scrollable actions>
+                                                <v-date-picker v-model="tempEvent.startDate" no-title actions :allowed-dates="allowedStartDates">
+                                                    <template slot-scope="{ save, cancel }">
+                                                        <v-card-actions>
+                                                            <v-spacer></v-spacer>
+                                                            <v-btn flat color="primary" @click.native="cancel">Cancel</v-btn>
+                                                            <v-btn flat color="primary" @click.native="save">OK</v-btn>
+                                                        </v-card-actions>
+                                                    </template>
+                                                </v-date-picker>
+                                            </v-menu>
+                                        </v-flex>
+                                        <v-flex xs3 class="mr-4">
+                                            <v-menu
+                                                    lazy
+                                                    :close-on-content-click="false"
+                                                    v-model="m3"
+                                                    transition="scale-transition"
+                                                    offset-x
+                                                    full-width
+                                                    :nudge-right="40"
+                                                    max-width="290px"
+                                                    min-width="290px"
+                                                    allow-overflow
+                                            >
+                                                <v-text-field
+                                                        slot="activator"
+                                                        label="End Date"
+                                                        v-model="tempEvent.endDate"
+                                                        :rules="[(v) => !!v || 'End date is required']"
+                                                        name="endDate"
+                                                        append-icon="event"
+                                                        readonly
+                                                        required
+                                                ></v-text-field>
+                                                <v-date-picker v-model="tempEvent.endDate" no-title actions :allowed-dates="allowedEndDates">
                                                     <template slot-scope="{ save, cancel }">
                                                         <v-card-actions>
                                                             <v-spacer></v-spacer>
@@ -277,7 +318,7 @@
                                                         readonly
                                                         required
                                                 ></v-text-field>
-                                                <v-time-picker v-model="tempEvent.startTime" format="24hr" no-title scrollable actions>
+                                                <v-time-picker v-model="tempEvent.startTime" format="24hr" no-title actions :allowed-hours="allowedStartHours">
                                                     <template slot-scope="{ save, cancel }">
                                                         <v-card-actions>
                                                             <v-spacer></v-spacer>
@@ -286,40 +327,6 @@
                                                         </v-card-actions>
                                                     </template>
                                                 </v-time-picker>
-                                            </v-menu>
-                                        </v-flex>
-                                        <v-flex xs3 class="mr-4">
-                                            <v-menu
-                                                    lazy
-                                                    :close-on-content-click="false"
-                                                    v-model="m3"
-                                                    transition="scale-transition"
-                                                    offset-x
-                                                    full-width
-                                                    :nudge-right="40"
-                                                    max-width="290px"
-                                                    min-width="290px"
-                                                    allow-overflow
-                                            >
-                                                <v-text-field
-                                                        slot="activator"
-                                                        label="End Date"
-                                                        v-model="tempEvent.endDate"
-                                                        :rules="[(v) => !!v || 'End date is required']"
-                                                        name="endDate"
-                                                        append-icon="event"
-                                                        readonly
-                                                        required
-                                                ></v-text-field>
-                                                <v-date-picker v-model="tempEvent.endDate" no-title scrollable actions>
-                                                    <template slot-scope="{ save, cancel }">
-                                                        <v-card-actions>
-                                                            <v-spacer></v-spacer>
-                                                            <v-btn flat color="primary" @click.native="cancel">Cancel</v-btn>
-                                                            <v-btn flat color="primary" @click.native="save">OK</v-btn>
-                                                        </v-card-actions>
-                                                    </template>
-                                                </v-date-picker>
                                             </v-menu>
                                         </v-flex>
                                         <v-flex xs2>
@@ -345,7 +352,7 @@
                                                         readonly
                                                         required
                                                 ></v-text-field>
-                                                <v-time-picker v-model="tempEvent.endTime" format="24hr" no-title scrollable actions>
+                                                <v-time-picker v-model="tempEvent.endTime" format="24hr" no-title actions :allowed-hours="allowedEndHours">
                                                     <template slot-scope="{ save, cancel }">
                                                         <v-card-actions>
                                                             <v-spacer></v-spacer>
@@ -358,7 +365,6 @@
                                         </v-flex>
                                     </v-layout>
                                 </v-container>
-                                <v-card-text class="text-xs-center"><label><b>EVENT IMAGE*</b></label></v-card-text>
                                 <v-text-field
                                         label="Event Image"
                                         append-icon="attach_file"
@@ -372,7 +378,7 @@
                                         readonly
                                 ></v-text-field>
                                 <input type="file" :accept="accept" :disabled="disabled"
-                                       ref="fileInput" @change="changeFile" name='profile'>
+                                       ref="fileInput" @change="changeFile" name='profile' id="files">
                                 <div class="text-xs-center"><img id='image' :src=tempEvent.imgURL style="max-width:200px; max-height:200px;"/></div>
                                 <v-text-field
                                         label="Event Description"
@@ -423,29 +429,38 @@
                                         <v-flex xs4>
                                             <v-subheader><b>Event Capacity:</b></v-subheader>
                                         </v-flex>
-                                        <v-flex xs7>
+                                        <v-flex xs8>
                                             <v-text-field
+                                                    type="number"
                                                     label="Event capacity"
                                                     v-model="tempEvent.capacity"
                                                     :rules="capacityRules"
                                                     required
                                             ></v-text-field>
                                         </v-flex>
-                                        <v-flex xs1>
-                                            <v-btn icon v-on:click="increase"><v-icon>arrow_upward</v-icon></v-btn>
-                                            <v-btn icon v-on:click="decrease"><v-icon>arrow_downward</v-icon></v-btn>
+                                        <v-flex xs4>
+                                            <v-subheader><b>Price:</b></v-subheader>
+                                        </v-flex>
+                                        <v-flex xs8>
+                                            <v-text-field
+                                                    type="number"
+                                                    label="Price"
+                                                    v-model="tempEvent.price"
+                                                    :rules="priceRules"
+                                                    required
+                                            ></v-text-field>
                                         </v-flex>
                                     </v-layout>
                                 </v-container>
                                 <label style="font-size:1.25em;">Choose your event layout: </label>
-                                <v-radio-group v-model="tempEvent.layoutID" :rules="[(v) => !!v || 'You must select one to continue!']">
+                                <v-radio-group v-model="tempEvent.layoutID" :rules="[(v) => !!v || 'You must select one to continue!']" required>
                                     <v-container fluid class="ma-0 pa-0 transparent">
                                         <v-layout row wrap>
                                             <v-flex xs6>
-                                                <v-radio label="Form 1" value="1"></v-radio><a href="#" v-on:click.prevent="showfullpic1 = true"><img  src="/assets/img/event1.png" width="200" height="200" v-on:click.native.stop="showfullpic1 = true"> </a>
+                                                <v-radio label="Form 1" value='A'></v-radio><a href="#" v-on:click.prevent="showfullpic1 = true"><img  src="/assets/img/event1.png" width="200" height="200" v-on:click.native.stop="showfullpic1 = true"> </a>
                                             </v-flex>
                                             <v-flex xs6>
-                                                <v-radio label="Form 2" value="2"></v-radio><a href="#" v-on:click.prevent="showfullpic2 = true"><img href="#" src="/assets/img/event2.png" width="200" height="200" v-on:click.native.stop="showfullpic2 = true"></a>
+                                                <v-radio label="Form 2" value='B'></v-radio><a href="#" v-on:click.prevent="showfullpic2 = true"><img href="#" src="/assets/img/event2.png" width="200" height="200" v-on:click.native.stop="showfullpic2 = true"></a>
                                             </v-flex>
                                         </v-layout>
                                     </v-container>
@@ -470,7 +485,6 @@
                                     <img src="/assets/img/event2.png">
                                 </v-dialog>
                                 <v-btn round @click="FormSubmit" :class="{ green: valid, red: !valid }">Update</v-btn>
-                                <v-btn round @click="clear">clear</v-btn>
                             </v-form>
                         </v-flex>
                     </v-layout>
@@ -482,7 +496,19 @@
 
 @section('script')
     <script>
-        new Vue({
+    var event = <?php echo json_encode($event); ?>;
+    var category = <?php echo json_encode($category); ?>;
+    var type = <?php echo json_encode($event_type); ?>;
+    var list = <?php echo json_encode($people_attend); ?>;
+    var allCategories = <?php echo json_encode($all_categories); ?>;
+    var allTypes = <?php echo json_encode($all_types); ?>;
+    console.log(allCategories);
+    console.log(allTypes);
+    console.log(list);
+    console.log(category);
+    console.log(type);
+    console.log(event);
+        var vm = new Vue({
             el: '#app',
             props: {
                 accept: {
@@ -502,10 +528,15 @@
                 m2: false,
                 m3: false,
                 m4: false,
+               
                 showfullpic1: false,
                 showfullpic2: false,
-                EventCategories: ['Conference','Meeting','Seminar','Career fair', 'Symposium','Training','Community/social','Performance','Athletics'],
-                EventTypes: ['Public','Private'],
+                type: type,
+                category: category,
+                allCategories: allCategories,
+                allTypes: allTypes,
+                EventCategories: [],
+                EventTypes: [],
                 search:'',
                 fullDate: '',
                 filter: '',
@@ -562,27 +593,7 @@
                     layoutID: '',
                     uniqueCode: ''
                 },
-                event:{
-                    imgURL: '/assets/img/dummyEvent.jpg',
-                    imageName: 'dummyEvent.jpg',
-                    title: 'Indie Game Hackathon',
-                    location: '160 Kendal Avenue, Toronto, Ontario',
-                    participant: 135,
-                    capacity: 1000,
-                    startDate: '2017-03-06',
-                    startTime: '14:00',
-                    endDate: '2017-04-05',
-                    endTime: '9:00',
-                    description: 'An event for geeks',
-                    orgDescription: 'Non-profitable Organization',
-                    price: '40',
-                    viewLink: '/event/1',
-                    status: '',
-                    category: 'Conference',
-                    type: 'Private',
-                    layoutID: '1',
-                    uniqueCode: 'N'
-                },
+                event: event,
                 headers: [
                     {
                         text: 'Icon',
@@ -603,91 +614,15 @@
                         sortable: false,
                         value: 'detailLink'
                     }],
-                attendants: [
-                    {
-                        value:true,
-                        icon: '/assets/img/myAvatar.png',
-                        firstname: 'Huy',
-                        lastname: 'Dam',
-                        age: '',
-                        dateofbirth: '1997-03-06',
-                        sex: 'twice a week',
-                        socialProfile: ''
-                    },
-                    {
-                        value:true,
-                        icon: '/assets/img/myAvatar.png',
-                        firstname: 'Allan',
-                        lastname: 'Martinez',
-                        age: '',
-                        dateofbirth: '1990-03-06',
-                        sex: 'zero',
-                        socialProfile: ''
-                    },
-                    {
-                        value:true,
-                        icon: '/assets/img/myAvatar.png',
-                        firstname: 'Huy',
-                        lastname: 'Dam',
-                        age: '',
-                        dateofbirth: '1997-03-06',
-                        sex: 'twice a week',
-                        socialProfile: ''
-                    },
-                    {
-                        value:true,
-                        icon: '/assets/img/myAvatar.png',
-                        firstname: 'Huy',
-                        lastname: 'Dam',
-                        age: '20',
-                        dateofbirth: '1997-03-06',
-                        sex: 'twice a week',
-                        socialProfile: ''
-                    },
-                    {
-                        value:true,
-                        icon: '/assets/img/myAvatar.png',
-                        firstname: 'Huy',
-                        lastname: 'Dam',
-                        age: '',
-                        dateofbirth: '1997-03-06',
-                        sex: 'twice a week',
-                        socialProfile: ''
-                    },
-                    {
-                        value:true,
-                        icon: '/assets/img/myAvatar.png',
-                        firstname: 'Huy',
-                        lastname: 'Dam',
-                        age: '',
-                        dateofbirth: '1997-03-06',
-                        sex: 'twice a week',
-                        socialProfile: ''
-                    },
-                    {
-                        value:true,
-                        icon: '/assets/img/myAvatar.png',
-                        firstname: 'Huy',
-                        lastname: 'Dam',
-                        age: '',
-                        dateofbirth: '1997-03-06',
-                        sex: 'twice a week',
-                        socialProfile: ''
-                    },
-                    {
-                        value:true,
-                        icon: '/assets/img/myAvatar.png',
-                        firstname: 'Huy',
-                        lastname: 'Dam',
-                        age: '',
-                        dateofbirth: '1997-03-06',
-                        sex: 'twice a week',
-                        socialProfile: ''
-                    }],
+                attendants: list,
                 capacityRules: [
                     (v) => !!v || 'Please enter the event capacity',
-            (v) => (!isNaN(v) && v <= 10000 && v >= 1) || 'Your capacity should be a number and within 1 to 5000'
-        ]
+                    (v) => (!isNaN(v) && v <= 10000 && v >= 1) || 'Your capacity should be a number and within 1 to 5000'
+                ],
+                priceRules: [
+                    (v) => !!v || 'Please enter price for the event',
+                    (v) => (!isNaN(v) && v >= 0) || 'Your price should be a valid number' 
+                ]
         },
         methods: {
             submit: function (e){
@@ -697,25 +632,76 @@
             },
             getEvent: function (i){
                 if(this.navigations[i].actionID == 'edit'){
-                    this.tempEvent.imgURL = this.event.imgURL
-                    this.tempEvent.imageName = this.event.imageName
+                    this.tempEvent.imgURL = this.event.background_photo
+                    this.tempEvent.imageName = this.event.background_photo.replace("/assets/img/","")
                     this.tempEvent.title = this.event.title
                     this.tempEvent.location = this.event.location
                     this.tempEvent.capacity = this.event.capacity
-                    this.tempEvent.startDate = this.event.startDate
-                    this.tempEvent.startTime = this.event.startTime
-                    this.tempEvent.endDate = this.event.endDate,
-                        this.tempEvent.endTime = this.event.endTime,
-                        this.tempEvent.description = this.event.description
-                    this.tempEvent.orgDescription = this.event.orgDescription
+                    this.tempEvent.startDate = this.event.startdate
+                    this.tempEvent.startTime = this.event.starttime
+                    this.tempEvent.endDate = this.event.enddate
+                    this.tempEvent.endTime = this.event.endtime
+                    this.tempEvent.description = this.event.description
+                    this.tempEvent.orgDescription = this.event.organizer_description
                     this.tempEvent.price = this.event.price
-                    this.tempEvent.category = this.event.category
-                    this.tempEvent.type = this.event.type
-                    this.tempEvent.layoutID = this.event.layoutID
-                    this.tempEvent.uniqueCode = this.event.uniqueCode
+                    this.tempEvent.category = this.category
+                    this.tempEvent.type = this.type
+                    this.tempEvent.layoutID = this.event.template
+                    this.tempEvent.uniqueCode = this.event.code == "" ? "N" : "Y"
                 }
                 this.showResponse = this.navigations[i].actionID
             },
+            allowedStartDates: function (date){
+                if(vm.tempEvent.endDate != null){
+                   if(this.compare(date,vm.tempEvent.endDate) == 0 || this.compare(date,vm.tempEvent.endDate) == -1){
+                    return date
+                    } 
+                }else{
+                    return date
+                }
+                
+            },
+            allowedEndDates: function(date){
+                if(vm.tempEvent.startDate != null){
+                    if(this.compare(date,vm.tempEvent.startDate) == 0 || this.compare(date,vm.tempEvent.startDate) == 1){
+                        return date
+                    }
+                }else{
+                    return date.getDate()
+                }
+            },
+            allowedStartHours: function(value){
+                if(vm.tempEvent.endDate != null && vm.tempEvent.startDate != null){
+                    if(vm.tempEvent.endDate == vm.tempEvent.startDate){
+                        if(vm.tempEvent.endTime != null){
+                            return value < vm.tempEvent.endTime.slice(0,2)
+                            
+                        }else{
+                            return value
+                        }
+                    }else{
+                        return value
+                    }
+                }else{
+                    return 0
+                }
+            },
+            allowedEndHours: function(value){
+                if(vm.tempEvent.endDate != null && vm.tempEvent.startDate != null){
+                    if(vm.tempEvent.endDate == vm.tempEvent.startDate){
+                        if(vm.tempEvent.startTime != null){
+                            return value > vm.tempEvent.startTime.slice(0,2)
+                        }else{
+                            return value
+                        }
+                    }else{
+                        return value
+                    }
+                }else{
+                    return 0
+                }
+            },
+            
             convertToDateObject : function (dateString){
                 return (
                     dateString.constructor === Date ? dateString :
@@ -759,7 +745,7 @@
                 return result
             },
             calcPercentage: function(e){
-                return (e.participant/e.capacity)*100
+                return Number(((e.registered_amount/e.capacity)*100).toFixed(2))
             },
             getColor: function(event){
                 if(this.calcPercentage(event) <= 30){
@@ -770,14 +756,28 @@
                     return "red"
                 }
             },
+            findCategoryID: function(category){
+                for(var i = 0; i < this.allCategories.length; i++){
+                    if(this.allCategories[i].text == category){
+                        return this.allCategories[i].id
+                    }
+                }
+            },
+            findTypeID: function(type){
+                for(var i = 0; i < this.allTypes.length; i++){
+                    if(this.allTypes[i].text == type){
+                        return this.allTypes[i].id
+                    }
+                }
+            },
             getDetails: function(ob){
-                this.tempDetails.icon = ob.icon
+                this.tempDetails.icon = ob.profile_picture
                 this.tempDetails.firstname = ob.firstname
                 this.tempDetails.lastname = ob.lastname
                 this.tempDetails.age = ob.age
-                this.tempDetails.dateofbirth = ob.dateofbirth
-                this.tempDetails.sex = ob.sex
-                this.tempDetails.socialProfile = ob.socialProfile
+                this.tempDetails.dateofbirth = ob.DOB
+                this.tempDetails.sex = ob.gender
+                this.tempDetails.socialProfile = ob.social_network
                 this.showDetails = true
             },
             done: function(){
@@ -786,7 +786,36 @@
             },
             FormSubmit: function () {
                 if (this.$refs.form.validate()) {
-                    this.$refs.form.$el.submit()
+                    var form = new FormData()
+                    var imagefile = document.querySelector('#files')
+                    console.log(imagefile.files[0]);
+                    form.append("photo", imagefile.files[0]);
+                    form.append("title",vm.tempEvent.title);
+                    form.append("location",vm.tempEvent.location);
+                    form.append("capacity",vm.tempEvent.capacity);
+                    form.append("startdate",vm.tempEvent.startDate);
+                    form.append("starttime",vm.tempEvent.startTime);
+                    form.append("enddate",vm.tempEvent.endDate);
+                    form.append("endtime",vm.tempEvent.endTime);
+                    form.append("description",vm.tempEvent.description);
+                    form.append("organizerDescription",vm.tempEvent.orgDescription);
+                    form.append("price",vm.tempEvent.price);
+                    form.append("category",vm.findCategoryID(vm.tempEvent.category));
+                    form.append("type",vm.findTypeID(vm.tempEvent.type));
+                    console.log(vm.tempEvent.layoutID);
+                    form.append("layoutID",vm.tempEvent.layoutID);
+                    form.append("uniqueCode",vm.tempEvent.uniqueCode);
+                    const config = { headers: { 'Content-Type': 'multipart/form-data' } };
+                    if (this.$refs.form.validate()) {
+                        axios.post('/event/dashboard', form,config)
+                          .then(function (response) {
+                            console.log(response.data)
+                          })
+                          .catch(function (error) {
+                            console.log(error);
+                          });
+                        
+                    }
                 }
             },
             clear: function () {
@@ -857,17 +886,29 @@
                 this.tempEvent.imageName = fv;
             }
         },
+        updated: function(){
+            for(var j = 0; j < this.attendants.length; j++){
+                this.attendants[j].age = this.getYear(this.attendants[j].DOB)
+            }
+            
+        },
         mounted: function() {
-            this.event.status = this.getStatus(this.event.endDate + " " + this.event.endTime)
+            this.event.status = this.getStatus(this.event.enddate + " " + this.event.endtime)
             var formats = {
                 weekday: "long", year: "numeric", month: "short",
                 day: "numeric", hour: "2-digit", minute: "2-digit"
             }
-            this.fullDate = this.convertToDateObject(this.event.startDate + " " + this.event.startTime).toLocaleTimeString("en-us", formats)
-            for(var j = 0; j < this.attendants.length; j++){
-                this.attendants[j].age = this.getYear(this.attendants[j].dateofbirth)
-            }
+            
+            this.fullDate = this.convertToDateObject(this.event.startdate + " " + this.event.starttime).toLocaleTimeString("en-us", formats)
+            this.event.viewLink = window.location.href.replace("/dashboard","")
             this.tempEvent.imageName = this.fileValue
+            for(var i = 0; i < this.allCategories.length; i++){
+                this.EventCategories.push(this.allCategories[i].text)
+            }
+            for(var k = 0; k < this.allTypes.length; k++){
+                this.EventTypes.push(this.allTypes[k].text)
+            }
+            
         }
         })
     </script>

@@ -19,6 +19,8 @@ use Image;
 class LoginController extends Controller
 {
     public function index() {
+        
+        $error = "correct";
 
         if (\Request::input('email') && \Request::input('password')) {
             $userData = [
@@ -35,12 +37,13 @@ class LoginController extends Controller
                     return redirect($login_path)->withCookie($cookie);
                 }
             } else {
-                return redirect('/login/error');
+                $error = "Username or Password is incorrect";
             }
         }
 
         return view('login', [
-            'user_login' => Auth::user()
+            'user_login' => Auth::user(),
+            'error' => json_encode($error)
         ]);
 
         return null;

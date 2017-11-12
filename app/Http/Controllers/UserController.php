@@ -97,4 +97,12 @@ class UserController extends Controller
             'user_login' => $user
         ]);
     }
+    
+    
+    public function postUserProfile(Request $request) {
+        
+        $data = $request->all();
+        
+        return 0;
+    }
 }

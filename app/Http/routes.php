@@ -17,7 +17,7 @@ Route::get('/', 'HomeController@index');
 Route::any('login/{error?}', 'LoginController@index');
 Route::get('logout', 'LoginController@logout');
 
-Route::get('event/{id?}', 'EventController@getIndex');
+
 
 Route::get('view-event/{id?}', 'EventController@getIndexEvent');
 
@@ -31,20 +31,29 @@ Route::any('/password/reset', 'LoginController@resetPassword');
 
 Route::post('search', 'SearchController@index');
 Route::post('check-email', 'LoginController@checkEmail');
+Route::post('register', 'LoginController@postRegister');
 
-// {'email': "gab@gmail.com"} => true, false
 // User routes
 
 
 Route::group(['middleware' => ['web', 'auth.user']], function () {
 
+    // user routes
     Route::get('user/manage-event', ['as' => 'get-event-manage', 'uses' => 'UserController@manageEvent']);
     Route::get('user/profile', ['as' => 'get-user-profile', 'uses' => 'UserController@userProfile']);
+    Route::post('user/profile', ['as' => 'post-user-profile', 'uses' => 'UserController@postUserProfile']);
+    
+    // event routes
     Route::get('event/dashboard/{id?}', ['as' => 'get-event-dashboard', 'uses' => 'EventController@getDashboard']);
-    Route::any('event/create', ['as' => 'get-create-event', 'uses' => 'EventController@createEvent']);
-
+    Route::get('event/create', ['as' => 'get-create-event', 'uses' => 'EventController@createEvent']);
+    Route::post('event/create', ['as' => 'post-create-event', 'uses' => 'EventController@postCreateEvent']);
+    Route::post('event/attend', ['as' => 'post-attend-event', 'uses' => 'EventController@attendEvent']);
+    Route::post('event/delete', ['as' => 'post-delete-event', 'uses' => 'EventController@deleteEvent']);
 });
 
+Route::get('event/{id?}', 'EventController@getIndex');
+Route::get('category/{id?}', 'FilterController@getByCategory');
+Route::get('event-type/{id?}', 'FilterController@getByType');
 // Dummy routes
 
 Route::get('generate', "HomeController@generateData");

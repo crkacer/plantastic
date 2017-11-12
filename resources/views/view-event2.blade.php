@@ -74,7 +74,7 @@
                                             <br/> @{{ event.description }} </v-card-text>
                                         </v-flex>
                                         <v-flex xs12 class="text-xs-center pa-3">
-                                            <v-btn round :href="getTypeURL(event.type_id)"outline color="primary">@{{ event.event_type_name }}</v-btn>
+                                            <v-btn round :href="getTypeURL(event.event_type_id)"outline color="primary">@{{ event.event_type_name }}</v-btn>
                                             <v-btn round :href="getCatURL(event.category_id)" outline color="secondary">@{{ event.category_name }}</v-btn>
                                         </v-flex>
                                     </v-layout>
