@@ -192,13 +192,13 @@ class LoginController extends Controller
             for ($i = 65; $i<91; $i++) {
                 array_push($allowedChar, $i);
             }
-            for ($i = 1; $i<8; $i++) {
+            for ($i = 1; $i<10; $i++) {
                 $temp = rand(0,count($allowedChar)-1);
                 if ($allowedChar[$temp] > 64) $code .= chr($allowedChar[$temp]);
                 else $code .= $allowedChar[$temp];
             }
 
-            $user->password = $code;
+            $user->password = Hash::make($code);
             
 
             Mail::send('email.reset-password', [
@@ -207,9 +207,9 @@ class LoginController extends Controller
             ], function ($message) use ($user)
                 {
 
-                    $message->from('plantastic.tech5upport@gmail.com', 'Reset password confirmation:');
+                    $message->from('plantastic.tech5upport@gmail.com', 'Plantastic');
 
-                    $message->to($user->email);
+                    $message->to($user->email)->subject('Reset password confirmation:');
 
                 });
             $user->save();
@@ -220,11 +220,6 @@ class LoginController extends Controller
     }
 
 
-    public function promptPassword($encStr) {
-
-    }
-
-    
 
     public function logout() {
         Auth::logout();

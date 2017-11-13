@@ -28,7 +28,6 @@
 <h2 class="title">Reset Password Confirmation: </h2>
 <div class="center">
     <p>Email:  {{ $email }}</p>
-    <br>
     <p>Password: {{ $password}}</p>
 </div>
 
