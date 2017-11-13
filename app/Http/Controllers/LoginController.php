@@ -15,6 +15,8 @@ use Session;
 use Hash;
 use Image;
 
+use Mail;
+
 
 class LoginController extends Controller
 {
@@ -164,7 +166,6 @@ class LoginController extends Controller
 
     }
 
-
     public function resetPassword() {
 
         $error = null;
@@ -174,6 +175,56 @@ class LoginController extends Controller
             'error' => $error
         ]);
     }
+
+    public function postEmailReset(Request $request) {
+
+        $data = $request->all();
+        $email = $data['email'];
+        
+        $user = User::where('email', $email)->first();
+        if ($user != null) {
+            
+            $code = "";
+            $allowedChar = [];
+            for ($i = 0; $i<10; $i++) {
+                array_push($allowedChar, $i);
+            }
+            for ($i = 65; $i<91; $i++) {
+                array_push($allowedChar, $i);
+            }
+            for ($i = 1; $i<8; $i++) {
+                $temp = rand(0,count($allowedChar)-1);
+                if ($allowedChar[$temp] > 64) $code .= chr($allowedChar[$temp]);
+                else $code .= $allowedChar[$temp];
+            }
+
+            $user->password = $code;
+            $user->save();
+
+            Mail::send('email.reset-password', [
+                'email' => $user->email,
+                'password' => $code
+            ], function ($message) use ($user)
+                {
+
+                    $message->from('plantastic.tech5upport@gmail.com', 'Reset password confirmation:');
+
+                    $message->to($user['email']);
+
+                });
+
+            return 0;
+        }
+        return 1;
+
+    }
+
+
+    public function promptPassword($encStr) {
+
+    }
+
+    
 
     public function logout() {
         Auth::logout();

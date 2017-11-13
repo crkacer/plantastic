@@ -27,7 +27,10 @@ Route::get('register', 'LoginController@getRegister');
 
 Route::get('home', 'HomeController@index');
 
-Route::any('/password/reset', 'LoginController@resetPassword');
+Route::get('/password/reset', 'LoginController@resetPassword');
+Route::post('/password/check-email', 'LoginController@postEmailReset');
+
+Route::get('/password-reset/{encStr}', 'LoginController@promptPassword');
 
 Route::post('search', 'SearchController@index');
 Route::post('check-email', 'LoginController@checkEmail');
