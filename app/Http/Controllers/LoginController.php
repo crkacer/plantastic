@@ -199,7 +199,7 @@ class LoginController extends Controller
             }
 
             $user->password = $code;
-            $user->save();
+            
 
             Mail::send('email.reset-password', [
                 'email' => $user->email,
@@ -209,10 +209,10 @@ class LoginController extends Controller
 
                     $message->from('plantastic.tech5upport@gmail.com', 'Reset password confirmation:');
 
-                    $message->to($user['email']);
+                    $message->to($user->email);
 
                 });
-
+            $user->save();
             return 0;
         }
         return 1;
