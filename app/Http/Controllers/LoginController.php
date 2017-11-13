@@ -170,7 +170,7 @@ class LoginController extends Controller
 
         $error = null;
 
-        return view('reset', [
+        return view('auth.passwords.reset', [
             'user_login' => Auth::user(),
             'error' => $error
         ]);
