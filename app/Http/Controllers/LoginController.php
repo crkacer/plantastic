@@ -2,29 +2,34 @@
 
 namespace App\Http\Controllers;
 
-use Request;
-
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use App\Http\Requests;
+use App\User;
 use View;
 use Symfony\Component\Console\Input;
 use Illuminate\Validation;
 use Auth;
 use Cookie;
 use Session;
+use Hash;
+use Image;
 
 
 class LoginController extends Controller
 {
     public function index() {
+        
+        $error = "correct";
 
-        if (Request::input('email') && Request::input('password')) {
+        if (\Request::input('email') && \Request::input('password')) {
             $userData = [
-                'email' => Request::input('email'),
-                'password' => Request::input('password')
+                'email' => \Request::input('email'),
+                'password' => \Request::input('password')
             ];
 
             if (Auth::attempt($userData, true)) {
-                $login_path = Request::input('login_path') ?: Cookie::get('login_path');
+                $login_path = \Request::input('login_path') ?: Cookie::get('login_path');
                 if (empty($login_path)) {
                     return redirect('/');
                 } else {
@@ -32,12 +37,13 @@ class LoginController extends Controller
                     return redirect($login_path)->withCookie($cookie);
                 }
             } else {
-                return redirect('/login/error');
+                $error = "Username or Password is incorrect";
             }
         }
 
         return view('login', [
-            'user_login' => Auth::user()
+            'user_login' => Auth::user(),
+            'error' => json_encode($error)
         ]);
 
         return null;
@@ -45,12 +51,12 @@ class LoginController extends Controller
 
     public function getRegister() {
 
-        if (Request::input('email') && Request::input('password') ) {
+        if (\Request::input('email') && \Request::input('password') ) {
             $userData = [
-                'fname' => Request::input('first_name'),
-                'lname' => Request::input('last_name'),
-                'email' => Request::input('email'),
-                'password' => Request::input('password')
+                'fname' => \Request::input('first_name'),
+                'lname' => \Request::input('last_name'),
+                'email' => \Request::input('email'),
+                'password' => \Request::input('password')
             ];
             // If user does not exist then allow to create
             if (User::where('email', '=', $userData['username'])->exists()) {
@@ -65,7 +71,7 @@ class LoginController extends Controller
                 $user->email = $userData['username'];
                 $user->save();
 
-                $login_path = Request::input('login_path') ?: Cookie::get('login_path');
+                $login_path = \Request::input('login_path') ?: Cookie::get('login_path');
                 if (empty($login_path)) {
                     return redirect('/');
                 } else {
@@ -75,47 +81,86 @@ class LoginController extends Controller
             }
         }
 
-    	return View::make('register', [
+        return View::make('register', [
             'user_login' => Auth::user()
         ]);
     }
 
-    public function postRegister(Request $request) {
-
-        $data = $request->all();
-        $email = $data['email'];
-        // validator
+    public function postRegister() {
+        
+        
+        $email = $_POST['email'];
+        $password = $_POST['password'];
+        $fname = $_POST['firstname'];
+        $lname = $_POST['lastname'];
+        $dob = $_POST['dob'];
+        $gender = $_POST['gender'];
+        
 
         $user = new User();
-        $user->profile_image = "/assets/image/default.jpg";
-        if (Input::file('photo')) {
-            Image::make(Input::file('photo'))->resize(300, 200)->save('image.jpg');
-            $currentTime = date('YmdGis');
-            $user->profile_image = "/assets/image/" . $data['email'] . "/" . $currentTime;
+        
+        $user->profile_picture = "/assets/img/myAvatar.png";
+        
+        $location = "/assets/img/myAvatar.png";
+        //  or File::makeDirectory(storage_path('app/blogpost/' . $postId));
+//         if ($_FILES['photo'] != null) {
+            
+            
+//             $currentTime = date('YmdGis');
+            
+//             // $location = "/home/ubuntu/workspace/public/assets/img/" . $fname.$lname . "/" . $currentTime. "/avatar.png";
+//             // if (!file_exists ( "/home/ubuntu/workspace/public/assets/img/" . $fname.$lname . "/" . $currentTime)) {
+//             //     mkdir("/home/ubuntu/workspace/public/assets/img/" . $fname.$lname . "/" . $currentTime);
+//             // }
+//             // Image::make($_FILES['photo']['tmp_name'])->resize(100, 100)->save($location);
+//             // move_uploaded_file($_FILES['photo']['tmp_name'], $location);
+            
+//             $image = $_FILES['photo'];
+//             $imgpath = $_FILES['photo']['name'];
+//             $ext = pathinfo($imgpath, PATHINFO_EXTENSION);
+//          $filename  = $fname.$lname . "/" . $currentTime. "/avatar.".$ext;
+//          $path = public_path('assets/img/' . $filename);
+            
+// //           File::exists(public_path('assets/img/').$fname.$lname . "/" . $currentTime);
+//             if (!is_dir(public_path('assets/img/').$fname.$lname . "/" . $currentTime)) {
+//                 mkdir(public_path('assets/img/').$fname.$lname . "/" . $currentTime, 0755);
+//             }
+//             $fp = fopen($path, "w");
+//             fwrite($fp, file_get_contents($_FILES['photo']['tmp_name']), "w");
+            
+            
+// //           Image::make($_FILES['photo']['tmp_name'])->resize(100, 100)->save($path);
+            
+//             $user->profile_picture = $path;
+//         }
+
+        $user->name = $fname;
+        $user->firstname = $fname;
+        $user->lastname = $lname;
+        $user->DOB = $dob;
+        $user->gender = $gender;
+        $user->social_network = " ";
+        $user->email = $email;
+        $user->password = Hash::make($password);
+        
+        if ($user->save()) {
+            return 0;
         }
-
-        $user->name = $data['fname'] + $data['lname'];
-        $user->firstname = $data['fname'];
-        $user->lastname = $data['lname'];
-        $user->DOB = $data['dob'];
-        $user->social_network = $data['social_network'];
-        $user->gender = $data['gender'];
-        $user->password = Hash::make($data['password']);
-
-        $user->save();
-
-        return redirect('/login');
+        return 1;
+        
+        
     }
 
     public function checkEmail(Request $request) {
-
+        
         $data = $request->all();
         $email = $data['email'];
         $user = User::where('email', $email)->first();
-        if ($user === null) {
-            return true;
+        // return $user;
+        if ($user == null) {
+            return 0;
         }
-        return false;
+        return 1;
 
     }
 
@@ -125,7 +170,7 @@ class LoginController extends Controller
         $error = null;
 
         return view('reset', [
-
+            'user_login' => Auth::user(),
             'error' => $error
         ]);
     }

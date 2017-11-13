@@ -22,7 +22,10 @@
             font-family: 'Kaushan Script', cursive;
             font-size:30px;
         }
-
+        #search::-webkit-input-placeholder{
+            color:grey;
+            font-style:italic;
+        }
     </style>
     @yield('style')
 </head>
@@ -31,8 +34,9 @@
     <v-toolbar class="white" style="z-index:2;" id="navbar">
         <v-toolbar-title><a href="/home" id="title">Plantastic</a></v-toolbar-title>
         <v-spacer></v-spacer>
-        <form method="post" action="/search">
-            <v-text-field style="width:150%;" append-icon="search" v-bind:append-icon-cb="submit" v-model="search" hide-details single-line placeholder="Enter any search events" required></v-text-field>
+        <form method="post" action="/search" ref="formSearch">
+            <v-text-field name="input" style="width:200%;" append-icon="search" v-bind:append-icon-cb="submit" v-model="search" hide-details single-line placeholder="Event Names, Description, Location, Type..." id="search" required></v-text-field>
+            {!! csrf_field() !!}        
         </form>
         <v-spacer></v-spacer>
         <v-toolbar-items class="hidden-sm-and-down">
@@ -41,10 +45,13 @@
 
         <v-toolbar-items>
             <v-menu open-on-hover offset-y>
-                <v-btn flat slot="activator" v-if="user_login">@{{ user_login.firstname }}</v-btn>
+                <v-btn flat slot="activator" v-if="user_login"><v-avatar size="32px"><img :src=user_login.profile_picture></v-avatar>&nbsp; @{{ user_login.firstname }}</v-btn>
                 <v-list class="ma-0 pa-0 grey lighten-4">
                     <v-list-tile v-for="(dropdown,c) in dropdowns" :key="c" @click="redirect(dropdown.url)">
                         <v-list-tile-title>@{{ dropdown.text }}</v-list-tile-title>
+                    </v-list-tile>
+                    <v-list-tile @click="redirect('/logout')">
+                        <v-list-tile-title>Sign out</v-list-tile-title>
                     </v-list-tile>
                 </v-list>
             </v-menu>
@@ -54,10 +61,15 @@
             <v-btn flat href="/register" class="button">Register</v-btn>
         </v-toolbar-items>
 
+        <v-toolbar-items class="hidden-sm-and-down" v-if="!user_login">
+            <v-btn flat href="/login" class="button">Sign In</v-btn>
+        </v-toolbar-items>
 
-
-        <v-toolbar-items class="hidden-sm-and-down">
+        <v-toolbar-items class="hidden-sm-and-down" v-if="!user_login">
             <v-btn flat href="/login">Create Event</v-btn>
+        </v-toolbar-items>
+        <v-toolbar-items class="hidden-sm-and-down" v-else>
+            <v-btn flat href="/event/create">Create Event</v-btn>
         </v-toolbar-items>
     </v-toolbar>
 
@@ -69,12 +81,14 @@
         </v-footer>
     </v-app>
 </div>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 <script src="https://unpkg.com/vue/dist/vue.js"></script>
 <script src="https://unpkg.com/vuetify/dist/vuetify.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
     //axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     var user_login = <?php echo json_encode($user_login); ?>;
-    console.log(user_login);
+    
     new Vue({
         el: '#navbar',
         data: {
@@ -102,16 +116,7 @@
         },
         methods: {
             submit: function() {
-                axios.post('/api/submit',{
-                    search:this.search
-
-                }).then((result) => {
-                    if (result) {
-
-                    } else {
-
-                    }
-                })
+               this.$refs.formSearch.submit()
             },
             redirect: function(link){
                 window.location.href=link

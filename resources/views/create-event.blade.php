@@ -9,7 +9,7 @@
             color:red;
         }
         #app{
-            background-color:#efefef;
+            background-color:#f9fbff;
         }
         input[type=file] {
             position: absolute;
@@ -22,195 +22,12 @@
     <v-container class="ma-0 pa-0" fluid>
         <v-layout row wrap>
             <v-flex xs12>
-                <v-container fluid class=" ma-0 pa-0 transparent" style="z-index:1;">
-                    <v-layout row>
-                        <v-flex xs12>
-                            <v-card flat style="border-bottom: 1px solid #9b9b9b;">
-                                <v-container fluid class="ma-0 pa-0">
-                                    <v-layout row wrap>
-                                        <v-flex xs8>
-                                            <v-card-title>
-                                                <div>
-                                                    <span><b>@{{ event.status }}</b></span>
-                                                    <span><h4>@{{ event.title }}</h4></span>
-                                                    <span>@{{ event.location }}</span>
-                                                    <br/>
-                                                    <span>@{{ fullDate }}</span>
-                                                </div>
-                                            </v-card-title>
-                                        </v-flex>
-                                        <v-flex xs4>
-                                            <v-layout align-center justify-center>
-                                                <v-card-actions><v-btn outline color="orange" round :href="event.viewLink" class="mt-5">View</v-btn></v-card-actions>
-                                            </v-layout>
-                                        </v-flex>
-                                    </v-layout>
-                                </v-container>
-                            </v-card>
-                        </v-flex>
-                    </v-layout>
-                </v-container>
-            </v-flex>
-            <v-flex xs3>
-                <v-navigation-drawer style="z-index:0; position:relative;" :mini-variant.sync="mini" persistent floating light app v-model="drawer" class="grey lighten-4 elevation-4" >
-                    <v-toolbar flat class="transparent">
-                        <v-list class="pa-0">
-                            <v-list-tile avatar>
-                                <v-list-tile-content v-if="!mini">
-                                    <v-list-tile-title class="title">Select your option</v-list-tile-title>
-                                </v-list-tile-content>
-                                <v-list-tile-action>
-                                    <v-btn icon @click.native.stop="mini = !mini">
-                                        <v-icon v-if="mini">chevron_right</v-icon>
-                                        <v-icon v-else>chevron_left</v-icon>
-                                    </v-btn>
-                                </v-list-tile-action>
-                            </v-list-tile>
-                        </v-list>
-                    </v-toolbar>
-                    <v-list dense class="pt-0">
-                        <v-divider></v-divider>
-                        <v-list-tile v-for="(navigation,i) in navigations" :key="i" @click="getEvent(i)">
-                            <v-list-tile-action>
-                                <v-icon>@{{ navigation.icon }}</v-icon>
-                            </v-list-tile-action>
-                            <v-list-tile-content>
-                                <v-list-tile-title>@{{ navigation.text }}</v-list-tile-title>
-                            </v-list-tile-content>
-                        </v-list-tile>
-                    </v-list>
-                </v-navigation-drawer>
-            </v-flex>
-            <v-flex xs9>
-                
-                <v-container v-if="showResponse == 'dashboard'" fluid>
-                    <v-layout row wrap>
-                        <v-flex xs12 class="text-xs-left">
-                            <v-card-text ><h3>Event Dashboard</h3></v-card-text>
-                            <hr/>
-                        </v-flex>
-                        <v-flex xs12>
-                            <v-container fluid text-xs-left>
-                                <v-layout row wrap>
-                                    <v-flex xs3 style="border:1px solid black;" class="mr-4">
-                                        <v-card-text style="font-family: 'Lora', serif;" v-if="event.status == 'Ongoing'" ><v-icon>event</v-icon> Ongoing!
-                                            <br/>
-                                            <br/>
-                                            Your event is up and running.
-                                        </v-card-text>
-                                        <v-card-text style="font-family: 'Lora', serif;" v-if="event.status=='Past'" class="mr-4" ><v-icon>&#xE867;</v-icon> Past!
-                                            <br/>
-                                            <br/>
-                                            Your event has passed.
-                                        </v-card-text>
-                                    </v-flex>
-                                    <v-flex xs4 style="border:1px solid black;" class="mr-4">
-                                        <v-card-text style="font-family: 'Lora', serif;" v-if="type=='Public'">
-                                            <v-icon>&#xE80B;</v-icon> Public
-                                            <br/>
-                                            <br/>
-                                            Your event is made public and searchable.
-                                        </v-card-text>
-                                        <v-card-text style="font-family: 'Lora', serif;" class="mr-4" v-else>
-                                            <v-icon>&#xE897;</v-icon> Private
-                                            <br/>
-                                            <br/>
-                                            A list of attendants is included.
-                                        </v-card-text>
-                                    </v-flex>
-                                    <v-flex xs4 style="border:1px solid black;">
-                                        <v-card-text style="font-family: 'Lora', serif;" v-if="calcPercentage(event) >= 100">Event is full <br/><v-progress-linear v-model="calcPercentage(event)" v-bind:color="getColor(event)"></v-progress-linear></v-card-text>
-                                        <v-card-text style="font-family: 'Lora', serif;" v-else>@{{ event.registered_amount }} / @{{ event.capacity }} people has registered <br/><v-progress-linear v-model="calcPercentage(event)" v-bind:color="getColor(event)"></v-progress-linear></v-card-text>
-                                    </v-flex>
-                                    <v-flex xs7 style="border:1px solid black;" class="mt-3 text-xs-center">
-                                        <v-card-text><b>Percentage of attendants</b></v-card-text>
-                                        <v-progress-circular
-                                                :size="150"
-                                                :width="15"
-                                                :rotate=-"-90"
-                                                v-model="calcPercentage(event)"
-                                                :color="getColor(event)"
-                                        >
-                                            @{{ calcPercentage(event) }}%
-                                        </v-progress-circular>
-                                    </v-flex>
-                                    <v-flex xs4 style="border:1px solid black;" class="mt-4 ml-5 text-xs-center" v-if="event.code != '0000000'">
-                                        <v-card-text style="font-family: 'Lora', serif;">
-                                            <v-icon>&#xE32A;</v-icon>Event Code: 
-                                            <br/>
-                                            <br/>
-                                            <b>@{{event.code}}</b>
-                                            </v-card-text>
-                                        
-                                    </v-flex>
-                                    <v-flex xs12 class="mt-3" v-if="type=='Private'">
-                                        <v-card flat class="transparent">
-                                            <v-card-title>
-                                                <span style="font-family: 'Merriweather', serif;" class="headline">Attendants List</span>
-                                                <v-spacer></v-spacer>
-                                                <v-text-field append-icon="search" label="Enter any keyword to filter" single-line hide-details v-model="filter"></v-text-field>
-                                            </v-card-title>
-                                        </v-card>
-                                        <v-data-table v-bind:headers="headers" v-bind:items="attendants" v-bind:search="filter" v-bind:pagination.sync="pagination" hide-actions class="elevation-1">
-                                            <template slot="items" slot-scope="props">
-                                                <td class="text-xs-center"><v-avatar><img :src=props.item.profile_picture></v-avatar></td>
-                                                <td class="text-xs-right">@{{ props.item.firstname }}</td>
-                                                <td class="text-xs-right">@{{ props.item.lastname }}</td>
-                                                <td class="text-xs-right"><a href="#" v-on:click.prevent="getDetails(props.item)">View Details</a></td>
-                                            </template>
-                                        </v-data-table>
-                                        <div class="text-xs-center pt-2">
-                                            <v-pagination v-model="pagination.page" :length="pages" circle :total-visible="5"></v-pagination>
-                                        </div>
-                                        <v-dialog v-model="showDetails" max-width="400" persistent>
-                                            <v-card>
-                                                <v-container fluid>
-                                                    <v-layout column wrap>
-                                                        <v-flex xs12 class="text-xs-center">
-                                                            <v-avatar size="100px"><img :src=tempDetails.icon></v-avatar>
-                                                        </v-flex>
-                                                        <v-flex xs12 class="text-xs-center">
-                                                            <v-card-text>Full Name: @{{ fullname }}</v-card-text>
-                                                        </v-flex>
-                                                        <v-flex xs12 class="text-xs-center">
-                                                            <v-card-text>Age: @{{ tempDetails.age }}</v-card-text>
-                                                        </v-flex>
-                                                        <v-flex xs12 class="text-xs-center">
-                                                            <v-card-text>Date of Birth: @{{ tempDetails.dateofbirth }}</v-card-text>
-                                                        </v-flex>
-                                                        <v-flex xs12 class="text-xs-center" style="text-transform:capitalize;">
-                                                            <v-card-text>Sex: @{{ tempDetails.sex }}</v-card-text>
-                                                        </v-flex>
-                                                        <v-flex xs12 class="text-xs-center">
-                                                            <v-card-text>Social Media Link:</v-card-text>
-                                                            <v-card-text>@{{ tempDetails.socialProfile }}</v-card-text>
-                                                        </v-flex>
-                                                        <v-flex xs12 class="text-xs-right">
-                                                            <v-card-actions>
-                                                                <v-spacer></v-spacer>
-                                                                <v-btn color="green darken-1" flat @click="done">Done</v-btn>
-                                                            </v-card-actions>
-                                                        </v-flex>
-                                                    </v-layout>
-                                                </v-container>
-                                            </v-card>
-                                        </v-dialog>
-                                    </v-flex>
-                                    <v-flex xs12 class="mt-3">
-                                        <h6>Your event URL:</h6>
-                                        <v-text-field v-model="event.viewLink" readonly></v-text-field>
-                                    </v-flex>
-                                </v-layout>
-                            </v-container>
-                        </v-flex>
-                    </v-layout>
-                </v-container>
-                <v-container v-if="showResponse == 'edit'" fluid>
-                    <v-layout row wrap>
-                        <v-flex xs12 class="mt-3">
-                            <v-form v-model="valid" ref="form" action="{{ url('/login') }}" method="post">
+                <v-container fluid>
+                    <v-layout align-center justify-center row wrap>
+                        <v-flex xs7 class="mt-3">
+                            <v-form v-model="valid" ref="form" action="{{ url('/login') }}" method="post" enctype="multipart/form-data">
                                 {{ csrf_field() }}
-                                <v-card-text class="text-xs-center"><h4 class="mb-0"><b>1. Edit Event</b></h4></v-card-text>
+                                <v-card-text class="text-xs-center"><h4 class="mb-0" style="font-family: 'Cinzel', serif;"><b>1. Basic Information</b></h4></v-card-text>
                                 <v-text-field
                                         label="Event Title"
                                         v-model="tempEvent.title"
@@ -226,7 +43,7 @@
                                         required
                                 ></v-text-field>
                                 <v-container fluid class="transparent ma-0 pa-0">
-                                    <v-layout row>
+                                    <v-layout align-center justify-center row wrap>
                                         <v-flex xs3 class="mr-4">
                                             <v-menu
                                                     lazy
@@ -246,6 +63,7 @@
                                                         v-model="tempEvent.startDate"
                                                         :rules="[(v) => !!v || 'Start date is required']"
                                                         name="startDate"
+                                                    
                                                         append-icon="event"
                                                         readonly
                                                         required
@@ -281,6 +99,7 @@
                                                         :rules="[(v) => !!v || 'End date is required']"
                                                         name="endDate"
                                                         append-icon="event"
+                                                        
                                                         readonly
                                                         required
                                                 ></v-text-field>
@@ -314,6 +133,7 @@
                                                         v-model="tempEvent.startTime"
                                                         :rules="[(v) => !!v || 'Start time is required']"
                                                         name="startTime"
+    
                                                         append-icon="access_time"
                                                         readonly
                                                         required
@@ -329,13 +149,14 @@
                                                 </v-time-picker>
                                             </v-menu>
                                         </v-flex>
+                                        
                                         <v-flex xs2>
                                             <v-menu
                                                     lazy
                                                     :close-on-content-click="false"
                                                     v-model="m4"
                                                     transition="scale-transition"
-                                                    offset-y
+                                                    offset-x
                                                     full-width
                                                     :nudge-right="40"
                                                     max-width="290px"
@@ -348,6 +169,7 @@
                                                         v-model="tempEvent.endTime"
                                                         :rules="[(v) => !!v || 'End time is required']"
                                                         name="endTime"
+                                                        
                                                         append-icon="access_time"
                                                         readonly
                                                         required
@@ -393,7 +215,7 @@
                                         multi-line
                                 >
                                 </v-text-field>
-                                <v-card-text class="text-xs-center"><h4 class="mb-0"><b>2. Event Settings</b></h4></v-card-text>
+                                <v-card-text class="text-xs-center" style="font-family: 'Cinzel', serif;"><h4 class="mb-0"><b>2. Event Settings</b></h4></v-card-text>
                                 <v-container fluid class="transparent ma-0 pa-0">
                                     <v-layout row wrap>
                                         <v-flex xs4>
@@ -412,7 +234,7 @@
                                             ></v-select>
                                         </v-flex>
                                         <v-flex xs4>
-                                            <v-subheader><b>Event Type:</b></v-subheader>
+                                            <v-subheader ><b>Event Type:</b></v-subheader>
                                         </v-flex>
                                         <v-flex xs8>
                                             <v-select
@@ -484,7 +306,16 @@
                                 <v-dialog v-model="showfullpic2" max-width="1000">
                                     <img src="/assets/img/event2.png">
                                 </v-dialog>
-                                <v-btn round @click="FormSubmit" :class="{ green: valid, red: !valid }">Update</v-btn>
+                                <div class="text-xs-center"><v-btn round @click="FormSubmit" :class="{ green: valid, red: !valid }">Create</v-btn><v-btn round @click="clear">Clear</v-btn></div>
+                                <v-dialog v-model="success" persistent max-width="500">
+                                    <v-card>
+                                        <v-card-title class="headline">Congratulation! You've successfully created an event</v-card-title>
+                                        <v-card-actions>
+                                          <v-spacer></v-spacer>
+                                          <v-btn href="/user/manage-event" color="primary" flat >Awesome</v-btn>
+                                        </v-card-actions>
+                                      </v-card>
+                                </v-dialog>
                             </v-form>
                         </v-flex>
                     </v-layout>
@@ -496,18 +327,10 @@
 
 @section('script')
     <script>
-    var event = <?php echo json_encode($event); ?>;
-    var category = <?php echo json_encode($category); ?>;
-    var type = <?php echo json_encode($event_type); ?>;
-    var list = <?php echo json_encode($people_attend); ?>;
-    var allCategories = <?php echo json_encode($all_categories); ?>;
-    var allTypes = <?php echo json_encode($all_types); ?>;
-    console.log(allCategories);
-    console.log(allTypes);
-    console.log(list);
-    console.log(category);
-    console.log(type);
-    console.log(event);
+    var allCat = <?php echo json_encode($all_categories); ?>;
+    var allType = <?php echo json_encode($all_types); ?>;
+    console.log(allCat);
+    console.log(allType);
         var vm = new Vue({
             el: '#app',
             props: {
@@ -528,93 +351,32 @@
                 m2: false,
                 m3: false,
                 m4: false,
-               
                 showfullpic1: false,
                 showfullpic2: false,
-                type: type,
-                category: category,
-                allCategories: allCategories,
-                allTypes: allTypes,
+                success: false,
+                allCategories: allCat,
+                allTypes: allType,
                 EventCategories: [],
                 EventTypes: [],
-                search:'',
-                fullDate: '',
-                filter: '',
-                showDetails: false,
-                pagination: {rowsPerPage:5, page:1},
-                drawer: true,
                 valid: false,
-                mini:false,
-                right:null,
-                tempDetails: {
-                    icon: '',
-                    firstname: '',
-                    lastname: '',
-                    dateofbirth: '',
-                    sex: '',
-                    socialProfile: ''
-                },
-                buttons: [
-                    {
-                        text: 'Home',
-                        url: '/home'
-                    },
-                    {
-                        text: 'Register',
-                        url: '/register'
-                    }],
-                navigations: [
-                    {
-                        text: 'Event Dashboard',
-                        actionID: 'dashboard',
-                        icon: 'assessment'
-                    },
-                    {
-                        text: 'Edit Event',
-                        actionID: 'edit',
-                        icon: 'create'
-                    }],
-                showResponse: 'dashboard',
                 tempEvent: {
                     imgURL: '',
                     imageName: '',
                     title: '',
                     location: '',
                     capacity: 0,
-                    startDate: '',
-                    startTime: '',
-                    endDate: '',
-                    endTime: '',
+                    startDate: null,
+                    startTime: null,
+                    endDate: null,
+                    endTime: null,
                     description: '',
                     orgDescription: '',
-                    price: '',
+                    price: 0,
                     category:'',
                     type: '',
                     layoutID: '',
                     uniqueCode: ''
                 },
-                event: event,
-                headers: [
-                    {
-                        text: 'Icon',
-                        sortable: false,
-                        align: 'center',
-                        value: 'icon'
-                    },
-                    {
-                        text: 'First Name',
-                        value: 'firstname'
-                    },
-                    {
-                        text: 'Last Name',
-                        value:'lastname'
-                    },
-                    {
-                        text: 'Details',
-                        sortable: false,
-                        value: 'detailLink'
-                    }],
-                attendants: list,
                 capacityRules: [
                     (v) => !!v || 'Please enter the event capacity',
                     (v) => (!isNaN(v) && v <= 10000 && v >= 1) || 'Your capacity should be a number and within 1 to 5000'
@@ -625,32 +387,6 @@
                 ]
         },
         methods: {
-            submit: function (e){
-                axios.post('/api/submit',{
-                    search:this.search
-                })
-            },
-            getEvent: function (i){
-                if(this.navigations[i].actionID == 'edit'){
-                    this.tempEvent.imgURL = this.event.background_photo
-                    this.tempEvent.imageName = this.event.background_photo.replace("/assets/img/","")
-                    this.tempEvent.title = this.event.title
-                    this.tempEvent.location = this.event.location
-                    this.tempEvent.capacity = this.event.capacity
-                    this.tempEvent.startDate = this.event.startdate
-                    this.tempEvent.startTime = this.event.starttime
-                    this.tempEvent.endDate = this.event.enddate
-                    this.tempEvent.endTime = this.event.endtime
-                    this.tempEvent.description = this.event.description
-                    this.tempEvent.orgDescription = this.event.organizer_description
-                    this.tempEvent.price = this.event.price
-                    this.tempEvent.category = this.category
-                    this.tempEvent.type = this.type
-                    this.tempEvent.layoutID = this.event.template
-                    this.tempEvent.uniqueCode = this.event.code == "" ? "N" : "Y"
-                }
-                this.showResponse = this.navigations[i].actionID
-            },
             allowedStartDates: function (date){
                 if(vm.tempEvent.endDate != null){
                    if(this.compare(date,vm.tempEvent.endDate) == 0 || this.compare(date,vm.tempEvent.endDate) == -1){
@@ -667,9 +403,11 @@
                         return date
                     }
                 }else{
-                    return date.getDate()
+                    return date
                 }
+               
             },
+            
             allowedStartHours: function(value){
                 if(vm.tempEvent.endDate != null && vm.tempEvent.startDate != null){
                     if(vm.tempEvent.endDate == vm.tempEvent.startDate){
@@ -701,15 +439,14 @@
                     return 0
                 }
             },
-            
             convertToDateObject : function (dateString){
-                return (
-                    dateString.constructor === Date ? dateString :
-                        dateString.constructor === Number ? new Date(dateString) :
-                            dateString.constructor === String ? new Date(dateString) :
-                                typeof dateString === "object" ? new Date(dateString.year, dateString.month, dateString.date) :
-                                    NaN
-                )
+                    return (
+                        dateString.constructor === Date ? dateString :
+                            dateString.constructor === Number ? new Date(dateString) :
+                                dateString.constructor === String ? new Date(dateString) :
+                                    typeof dateString === "object" ? new Date(dateString.year, dateString.month, dateString.date) :
+                                        NaN
+                    )
             },
             compare: function(a,b){
                 return (
@@ -718,43 +455,6 @@
                         (a>b)-(a<b):
                         NaN
                 )
-            },
-            getStatus: function(d){
-                var nowTime = Date.now()
-                var comparison = this.compare(d,nowTime)
-                var result = ""
-                switch (comparison){
-                    case -1:
-                        result = "Past"
-                        break
-                    case 0:
-                        result = "Ongoing"
-                        break
-                    case 1:
-                        result = "Ongoing"
-                        break
-                    default:
-                        result = "Invalid Date Input"
-                        break
-                }
-                return result
-            },
-            getYear: function(d){
-                var nowTime = Date.now()
-                var result = isFinite(a=this.convertToDateObject(d).getYear()) && isFinite(b=this.convertToDateObject(nowTime).getYear()) ? (a < b ? b-a : "N/A") : NaN
-                return result
-            },
-            calcPercentage: function(e){
-                return Number(((e.registered_amount/e.capacity)*100).toFixed(2))
-            },
-            getColor: function(event){
-                if(this.calcPercentage(event) <= 30){
-                    return "green"
-                }else if(this.calcPercentage(event) <= 60){
-                    return "blue"
-                }else {
-                    return "red"
-                }
             },
             findCategoryID: function(category){
                 for(var i = 0; i < this.allCategories.length; i++){
@@ -770,25 +470,14 @@
                     }
                 }
             },
-            getDetails: function(ob){
-                this.tempDetails.icon = ob.profile_picture
-                this.tempDetails.firstname = ob.firstname
-                this.tempDetails.lastname = ob.lastname
-                this.tempDetails.age = ob.age
-                this.tempDetails.dateofbirth = ob.DOB
-                this.tempDetails.sex = ob.gender
-                this.tempDetails.socialProfile = ob.social_network
-                this.showDetails = true
-            },
-            done: function(){
-                this.showDetails = false
-
-            },
             FormSubmit: function () {
                 if (this.$refs.form.validate()) {
+                    //this.$refs.form.$el.submit()
                     var form = new FormData()
                     var imagefile = document.querySelector('#files')
                     console.log(imagefile.files[0]);
+                    console.log(vm.findCategoryID(vm.tempEvent.category));
+                    console.log(vm.findTypeID(vm.tempEvent.type));
                     form.append("photo", imagefile.files[0]);
                     form.append("title",vm.tempEvent.title);
                     form.append("location",vm.tempEvent.location);
@@ -802,19 +491,20 @@
                     form.append("price",vm.tempEvent.price);
                     form.append("category",vm.findCategoryID(vm.tempEvent.category));
                     form.append("type",vm.findTypeID(vm.tempEvent.type));
-                    console.log(vm.tempEvent.layoutID);
                     form.append("layoutID",vm.tempEvent.layoutID);
                     form.append("uniqueCode",vm.tempEvent.uniqueCode);
                     const config = { headers: { 'Content-Type': 'multipart/form-data' } };
                     if (this.$refs.form.validate()) {
-                        axios.post('/event/dashboard', form,config)
+                        axios.post('/event/create', form,config)
                           .then(function (response) {
-                            console.log(response.data)
+                            if(response.data == 0){
+                                vm.success = true
+                            }
                           })
                           .catch(function (error) {
                             console.log(error);
                           });
-                        
+                        //this.$refs.form.$el.submit()
                     }
                 }
             },
@@ -868,39 +558,30 @@
                 if(this.tempEvent.capacity > 1){
                     this.tempEvent.capacity--
                 }
+            },
+            saveEvent: function(){
+                if(this.tempEvent.startDate != null){
+                    this.m1 = false
+                    
+                }
+                else if(this.tempEvent.endDate != null){
+                    this.allowedStartDates.max = this.tempEvent.endDate
+                    this.m3 = false
+                }
+                console.log(this.allowedEndDates)
+                console.log(this.tempEvent.startDate)
+                console.log(this.tempEvent.endDate)
             }
         },
         computed:{
-            shareLink: function(){
-                return "https://php-project-willieduke.c9users.io" + this.event.viewLink
-            },
-            pages: function() {
-                return this.pagination.rowsPerPage ? Math.ceil(this.attendants.length / this.pagination.rowsPerPage) : 0
-            },
-            fullname: function(){
-                return this.tempDetails.firstname + " " + this.tempDetails.lastname
-            }
+            
         },
         watch: {
             fileValue: function (fv){
                 this.tempEvent.imageName = fv;
             }
         },
-        updated: function(){
-            for(var j = 0; j < this.attendants.length; j++){
-                this.attendants[j].age = this.getYear(this.attendants[j].DOB)
-            }
-            
-        },
         mounted: function() {
-            this.event.status = this.getStatus(this.event.enddate + " " + this.event.endtime)
-            var formats = {
-                weekday: "long", year: "numeric", month: "short",
-                day: "numeric", hour: "2-digit", minute: "2-digit"
-            }
-            
-            this.fullDate = this.convertToDateObject(this.event.startdate + " " + this.event.starttime).toLocaleTimeString("en-us", formats)
-            this.event.viewLink = window.location.href.replace("/dashboard","")
             this.tempEvent.imageName = this.fileValue
             for(var i = 0; i < this.allCategories.length; i++){
                 this.EventCategories.push(this.allCategories[i].text)
@@ -908,6 +589,7 @@
             for(var k = 0; k < this.allTypes.length; k++){
                 this.EventTypes.push(this.allTypes[k].text)
             }
+            
             
         }
         })
