@@ -30,7 +30,6 @@ Route::get('home', 'HomeController@index');
 Route::get('/password/reset', 'LoginController@resetPassword');
 Route::post('/password/check-email', 'LoginController@postEmailReset');
 
-Route::get('/password-reset/{encStr}', 'LoginController@promptPassword');
 
 Route::post('search', 'SearchController@index');
 Route::post('check-email', 'LoginController@checkEmail');
