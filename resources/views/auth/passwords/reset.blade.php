@@ -30,7 +30,7 @@
             <v-flex xs12 v-if="isSuccess == false" style="width:30%;" class="mt-5">
             <transition name="fade" appear>
                 <v-alert color="error" icon="warning" v-model="isError">
-                    Email is incorrect
+                    No email exists
                 </v-alert>
             </transition>
             <v-form v-model="valid" ref="form" action="{{ url('/login') }}" method="post" enctype="multipart/form-data">
@@ -54,8 +54,9 @@
                 <v-alert color="success" icon="check_circle" value="true">
                     An email consisting your password has been sent to your email address.
                 </v-alert>
-                <a href="/password/reset">Still haven't got it? Press here to try again</a>
+                <div class="text-xs-center mt-3"><a href="/password/reset">Still haven't got it? Press here to try again</a></div>
             </v-flex>
+            
         </v-layout>
     </v-container>
 @stop
@@ -98,13 +99,13 @@
                     this.isProcess = true
                     setTimeout(function(){
                         vm.isProcess = false
-                        axios.post('/reset-password', {
-                        email: this.email
+                        axios.post('/password/check-email', {
+                            email: vm.email
                       })
                       .then(function (response) {
                         console.log(response.data)
                         
-                        if(1 == 1){
+                        if(response.data == 1){
                             vm.isError = true;
                         }else{
                             vm.isSuccess = true;
@@ -113,7 +114,7 @@
                       .catch(function (error) {
                         console.log(error);
                       });
-                    },1500)
+                    },2000)
                     
                 }
                 

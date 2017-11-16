@@ -3,6 +3,7 @@
 <meta name="csrf-token" content="{{ csrf_token() }}" />
 <meta name="_token" content="{{ csrf_token() }}" />
 <head>
+    @yield('header')
     <link href='https://fonts.googleapis.com/css?family=Roboto|Material+Icons' rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Kaushan+Script" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Belleza" rel="stylesheet">
@@ -10,8 +11,8 @@
     <link href="https://fonts.googleapis.com/css?family=Lora" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Merriweather" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Alegreya" rel="stylesheet">
-    <link href="https://unpkg.com/vuetify/dist/vuetify.min.css" rel="stylesheet">
-
+    <link href="/assets/css/vuetify-0.16.9.css" rel="stylesheet">
+        
     <style type="text/css">
         a {
             text-decoration:none;
@@ -22,20 +23,24 @@
             font-family: 'Kaushan Script', cursive;
             font-size:30px;
         }
-        #search::-webkit-input-placeholder{
+        #searchIcon::-webkit-input-placeholder{
             color:grey;
             font-style:italic;
+        }
+        @media only screen and (min-width: 768px){
+            #searchIcon {width:200%};
         }
     </style>
     @yield('style')
 </head>
 <body>
-<div>
+    
     <v-toolbar class="white" style="z-index:2;" id="navbar">
+        
         <v-toolbar-title><a href="/home" id="title">Plantastic</a></v-toolbar-title>
         <v-spacer></v-spacer>
         <form method="post" action="/search" ref="formSearch">
-            <v-text-field name="input" style="width:200%;" append-icon="search" v-bind:append-icon-cb="submit" v-model="search" hide-details single-line placeholder="Event Names, Description, Location, Type..." id="search" required></v-text-field>
+            <v-text-field name="input" style="width: 200%" append-icon="search" v-bind:append-icon-cb="submit" v-model="search" hide-details single-line placeholder="Event Names, Description, Location, Type..." id="searchIcon" required></v-text-field>
             {!! csrf_field() !!}        
         </form>
         <v-spacer></v-spacer>
@@ -73,18 +78,18 @@
         </v-toolbar-items>
     </v-toolbar>
 
-    <v-app id="app">
+    <v-app id="app" standalone>
         @yield('body')
         <v-footer class="grey darken-4 pa-3" id="footer" style="z-index:2;">
             <v-spacer></v-spacer>
             <div style="color:white">© @{{ new Date().getFullYear() }}</div>
         </v-footer>
     </v-app>
-</div>
 <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
-<script src="https://unpkg.com/vue/dist/vue.js"></script>
-<script src="https://unpkg.com/vuetify/dist/vuetify.js"></script>
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://unpkg.com/vue@2.5.3/dist/vue.js"></script>
+<script src="/assets/js/vuetify-0.16.9.js"></script>
+<script src="/assets/js/axios-0.17.1.js"></script>
+
 <script>
     //axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     var user_login = <?php echo json_encode($user_login); ?>;
@@ -127,3 +132,5 @@
 @yield('script')
 </body>
 </html>
+
+

@@ -15,6 +15,10 @@
             position: absolute;
             left: -99999px;
         }
+        #map{
+            height: 400px;
+            
+        }
     </style>
 @stop
 
@@ -36,12 +40,19 @@
                                         required
                                 ></v-text-field>
                                 <v-text-field
-                                        label="Location"
                                         v-model="tempEvent.location"
                                         :rules="[(v) => !!v || 'Location is required']"
                                         name="location"
+                                        placeholder="Location*"
+                                        ref="autocomplete"
                                         required
                                 ></v-text-field>
+                                
+                                 <div
+                                        id="hidden-map"
+                                        hidden
+                                ></div>
+                                
                                 <v-container fluid class="transparent ma-0 pa-0">
                                     <v-layout align-center justify-center row wrap>
                                         <v-flex xs3 class="mr-4">
@@ -327,10 +338,42 @@
 
 @section('script')
     <script>
-    var allCat = <?php echo json_encode($all_categories); ?>;
-    var allType = <?php echo json_encode($all_types); ?>;
-    console.log(allCat);
-    console.log(allType);
+        var allCat = <?php echo json_encode($all_categories); ?>;
+        var allType = <?php echo json_encode($all_types); ?>;
+        console.log(allCat);
+        console.log(allType);
+        
+        
+        function initMAP() {
+            var uluru = {lat: 43.6532, lng: -79.3832};
+            const google = window.google
+            var map = new google.maps.Map(document.getElementById('hidden-map'), {
+                zoom: 4,
+                center: uluru
+            });
+            
+            
+            var element = vm.$refs.autocomplete.$el
+            
+            element = element.querySelector('input');
+            var autocomplete = new google.maps.places.Autocomplete(
+            
+            (element),
+            
+            {types: ['establishment','geocode']});
+            
+            google.maps.event.addListener(autocomplete, 'place_changed', function() {
+                vm.tempEvent.location = autocomplete.getPlace().formatted_address;
+                vm.tempEvent.latitude = autocomplete.getPlace().geometry.location.lat();
+                vm.tempEvent.longtitude = autocomplete.getPlace().geometry.location.lng();
+          
+            
+                    // vm.tempEvent.location = place;
+            });
+            
+        }
+
+        
         var vm = new Vue({
             el: '#app',
             props: {
@@ -358,6 +401,7 @@
                 allTypes: allType,
                 EventCategories: [],
                 EventTypes: [],
+                autocomplete: '',
                 valid: false,
                 tempEvent: {
                     imgURL: '',
@@ -375,7 +419,9 @@
                     category:'',
                     type: '',
                     layoutID: '',
-                    uniqueCode: ''
+                    uniqueCode: '',
+                    latitude: 0,
+                    longtitude: 0
                 },
                 capacityRules: [
                     (v) => !!v || 'Please enter the event capacity',
@@ -387,6 +433,9 @@
                 ]
         },
         methods: {
+            getAddressData: function (addressData, placeResultData, id) {
+                this.address = addressData;
+            },
             allowedStartDates: function (date){
                 if(vm.tempEvent.endDate != null){
                    if(this.compare(date,vm.tempEvent.endDate) == 0 || this.compare(date,vm.tempEvent.endDate) == -1){
@@ -410,7 +459,7 @@
             
             allowedStartHours: function(value){
                 if(vm.tempEvent.endDate != null && vm.tempEvent.startDate != null){
-                    if(vm.tempEvent.endDate == vm.tempEvent.startDate){
+                    if(this.compare(vm.tempEvent.endDate, vm.tempEvent.startDate)==0){
                         if(vm.tempEvent.endTime != null){
                             return value < vm.tempEvent.endTime.slice(0,2)
                             
@@ -426,7 +475,7 @@
             },
             allowedEndHours: function(value){
                 if(vm.tempEvent.endDate != null && vm.tempEvent.startDate != null){
-                    if(vm.tempEvent.endDate == vm.tempEvent.startDate){
+                    if(this.compare(vm.tempEvent.endDate, vm.tempEvent.startDate) == 0){
                         if(vm.tempEvent.startTime != null){
                             return value > vm.tempEvent.startTime.slice(0,2)
                         }else{
@@ -493,6 +542,8 @@
                     form.append("type",vm.findTypeID(vm.tempEvent.type));
                     form.append("layoutID",vm.tempEvent.layoutID);
                     form.append("uniqueCode",vm.tempEvent.uniqueCode);
+                    form.append("latitude",vm.tempEvent.latitude);
+                    form.append("longitude",vm.tempEvent.longtitude);
                     const config = { headers: { 'Content-Type': 'multipart/form-data' } };
                     if (this.$refs.form.validate()) {
                         axios.post('/event/create', form,config)
@@ -571,7 +622,8 @@
                 console.log(this.allowedEndDates)
                 console.log(this.tempEvent.startDate)
                 console.log(this.tempEvent.endDate)
-            }
+            },
+        
         },
         computed:{
             
@@ -580,6 +632,8 @@
             fileValue: function (fv){
                 this.tempEvent.imageName = fv;
             }
+            
+            
         },
         mounted: function() {
             this.tempEvent.imageName = this.fileValue
@@ -591,7 +645,15 @@
             }
             
             
+           
+            
         }
         })
+        
     </script>
+    
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuP7giqQQp4O8FE8oL41qjWLyFlcv3Ws8&libraries=places&callback=initMAP">
+    </script>
+    
 @stop

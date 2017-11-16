@@ -48,9 +48,11 @@ Route::group(['middleware' => ['web', 'auth.user']], function () {
     // event routes
     Route::get('event/dashboard/{id?}', ['as' => 'get-event-dashboard', 'uses' => 'EventController@getDashboard']);
     Route::get('event/create', ['as' => 'get-create-event', 'uses' => 'EventController@createEvent']);
+    
     Route::post('event/create', ['as' => 'post-create-event', 'uses' => 'EventController@postCreateEvent']);
     Route::post('event/attend', ['as' => 'post-attend-event', 'uses' => 'EventController@attendEvent']);
     Route::post('event/delete', ['as' => 'post-delete-event', 'uses' => 'EventController@deleteEvent']);
+    Route::post('event/edit', ['as' => 'post-edit-event', 'uses' => 'EventController@editEvent']);
 });
 
 Route::get('event/{id?}', 'EventController@getIndex');

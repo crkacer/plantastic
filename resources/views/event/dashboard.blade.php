@@ -20,6 +20,7 @@
 
 @section('body')
     <v-container class="ma-0 pa-0" fluid>
+        
         <v-layout row wrap>
             <v-flex xs12>
                 <v-container fluid class=" ma-0 pa-0 transparent" style="z-index:1;">
@@ -83,7 +84,7 @@
             </v-flex>
             <v-flex xs9>
                 
-                <v-container v-if="showResponse == 'dashboard'" fluid>
+                <v-container v-show="showResponse == 'dashboard'" fluid>
                     <v-layout row wrap>
                         <v-flex xs12 class="text-xs-left">
                             <v-card-text ><h3>Event Dashboard</h3></v-card-text>
@@ -205,7 +206,7 @@
                         </v-flex>
                     </v-layout>
                 </v-container>
-                <v-container v-if="showResponse == 'edit'" fluid>
+                <v-container v-show="showResponse == 'edit'" fluid>
                     <v-layout row wrap>
                         <v-flex xs12 class="mt-3">
                             <v-form v-model="valid" ref="form" action="{{ url('/login') }}" method="post">
@@ -219,12 +220,17 @@
                                         required
                                 ></v-text-field>
                                 <v-text-field
-                                        label="Location"
                                         v-model="tempEvent.location"
                                         :rules="[(v) => !!v || 'Location is required']"
                                         name="location"
+                                        placeholder="Location*"
+                                        ref="autocomplete2"
                                         required
                                 ></v-text-field>
+                                <div
+                                        id="hidden-map"
+                                        hidden
+                                ></div>
                                 <v-container fluid class="transparent ma-0 pa-0">
                                     <v-layout row>
                                         <v-flex xs3 class="mr-4">
@@ -436,6 +442,7 @@
                                                     v-model="tempEvent.capacity"
                                                     :rules="capacityRules"
                                                     required
+                                                    ref="inputCapacity"
                                             ></v-text-field>
                                         </v-flex>
                                         <v-flex xs4>
@@ -453,7 +460,7 @@
                                     </v-layout>
                                 </v-container>
                                 <label style="font-size:1.25em;">Choose your event layout: </label>
-                                <v-radio-group v-model="tempEvent.layoutID" :rules="[(v) => !!v || 'You must select one to continue!']" required>
+                                <v-radio-group v-model="tempEvent.layoutID" required>
                                     <v-container fluid class="ma-0 pa-0 transparent">
                                         <v-layout row wrap>
                                             <v-flex xs6>
@@ -466,7 +473,7 @@
                                     </v-container>
                                 </v-radio-group>
                                 <label style="font-size:1.25em;">Do you want to generate a unique code for your event? </label>
-                                <v-radio-group v-model="tempEvent.uniqueCode" :rules="[(v) => !!v || 'You must select one to continue!']" required>
+                                <v-radio-group v-model="tempEvent.uniqueCode" required>
                                     <v-container fluid class="ma-0 pa-0 transparent">
                                         <v-layout row wrap>
                                             <v-flex xs6>
@@ -484,11 +491,21 @@
                                 <v-dialog v-model="showfullpic2" max-width="1000">
                                     <img src="/assets/img/event2.png">
                                 </v-dialog>
-                                <v-btn round @click="FormSubmit" :class="{ green: valid, red: !valid }">Update</v-btn>
+                                <div class="text-xs-center"> <v-btn round @click="FormSubmit" :class="{ green: valid, red: !valid }">Update</v-btn></div>
+                               
                             </v-form>
                         </v-flex>
                     </v-layout>
                 </v-container>
+                <v-dialog v-model="success" persistent max-width="600">
+                    <v-card>
+                        <v-card-title class="headline">Congratulation! You've successfully updated an event</v-card-title>
+                        <v-card-actions>
+                          <v-spacer></v-spacer>
+                          <v-btn :href="redirect" color="primary" flat >Awesome</v-btn>
+                        </v-card-actions>
+                      </v-card>
+                </v-dialog>
             </v-flex>
         </v-layout>
     </v-container>
@@ -508,6 +525,33 @@
     console.log(category);
     console.log(type);
     console.log(event);
+    
+    function initMAP() {
+        const google = window.google;
+        var uluru = {lat: 43.6532, lng: -79.3832};
+        var map = new google.maps.Map(document.getElementById('hidden-map'), {
+            zoom: 4,
+            center: uluru
+        });
+        
+        
+        var element = vm.$refs.autocomplete2.$el
+        
+        element = element.querySelector('input');
+        
+        var autocomplete = new google.maps.places.Autocomplete(
+        
+            (element),
+            
+            {types: ['establishment','geocode']});
+            
+        google.maps.event.addListener(autocomplete, 'place_changed', function() {
+            vm.tempEvent.location = autocomplete.getPlace().formatted_address;
+            vm.tempEvent.latitude = autocomplete.getPlace().geometry.location.lat();
+            vm.tempEvent.longtitude = autocomplete.getPlace().geometry.location.lng();
+      
+        });
+    }
         var vm = new Vue({
             el: '#app',
             props: {
@@ -524,11 +568,12 @@
                 }
             },
             data: {
+                includedGMap: false,
                 m1: false,
                 m2: false,
                 m3: false,
                 m4: false,
-               
+                success: false,
                 showfullpic1: false,
                 showfullpic2: false,
                 type: type,
@@ -587,11 +632,14 @@
                     endTime: '',
                     description: '',
                     orgDescription: '',
-                    price: '',
+                    price: 0,
+                    registered_amount: 0,
                     category:'',
                     type: '',
                     layoutID: '',
-                    uniqueCode: ''
+                    uniqueCode: '',
+                    latitude: 0,
+                    longtitude: 0
                 },
                 event: event,
                 headers: [
@@ -615,16 +663,13 @@
                         value: 'detailLink'
                     }],
                 attendants: list,
-                capacityRules: [
-                    (v) => !!v || 'Please enter the event capacity',
-                    (v) => (!isNaN(v) && v <= 10000 && v >= 1) || 'Your capacity should be a number and within 1 to 5000'
-                ],
+                capacityRules: [],
                 priceRules: [
-                    (v) => !!v || 'Please enter price for the event',
                     (v) => (!isNaN(v) && v >= 0) || 'Your price should be a valid number' 
                 ]
         },
         methods: {
+            
             submit: function (e){
                 axios.post('/api/submit',{
                     search:this.search
@@ -632,22 +677,38 @@
             },
             getEvent: function (i){
                 if(this.navigations[i].actionID == 'edit'){
-                    this.tempEvent.imgURL = this.event.background_photo
-                    this.tempEvent.imageName = this.event.background_photo.replace("/assets/img/","")
-                    this.tempEvent.title = this.event.title
-                    this.tempEvent.location = this.event.location
-                    this.tempEvent.capacity = this.event.capacity
-                    this.tempEvent.startDate = this.event.startdate
-                    this.tempEvent.startTime = this.event.starttime
-                    this.tempEvent.endDate = this.event.enddate
-                    this.tempEvent.endTime = this.event.endtime
-                    this.tempEvent.description = this.event.description
-                    this.tempEvent.orgDescription = this.event.organizer_description
-                    this.tempEvent.price = this.event.price
-                    this.tempEvent.category = this.category
-                    this.tempEvent.type = this.type
-                    this.tempEvent.layoutID = this.event.template
-                    this.tempEvent.uniqueCode = this.event.code == "" ? "N" : "Y"
+                    // append google map script
+                    if (!vm.includedGMap) {
+                        vm.includedGMap = true;
+                        var srt = document.getElementsByTagName('script')[0];
+                        var script = document.createElement('script');
+                        script.setAttribute('async', 'async');
+                        script.setAttribute("defer", "defer");
+                        script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyDuP7giqQQp4O8FE8oL41qjWLyFlcv3Ws8&libraries=places&callback=initMAP";
+                        script.type = 'text/javascript';
+                        srt.appendChild(script);
+                    // end append    
+                        this.tempEvent.location = this.event.location;
+                        this.tempEvent.latitude = this.event.lat;
+                        this.tempEvent.longtitude = this.event.lng;
+                        this.tempEvent.imgURL = this.event.background_photo
+                        this.tempEvent.imageName = this.event.background_photo.replace("/assets/img/","")
+                        this.tempEvent.title = this.event.title
+                        this.tempEvent.registered_amount = this.event.registered_amount
+                        this.tempEvent.capacity = this.event.capacity
+                        this.tempEvent.startDate = this.event.startdate
+                        this.tempEvent.startTime = this.event.starttime
+                        this.tempEvent.endDate = this.event.enddate
+                        this.tempEvent.endTime = this.event.endtime
+                        this.tempEvent.description = this.event.description
+                        this.tempEvent.orgDescription = this.event.organizer_description
+                        this.tempEvent.price = this.event.price
+                        this.tempEvent.category = this.category
+                        this.tempEvent.type = this.type
+                        this.tempEvent.layoutID = this.event.template
+                        
+                        this.tempEvent.uniqueCode = this.event.code == "0000000" ? "N" : "Y"
+                    }
                 }
                 this.showResponse = this.navigations[i].actionID
             },
@@ -790,6 +851,7 @@
                     var imagefile = document.querySelector('#files')
                     console.log(imagefile.files[0]);
                     form.append("photo", imagefile.files[0]);
+                    form.append("id", vm.event.id);
                     form.append("title",vm.tempEvent.title);
                     form.append("location",vm.tempEvent.location);
                     form.append("capacity",vm.tempEvent.capacity);
@@ -802,14 +864,18 @@
                     form.append("price",vm.tempEvent.price);
                     form.append("category",vm.findCategoryID(vm.tempEvent.category));
                     form.append("type",vm.findTypeID(vm.tempEvent.type));
-                    console.log(vm.tempEvent.layoutID);
                     form.append("layoutID",vm.tempEvent.layoutID);
+                    form.append("latitude",vm.tempEvent.latitude);
+                    form.append("longitude",vm.tempEvent.longtitude);
                     form.append("uniqueCode",vm.tempEvent.uniqueCode);
                     const config = { headers: { 'Content-Type': 'multipart/form-data' } };
                     if (this.$refs.form.validate()) {
-                        axios.post('/event/dashboard', form,config)
+                        axios.post('/event/edit', form,config)
                           .then(function (response) {
-                            console.log(response.data)
+    
+                            if(response.data == 0){
+                                vm.success=true
+                            }
                           })
                           .catch(function (error) {
                             console.log(error);
@@ -879,6 +945,9 @@
             },
             fullname: function(){
                 return this.tempDetails.firstname + " " + this.tempDetails.lastname
+            },
+            redirect: function(){
+                return "/event/dashboard/" + event.id
             }
         },
         watch: {
@@ -908,8 +977,16 @@
             for(var k = 0; k < this.allTypes.length; k++){
                 this.EventTypes.push(this.allTypes[k].text)
             }
+        
+                     
+            this.capacityRules.push((v) => !!v || 'Please enter the event capacity')
+            this.capacityRules.push((v) => (!isNaN(v) && v <= 10000 && v >= vm.event.registered_amount) || 'Your capacity should be a number and within ' + vm.event.registered_amount +' to 5000')
             
         }
         })
     </script>
+    <!--<script async defer-->
+    <!--        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuP7giqQQp4O8FE8oL41qjWLyFlcv3Ws8&libraries=places&callback=initMAP">-->
+    <!--</script>-->
+
 @stop
