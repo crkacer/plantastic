@@ -7,7 +7,7 @@ use App\Http\Requests;
 use App\User;
 use App\Event;
 use App\Attendance;
-
+use Hash;
 
 use Auth;
 
@@ -99,9 +99,21 @@ class UserController extends Controller
     }
     
     
-    public function postUserProfile(Request $request) {
+    public function postUserProfile() {
         
-        $data = $request->all();
+        $user = User::where('id', intval($_POST['id']))->first();
+        
+        // $user->photo = $;
+         
+        $user->email = $_POST['email'];
+        $user->password = Hash::make($_POST['password']);
+        $user->firstname = $_POST['firstname'];
+        $user->lastname = $_POST['lastname'];
+        $user->name = $user->firstname ." ". $user->lastname;
+        $user->DOB = $_POST['dob'];
+        $user->gender = $_POST['gender'];
+        $user->social_network = $_POST['socialMedia'];
+        $user->save();
         
         return 0;
     }

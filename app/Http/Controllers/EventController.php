@@ -258,6 +258,8 @@ class EventController extends Controller
         $event->code = $code;
         $event->price = $_POST['price'];
         $event->background_photo = "/assets/img/blur.jpg";
+        $event->lat = floatval($_POST['latitude']);
+        $event->lng = floatval($_POST['longitude']);
         $event->save();
         
         
@@ -282,4 +284,37 @@ class EventController extends Controller
         
         return 0;
     }
+    
+    public function editEvent() {
+ 
+        $event = Event::where('id', intval($_POST['id']))->first();
+        
+        if ($_POST['uniqueCode'] == "N") {
+            $event->code = "0000000";
+        }  
+        
+        $event->location = $_POST['location'];
+        $event->title = $_POST['title'];
+        $event->startdate = $_POST['startdate'];
+        $event->enddate = $_POST['enddate'];
+        $event->starttime = "0000-00-00 " . $_POST['starttime'];
+        $event->endtime = "0000-00-00 " . $_POST['endtime'];
+        $event->description = $_POST['description'];
+        $event->user_id = Auth::user()->id;
+        $event->organizer_description = $_POST['organizerDescription'];
+        $event->event_type_id = intval($_POST['type']);
+        $event->category_id = intval($_POST['category']);
+        $event->url = "";
+        $event->template = $_POST['layoutID'];
+        $event->capacity = intval($_POST['capacity']);
+        $event->price = $_POST['price'];
+        $event->background_photo = "/assets/img/blur.jpg";
+        $event->lat = floatval($_POST['latitude']);
+        $event->lng = floatval($_POST['longitude']);
+        $event->save();
+        
+        
+        return 0;
+    }
+    
 }

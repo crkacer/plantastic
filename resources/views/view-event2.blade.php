@@ -102,7 +102,7 @@
                                     @{{ event.organizer_description }}</v-card-text>
                                 </v-flex>
                                 <v-flex xs12>
-                                    <v-card-text id="map"></v-card-text>
+                                    <v-card-text id="map" style="height:400px;"></v-card-text>
                                 </v-flex>
                             </v-layout>
                         </v-flex>
@@ -202,9 +202,9 @@
         console.log(allCat);
         console.log(event);
         function initMap() {
-            var uluru = {lat: 43.6532, lng: -79.3832};
+            var uluru = {lat: event.lat, lng: event.lng};
             var map = new google.maps.Map(document.getElementById('map'), {
-                zoom: 4,
+                zoom: 16,
                 center: uluru
             });
             var marker = new google.maps.Marker({

@@ -14,7 +14,6 @@ use Cookie;
 use Session;
 use Hash;
 use Image;
-
 use Mail;
 
 
@@ -23,7 +22,7 @@ class LoginController extends Controller
     public function index() {
         
         $error = "correct";
-
+        if (Auth::check()) return redirect('/home');
         if (\Request::input('email') && \Request::input('password')) {
             $userData = [
                 'email' => \Request::input('email'),
@@ -207,9 +206,9 @@ class LoginController extends Controller
             ], function ($message) use ($user)
                 {
 
-                    $message->from('plantastic.tech5upport@gmail.com', 'Plantastic');
+                    $message->from('plantastic.tech5upport@gmail.com', 'Reset password confirmation:');
 
-                    $message->to($user->email)->subject('Reset password confirmation:');
+                    $message->to($user->email);
 
                 });
             $user->save();
