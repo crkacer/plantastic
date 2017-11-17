@@ -334,7 +334,7 @@
             },
             getYear: function(d){
                 var nowTime = Date.now()
-                var result = isFinite(a=this.convertToDateObject(d).getYear()) && isFinite(b=this.convertToDateObject(nowTime).getYear()) ? (a < b ? b-a : "N/A") : NaN
+                var result = isFinite(a=this.convertToDateObject(d).getFullYear()) && isFinite(b=this.convertToDateObject(nowTime).getFullYear()) ? (a < b ? b-a : "N/A") : NaN
                 return result
             },
             sendForm: function(){

@@ -72,7 +72,7 @@
                                         <v-layout class="ma-0 pa-0" row wrap>
                                             <v-flex xs3 class="grey lighten-2">
                                                 <a :href="link(e)">
-                                                    <v-card-media :src=e.background_photo height="175px" contain></v-card-media>
+                                                    <v-card-media :src=e.background_photo height="200px" contain></v-card-media>
                                                 </a>
                                             </v-flex>
                                             <v-flex xs5>

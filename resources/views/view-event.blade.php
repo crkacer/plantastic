@@ -59,10 +59,11 @@
                                 </v-flex>
                                 <v-flex xs4 class="text-xs-center" style="border-top-style:solid; border-top-width:1px;border-bottom-style:solid;border-bottom-width:1px">
                                     <v-card class="transparent" tile flat>
-                                        <v-btn tile color="red" style="width:90%; font-family: 'Belleza', sans-serif;" v-if="event.registered_amount >= event.capacity">Event is full</v-btn>
-                                        <v-btn tile href="/login" color="green" style="width:90%; font-family: 'Belleza', sans-serif;" v-if="event.registered_amount < event.capacity && user_login == null">Join Event</v-btn>
-                                        <v-btn tile color="grey" style="width:90%; font-family: 'Belleza', sans-serif;" v-if="event.registered_amount < event.capacity && user_login != null && attended == true">Joined</v-btn>
-                                        <v-btn tile color="green" style="width:90%; font-family: 'Belleza', sans-serif;" v-if="event.registered_amount < event.capacity && user_login != null && attended == false " @click.native="join">Join Event</v-btn>
+                                        <v-btn tile color="grey" style="width:90%; font-family: 'Belleza', sans-serif;" v-if="getStatus(fullEndDate) == 'Past'">Event no longer available</v-btn>
+                                        <v-btn tile color="red" style="width:90%; font-family: 'Belleza', sans-serif;" v-if="getStatus(fullEndDate) == 'Ongoing' && event.registered_amount >= event.capacity">Event is full</v-btn>
+                                        <v-btn tile href="/login" color="green" style="width:90%; font-family: 'Belleza', sans-serif;" v-if="getStatus(fullEndDate) == 'Ongoing' && event.registered_amount < event.capacity && user_login == null">Join Event</v-btn>
+                                        <v-btn tile color="grey" style="width:90%; font-family: 'Belleza', sans-serif;" v-if="getStatus(fullEndDate) == 'Ongoing' && event.registered_amount < event.capacity && user_login != null && attended == true">Joined</v-btn>
+                                        <v-btn tile color="green" style="width:90%; font-family: 'Belleza', sans-serif;" v-if="getStatus(fullEndDate) == 'Ongoing' && event.registered_amount < event.capacity && user_login != null && attended == false " @click.native="join">Join Event</v-btn>
                                         
                                     </v-card>
                                 </v-flex>
@@ -140,12 +141,12 @@
                                     <v-flex xs4 v-for="(s,k) in suggestion" :key="k">
                                         <v-card raised class="mr-3">
                                             <a :href= "link(s)">
-                                                <v-card-media  style="border-bottom: solid 1px #E8E8E8;" class="text-xs-right" height="200px" :src= s.background_photo contain>
+                                                <v-card-media  style="border-bottom: solid 1px #E8E8E8;" class="text-xs-right" height="300px" :src= s.background_photo contain>
                                                     <v-container fill-height fluid>
                                                         <v-layout fill-height>
                                                             <v-flex xs12 align-end flexbox>
-                                                                <span class="white black--text" style="font-family: 'Lora', serif;" v-if="s.price > 0">$ @{{ s.price }}</span>
-                                                                <span class="white black--text" style="font-family: 'Lora', serif;" v-else>Free</span>
+                                                                <span class="grey lighten-2 black--text" style="font-family: 'Lora', serif; font-size: 2em;" v-if="s.price > 0">$ @{{ s.price }}</span>
+                                                                <span class="grey lighten-2 black--text" style="font-family: 'Lora', serif; font-size: 2em;" v-else>Free</span>
                                                             </v-flex>
                                                         </v-layout>
                                                     </v-container>
@@ -269,6 +270,34 @@
                 },
                 getCatURL: function(id){
                     return "/category/" + id
+                },
+                getStatus: function(d){
+                    var nowTime = Date.now()
+                    var comparison = this.compare(d,nowTime)
+                    var result = ""
+                    switch (comparison){
+                        case -1:
+                            result = "Past"
+                            break
+                        case 0:
+                            result = "Ongoing"
+                            break
+                        case 1:
+                            result = "Ongoing"
+                            break
+                        default:
+                            result = "Invalid Date Input"
+                            break
+                    }
+                    return result
+                },
+                compare: function(a,b){
+                    return (
+                        isFinite(a=this.convertToDateObject(a).valueOf()) &&
+                        isFinite(b=this.convertToDateObject(b).valueOf()) ?
+                            (a>b)-(a<b):
+                            NaN
+                    )
                 }
             },
             mounted: function(){
