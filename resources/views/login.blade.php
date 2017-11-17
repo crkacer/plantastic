@@ -76,7 +76,6 @@
 @section('script')
     <script>
     var error = <?php echo $error; ?>;
-    console.log(error);
         var vm = new Vue({
             el: '#app',
             data: {

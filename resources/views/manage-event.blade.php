@@ -105,8 +105,7 @@
     <script>
     var attended = <?php echo json_encode($attended); ?>;
     var created = <?php echo json_encode($created); ?>;
-    console.log(created);
-    console.log(attended);
+
         var vm = new Vue({
             el: '#app',
             data: {

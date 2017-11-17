@@ -113,8 +113,31 @@ class UserController extends Controller
         $user->DOB = $_POST['dob'];
         $user->gender = $_POST['gender'];
         $user->social_network = $_POST['socialMedia'];
+
+        if (isset($_FILES['photo'])) {
+            // Upload photo
+
+            $target_location = public_path('assets/img/user_photo/') . $user->id;
+            $target_file = $target_location . "/" . $_FILES['photo']['name'];
+    
+            if (!is_dir($target_location)) {
+                mkdir($target_location, 0755);
+            }
+    
+            if (file_exists ($target_file)) {
+                unlink($target_file);
+            }
+    
+            $ok = move_uploaded_file($_FILES['photo']['tmp_name'], $target_file);
+    
+            if ($ok) {
+                $user->profile_picture = "/assets/img/user_photo/" . $user->id . "/" . $_FILES['photo']['name'];
+                $user->save();
+                return 0;
+            }  
+            $user->profile_picture = "/assets/img/myAvatar.png";
+        }
         $user->save();
-        
         return 0;
     }
 }

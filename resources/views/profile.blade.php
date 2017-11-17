@@ -29,7 +29,7 @@
                                 <v-container fluid class="ma-0 pa-2">
                                     <v-layout align-center justify-center row wrap>
                                         <v-flex xs7 class="text-xs-center">
-                                            <v-avatar size="150px"><img src="/assets/img/myAvatar.png" alt="User Avatar"></v-avatar>
+                                            <v-avatar size="45%"><img :src=user.profile_picture alt="User Avatar"></v-avatar>
                                         </v-flex>
                                         <v-flex xs5 >
                                             <v-card-title class="text-xs-center">
@@ -158,8 +158,17 @@
                                         name="socialMedia"
                                 ></v-text-field>    
                                 <div class="text-xs-center"><v-btn round @click="sendForm" :class="{ green: valid, red: !valid }">Update</v-btn></div>
-    
+                                
                             </v-form>
+                            <v-dialog v-model="success" persistent max-width="500">
+                                <v-card>
+                                    <v-card-title class="headline">Congratulation! You've successfully updated your profile</v-card-title>
+                                    <v-card-actions>
+                                      <v-spacer></v-spacer>
+                                      <v-btn href="/user/profile/" color="primary" flat >Awesome</v-btn>
+                                    </v-card-actions>
+                                  </v-card>
+                            </v-dialog>
                         </v-flex>
                     </v-layout>
                 </v-container>
@@ -171,7 +180,6 @@
 @section('script')
     <script>
         var user_login = <?php echo json_encode($user_login); ?>;
-        console.log(user_login);
         var vm = new Vue({
             el: '#app',
             props: {
@@ -188,6 +196,7 @@
                 }
             },
             data: {
+                success: false,
                 gender: '',
                 e1:true,
                 preview: '',
@@ -346,6 +355,7 @@
                 form.append("password",vm.password);
                 form.append("firstname",vm.firstName);
                 form.append("lastname",vm.lastName);
+                form.append("id",vm.user.id);
                 form.append("dob",vm.dateofbirth);
                 form.append("gender",vm.gender);
                 form.append("socialMedia",vm.socialMedia);
@@ -354,6 +364,9 @@
                     axios.post('/user/profile', form,config)
                       .then(function (response) {
                         console.log(response.data)
+                        if(response.data == 0){
+                            vm.success = true
+                        }
                       })
                       .catch(function (error) {
                         console.log(error);
@@ -394,7 +407,7 @@
             this.dateofbirth = this.user.DOB
             this.email = this.user.email
             this.password = "password"
-            this.filename = this.user.profile_picture.replace("/assets/img/","")
+            this.filename = this.user.profile_picture.replace("/assets/img/user_photo/"+this.user.id+"/","")
             this.fileURL = this.user.profile_picture
             this.gender = this.user.gender
             this.socialMedia = this.user.social_network

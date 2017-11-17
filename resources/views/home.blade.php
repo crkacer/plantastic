@@ -147,10 +147,7 @@
         var allCategory = <?php echo json_encode($category); ?>;
         var allEvent = <?php echo json_encode($pagi); ?>;
         var events = <?php echo json_encode($event); ?>;
-        console.log(allCategory);
-        console.log(allEvent);
-        console.log(allType);
-        
+
         function initMap() {
             var infowindow = new google.maps.InfoWindow;
             var map = new google.maps.Map(document.getElementById('map'), {

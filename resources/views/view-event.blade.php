@@ -196,11 +196,7 @@
         var allCat = <?php echo json_encode($all_cat); ?>;
         var user_login = <?php echo json_encode($user_login); ?>;
         var attended = <?php echo $attended; ?>;
-        console.log(attended);
-        console.log(suggestions);
-        console.log(allType);
-        console.log(allCat);
-        console.log(event);
+
         function initMap() {
             var uluru = {lat: event.lat, lng: event.lng};
             var map = new google.maps.Map(document.getElementById('map'), {
