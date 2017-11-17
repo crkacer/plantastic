@@ -214,7 +214,7 @@ class EventController extends Controller
         ]);
     }
     
-    public function postCreateEvent() {
+    public function postCreateEvent(Request $request) {
         
         $photo = $_FILES['photo'];
  
@@ -260,10 +260,31 @@ class EventController extends Controller
         $event->background_photo = "/assets/img/blur.jpg";
         $event->lat = floatval($_POST['latitude']);
         $event->lng = floatval($_POST['longitude']);
-        $event->save();
-        
-        
-        return 0;
+
+        // Upload background image
+        $maxID = DB::table('events')->max('id') + 1;
+        $target_location = public_path('assets/img/event_background/') . $maxID;
+        $target_file = $target_location . "/" . $_FILES['photo']['name'];
+
+        if (!is_dir($target_location)) {
+            mkdir($target_location, 0755);
+        }
+
+        if (file_exists ($target_file)) {
+            unlink($target_file);
+        }
+
+        $ok = move_uploaded_file($_FILES['photo']['tmp_name'], $target_file);
+
+        if ($ok) {
+            $event->background_photo = "/assets/img/event_background/" . $maxID . "/" . $_FILES['photo']['name'];
+            $event->save();
+            return 0;
+        }  
+        $event->background_photo = "/assets/img/blur.jpg";
+        $event->save();  
+        return 1;
+
     }
     
     
@@ -293,6 +314,27 @@ class EventController extends Controller
             $event->code = "0000000";
         }  
         
+        // if no need Code in the past, but need Code now then generate:    
+        if ($_POST['uniqueCode'] == "Y" && $event->code == "0000000") {
+            $nextID = $event->id;
+            $code = "";
+
+            $allowedChar = [];
+            for ($i = 0; $i<10; $i++) {
+                array_push($allowedChar, $i);
+            }
+            for ($i = 65; $i<91; $i++) {
+                array_push($allowedChar, $i);
+            }
+            for ($i = 1; $i<5; $i++) {
+                $temp = rand(0,count($allowedChar)-1);
+                if ($allowedChar[$temp] > 64) $code .= chr($allowedChar[$temp]);
+                else $code .= $allowedChar[$temp];
+            }
+            $code .= $nextID;
+            $event->code = $code;
+        }
+        
         $event->location = $_POST['location'];
         $event->title = $_POST['title'];
         $event->startdate = $_POST['startdate'];
@@ -308,13 +350,38 @@ class EventController extends Controller
         $event->template = $_POST['layoutID'];
         $event->capacity = intval($_POST['capacity']);
         $event->price = $_POST['price'];
-        $event->background_photo = "/assets/img/blur.jpg";
         $event->lat = floatval($_POST['latitude']);
         $event->lng = floatval($_POST['longitude']);
+
+        // Upload background image
+        if (isset($_FILES['photo'])) {
+            $maxID = $event->id;
+            $target_location = public_path('assets/img/event_background/') . $maxID;
+            $target_file = $target_location . "/" . $_FILES['photo']['name'];
+    
+            if (!is_dir($target_location)) {
+                mkdir($target_location, 0755);
+            }
+    
+            if (file_exists ($target_file)) {
+                unlink($target_file);
+            }
+    
+            $ok = move_uploaded_file($_FILES['photo']['tmp_name'], $target_file);
+    
+            if ($ok) {
+                $event->background_photo = "/assets/img/event_background/" . $maxID . "/" . $_FILES['photo']['name'];
+                $event->save();
+                return 0;
+            }  
+            $event->background_photo = "/assets/img/blur.jpg";
+            $event->save();  
+            return 1;
+        }
+        
         $event->save();
-        
-        
         return 0;
+
     }
     
 }

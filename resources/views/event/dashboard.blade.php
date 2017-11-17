@@ -163,7 +163,7 @@
                                         <div class="text-xs-center pt-2">
                                             <v-pagination v-model="pagination.page" :length="pages" circle :total-visible="5"></v-pagination>
                                         </div>
-                                        <v-dialog v-model="showDetails" max-width="400" persistent>
+                                        <v-dialog v-model="showDetails" max-width persistent>
                                             <v-card>
                                                 <v-container fluid>
                                                     <v-layout column wrap>
@@ -182,9 +182,12 @@
                                                         <v-flex xs12 class="text-xs-center" style="text-transform:capitalize;">
                                                             <v-card-text>Sex: @{{ tempDetails.sex }}</v-card-text>
                                                         </v-flex>
-                                                        <v-flex xs12 class="text-xs-center">
-                                                            <v-card-text>Social Media Link:</v-card-text>
-                                                            <v-card-text>@{{ tempDetails.socialProfile }}</v-card-text>
+                                                        <v-flex xs12 fill-height class="text-xs-center">
+                                                            <v-card-text>Social Media Link:
+                                                            <br/>
+                                                            @{{ tempDetails.socialProfile }}
+                                                            </v-card-text>
+                                                            
                                                         </v-flex>
                                                         <v-flex xs12 class="text-xs-right">
                                                             <v-card-actions>
@@ -513,19 +516,20 @@
 
 @section('script')
     <script>
+    var user_login = <?php echo json_encode($user_login); ?>;
+    //get JSON event
     var event = <?php echo json_encode($event); ?>;
+    //get specific category
     var category = <?php echo json_encode($category); ?>;
+    //get specific type
     var type = <?php echo json_encode($event_type); ?>;
+    //get List of people attending 
     var list = <?php echo json_encode($people_attend); ?>;
+    //get all categories
     var allCategories = <?php echo json_encode($all_categories); ?>;
+    //get all types
     var allTypes = <?php echo json_encode($all_types); ?>;
-    console.log(allCategories);
-    console.log(allTypes);
-    console.log(list);
-    console.log(category);
-    console.log(type);
-    console.log(event);
-    
+    //initialize Google Map API
     function initMAP() {
         const google = window.google;
         var uluru = {lat: 43.6532, lng: -79.3832};
@@ -534,7 +538,7 @@
             center: uluru
         });
         
-        
+        //Autocomplete binding with input 
         var element = vm.$refs.autocomplete2.$el
         
         element = element.querySelector('input');
@@ -555,42 +559,59 @@
         var vm = new Vue({
             el: '#app',
             props: {
+                //prop for input file upload to filter out the type of file
                 accept: {
                     type: String,
                     default: "image/*"
                 },
+                //prop for disabled input file upload
                 disabled: {
                     type: Boolean,
                     default: false
                 },
+                //value of input file upload
                 value: {
                     type: [Array, String]
                 }
             },
             data: {
+                //flag to include google map functionality
                 includedGMap: false,
+                //date picker vue-model flag
                 m1: false,
                 m2: false,
                 m3: false,
                 m4: false,
+                //vue-model for Modal
                 success: false,
+                //vue-model to toggle on-off the picture Modal
                 showfullpic1: false,
                 showfullpic2: false,
+                //types of events 
                 type: type,
+                //categories of events
                 category: category,
                 allCategories: allCategories,
                 allTypes: allTypes,
+                //Works collaboratively with vuetify dropdown
                 EventCategories: [],
                 EventTypes: [],
-                search:'',
+                user: user_login,
+                //vue-model to show full date format
                 fullDate: '',
+                //filter out data table
                 filter: '',
+                //show Modal about user details
                 showDetails: false,
+                //vue-model pagination of data table
                 pagination: {rowsPerPage:5, page:1},
+                //toggle navigation drawer on/off
                 drawer: true,
+                //vue-model with v-form
                 valid: false,
+                //toggle mini drawer
                 mini:false,
-                right:null,
+                //temporary variable for user details
                 tempDetails: {
                     icon: '',
                     firstname: '',
@@ -599,15 +620,7 @@
                     sex: '',
                     socialProfile: ''
                 },
-                buttons: [
-                    {
-                        text: 'Home',
-                        url: '/home'
-                    },
-                    {
-                        text: 'Register',
-                        url: '/register'
-                    }],
+                //Navigation Drawer
                 navigations: [
                     {
                         text: 'Event Dashboard',
@@ -619,7 +632,9 @@
                         actionID: 'edit',
                         icon: 'create'
                     }],
+                //response to conditional rendering
                 showResponse: 'dashboard',
+                //temporary variable for event
                 tempEvent: {
                     imgURL: '',
                     imageName: '',
@@ -641,7 +656,9 @@
                     latitude: 0,
                     longtitude: 0
                 },
+                //main variable for event that has been passed from database
                 event: event,
+                //Header for  data table
                 headers: [
                     {
                         text: 'Icon',
@@ -662,19 +679,17 @@
                         sortable: false,
                         value: 'detailLink'
                     }],
+                //list of attendants
                 attendants: list,
+                //Rules for capacity change
                 capacityRules: [],
+                //Rules for price
                 priceRules: [
                     (v) => (!isNaN(v) && v >= 0) || 'Your price should be a valid number' 
                 ]
         },
         methods: {
-            
-            submit: function (e){
-                axios.post('/api/submit',{
-                    search:this.search
-                })
-            },
+            //populate or unpopulate when user picks edit event or event dashboard
             getEvent: function (i){
                 if(this.navigations[i].actionID == 'edit'){
                     // append google map script
@@ -692,7 +707,7 @@
                         this.tempEvent.latitude = this.event.lat;
                         this.tempEvent.longtitude = this.event.lng;
                         this.tempEvent.imgURL = this.event.background_photo
-                        this.tempEvent.imageName = this.event.background_photo.replace("/assets/img/","")
+                        this.tempEvent.imageName = this.event.background_photo.replace("/assets/img/event_background/"+this.event.id+"/","")
                         this.tempEvent.title = this.event.title
                         this.tempEvent.registered_amount = this.event.registered_amount
                         this.tempEvent.capacity = this.event.capacity
@@ -712,6 +727,7 @@
                 }
                 this.showResponse = this.navigations[i].actionID
             },
+            //allowing start date for time picker
             allowedStartDates: function (date){
                 if(vm.tempEvent.endDate != null){
                    if(this.compare(date,vm.tempEvent.endDate) == 0 || this.compare(date,vm.tempEvent.endDate) == -1){
@@ -722,6 +738,7 @@
                 }
                 
             },
+            //allowing end date for time picker
             allowedEndDates: function(date){
                 if(vm.tempEvent.startDate != null){
                     if(this.compare(date,vm.tempEvent.startDate) == 0 || this.compare(date,vm.tempEvent.startDate) == 1){
@@ -731,6 +748,7 @@
                     return date.getDate()
                 }
             },
+            //allowing start hour for time picker
             allowedStartHours: function(value){
                 if(vm.tempEvent.endDate != null && vm.tempEvent.startDate != null){
                     if(vm.tempEvent.endDate == vm.tempEvent.startDate){
@@ -747,6 +765,7 @@
                     return 0
                 }
             },
+            //allowing end hour for time picker
             allowedEndHours: function(value){
                 if(vm.tempEvent.endDate != null && vm.tempEvent.startDate != null){
                     if(vm.tempEvent.endDate == vm.tempEvent.startDate){
@@ -762,7 +781,7 @@
                     return 0
                 }
             },
-            
+            //convert a parameter to DateTime object in Javascript
             convertToDateObject : function (dateString){
                 return (
                     dateString.constructor === Date ? dateString :
@@ -772,6 +791,10 @@
                                     NaN
                 )
             },
+            //Comparing 2 date time object a,b
+            //Function returns -1 if b>a
+            //Returns 0 if b = a
+            //Returns 1 if b < a
             compare: function(a,b){
                 return (
                     isFinite(a=this.convertToDateObject(a).valueOf()) &&
@@ -780,6 +803,7 @@
                         NaN
                 )
             },
+            //Returns the status of the event accordingly
             getStatus: function(d){
                 var nowTime = Date.now()
                 var comparison = this.compare(d,nowTime)
@@ -800,14 +824,17 @@
                 }
                 return result
             },
+            //get the age of the user
             getYear: function(d){
                 var nowTime = Date.now()
                 var result = isFinite(a=this.convertToDateObject(d).getYear()) && isFinite(b=this.convertToDateObject(nowTime).getYear()) ? (a < b ? b-a : "N/A") : NaN
                 return result
             },
+            //calculating percentage for charts
             calcPercentage: function(e){
                 return Number(((e.registered_amount/e.capacity)*100).toFixed(2))
             },
+            //Change color of the charts accordingly
             getColor: function(event){
                 if(this.calcPercentage(event) <= 30){
                     return "green"
@@ -817,6 +844,7 @@
                     return "red"
                 }
             },
+            //find the category ID in order to pass to back-end
             findCategoryID: function(category){
                 for(var i = 0; i < this.allCategories.length; i++){
                     if(this.allCategories[i].text == category){
@@ -824,6 +852,7 @@
                     }
                 }
             },
+            //find type ID in order to pass to back-end
             findTypeID: function(type){
                 for(var i = 0; i < this.allTypes.length; i++){
                     if(this.allTypes[i].text == type){
@@ -831,6 +860,7 @@
                     }
                 }
             },
+            //Generate a user detail to modal
             getDetails: function(ob){
                 this.tempDetails.icon = ob.profile_picture
                 this.tempDetails.firstname = ob.firstname
@@ -841,10 +871,12 @@
                 this.tempDetails.socialProfile = ob.social_network
                 this.showDetails = true
             },
+            //Show details
             done: function(){
                 this.showDetails = false
 
             },
+            //Submit Update Form
             FormSubmit: function () {
                 if (this.$refs.form.validate()) {
                     var form = new FormData()
@@ -884,10 +916,12 @@
                     }
                 }
             },
+            //Clear the form
             clear: function () {
                 this.valid=false
                 this.$refs.form.reset()
             },
+            //generate FormData object
             getFormData(files){
                 const data = new FormData()
                 for (let file of files) {
@@ -895,12 +929,14 @@
                 }
                 return data
             },
+            //function triggered when focusing on file upload input
             onFocus(){
                 if (!this.disabled) {
                     debugger
                     this.$refs.fileInput.click()
                 }
             },
+            //Cut the name of the file input and displaying on v-text-field
             changeFile($event){
                 const files = $event.target.files || $event.dataTransfer.files
                 const form = this.getFormData(files)
@@ -925,11 +961,13 @@
                 this.$emit('input', this.tempEvent.imageName)
                 this.$emit('formData', form)
             },
+            //Increase Capacity
             increase: function(){
                 if(this.tempEvent.capacity < 10000){
                     this.tempEvent.capacity++
                 }
             },
+            //Decrease Capacity
             decrease: function(){
                 if(this.tempEvent.capacity > 1){
                     this.tempEvent.capacity--
@@ -937,32 +975,36 @@
             }
         },
         computed:{
-            shareLink: function(){
-                return "https://php-project-willieduke.c9users.io" + this.event.viewLink
-            },
+            //get the total pagination
             pages: function() {
                 return this.pagination.rowsPerPage ? Math.ceil(this.attendants.length / this.pagination.rowsPerPage) : 0
             },
+            //full name 
             fullname: function(){
                 return this.tempDetails.firstname + " " + this.tempDetails.lastname
             },
+            //redirect to the view event
             redirect: function(){
                 return "/event/dashboard/" + event.id
             }
         },
         watch: {
+            //populate imageName with fileValue changes
             fileValue: function (fv){
                 this.tempEvent.imageName = fv;
             }
         },
         updated: function(){
+            //populate the age of attendants accordingly
             for(var j = 0; j < this.attendants.length; j++){
                 this.attendants[j].age = this.getYear(this.attendants[j].DOB)
             }
             
         },
         mounted: function() {
+            //get status of the event
             this.event.status = this.getStatus(this.event.enddate + " " + this.event.endtime)
+            //format the date
             var formats = {
                 weekday: "long", year: "numeric", month: "short",
                 day: "numeric", hour: "2-digit", minute: "2-digit"

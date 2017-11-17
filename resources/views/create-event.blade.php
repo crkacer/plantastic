@@ -548,6 +548,7 @@
                     if (this.$refs.form.validate()) {
                         axios.post('/event/create', form,config)
                           .then(function (response) {
+                            console.log(response.data);
                             if(response.data == 0){
                                 vm.success = true
                             }
