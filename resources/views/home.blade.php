@@ -152,7 +152,7 @@
             var infowindow = new google.maps.InfoWindow;
             var map = new google.maps.Map(document.getElementById('map'), {
                 zoom: 12,
-                center: {lat: events[1].lat, lng: events[1].lng}
+                center: {lat: events[0].lat, lng: events[0].lng}
             });
             
             for(var i = 0; i < events.length; i++){
