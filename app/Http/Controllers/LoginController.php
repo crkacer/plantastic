@@ -103,37 +103,6 @@ class LoginController extends Controller
         $user->profile_picture = "/assets/img/myAvatar.png";
         
         $location = "/assets/img/myAvatar.png";
-        //  or File::makeDirectory(storage_path('app/blogpost/' . $postId));
-//         if ($_FILES['photo'] != null) {
-            
-            
-//             $currentTime = date('YmdGis');
-            
-//             // $location = "/home/ubuntu/workspace/public/assets/img/" . $fname.$lname . "/" . $currentTime. "/avatar.png";
-//             // if (!file_exists ( "/home/ubuntu/workspace/public/assets/img/" . $fname.$lname . "/" . $currentTime)) {
-//             //     mkdir("/home/ubuntu/workspace/public/assets/img/" . $fname.$lname . "/" . $currentTime);
-//             // }
-//             // Image::make($_FILES['photo']['tmp_name'])->resize(100, 100)->save($location);
-//             // move_uploaded_file($_FILES['photo']['tmp_name'], $location);
-            
-//             $image = $_FILES['photo'];
-//             $imgpath = $_FILES['photo']['name'];
-//             $ext = pathinfo($imgpath, PATHINFO_EXTENSION);
-//          $filename  = $fname.$lname . "/" . $currentTime. "/avatar.".$ext;
-//          $path = public_path('assets/img/' . $filename);
-            
-// //           File::exists(public_path('assets/img/').$fname.$lname . "/" . $currentTime);
-//             if (!is_dir(public_path('assets/img/').$fname.$lname . "/" . $currentTime)) {
-//                 mkdir(public_path('assets/img/').$fname.$lname . "/" . $currentTime, 0755);
-//             }
-//             $fp = fopen($path, "w");
-//             fwrite($fp, file_get_contents($_FILES['photo']['tmp_name']), "w");
-            
-            
-// //           Image::make($_FILES['photo']['tmp_name'])->resize(100, 100)->save($path);
-            
-//             $user->profile_picture = $path;
-//         }
 
         $user->name = $fname;
         $user->firstname = $fname;
@@ -201,7 +170,7 @@ class LoginController extends Controller
             
 
             Mail::send('email.reset-password', [
-                'email' => $user->email,
+                'user' => $user,
                 'password' => $code
             ], function ($message) use ($user)
                 {
