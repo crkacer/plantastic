@@ -145,8 +145,8 @@
                                                     <v-container fill-height fluid>
                                                         <v-layout fill-height>
                                                             <v-flex xs12 align-end flexbox>
-                                                                <span class="grey lighten-2 black--text" style="font-family: 'Lora', serif; font-size: 2em;" v-if="s.price > 0">$ @{{ s.price }}</span>
-                                                                <span class="grey lighten-2 black--text" style="font-family: 'Lora', serif; font-size: 2em;" v-else>Free</span>
+                                                                <span class="grey lighten-2 black--text" style="font-family: 'Lora', serif; font-size: 1.25em;" v-if="s.price > 0">$ @{{ s.price }}</span>
+                                                                <span class="grey lighten-2 black--text" style="font-family: 'Lora', serif; font-size: 1.25em;" v-else>Free</span>
                                                             </v-flex>
                                                         </v-layout>
                                                     </v-container>
@@ -196,7 +196,6 @@
         var allCat = <?php echo json_encode($all_cat); ?>;
         var user_login = <?php echo json_encode($user_login); ?>;
         var attended = <?php echo $attended; ?>;
-
         function initMap() {
             var uluru = {lat: event.lat, lng: event.lng};
             var map = new google.maps.Map(document.getElementById('map'), {
@@ -224,7 +223,7 @@
             },
             methods: {
                 getShareLink: function(row,column){
-                    this.shareLink = "https://php-project-willieduke.c9users.io/event/" + this.recommendations[row][column].id
+                    this.shareLink =window.location.href.replace("/event","") + "/event/" + this.recommendations[row][column].id
                     this.share = true
                 },
                 link: function(event) {

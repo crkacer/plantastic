@@ -33,7 +33,7 @@
                     No email exists
                 </v-alert>
             </transition>
-            <v-form v-model="valid" ref="form" action="{{ url('/login') }}" method="post" enctype="multipart/form-data">
+            <v-form v-model="valid" ref="form" onkeypress="return event.keyCode != 13;" enctype="multipart/form-data">
                             {{ csrf_field() }}
                             <v-text-field
                                     label="Email"
@@ -79,22 +79,31 @@
                 }
             },
             data: {
+                //vue-model for v-form checking
                 valid: false,
+                //vue-model for displaying successful view
                 isSuccess: false,
+                //vue-model for displaying alert box
                 isError: false,
+                //vue-model for loading progress
                 isProcess: false,
+                //vue-model for email input box
                 email: '',
-                    emailRules: [
+                //vue-model to bind with :rules attribute in input box
+                emailRules: [
                     (v) => !!v || 'E-mail is required',
                     (v) => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'
                 ]
         },
         methods: {
+            //Bind with the clear button
             clear () {
                 this.valid=false
                 this.$refs.form.reset()
             },
-            sendEmail: function(){
+            //Bind with Reset button, send axios post request to server
+            sendEmail: function(e){
+                e.preventDefault();
                 if (this.$refs.form.validate()) {
                     this.isProcess = true
                     setTimeout(function(){
@@ -120,15 +129,6 @@
                 
             }
             
-        },
-        computed:{
-
-        },
-        watch: {
-
-
-        },
-        mounted() {
         }
         })
     </script>
