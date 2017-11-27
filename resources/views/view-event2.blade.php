@@ -223,7 +223,7 @@
             },
             methods: {
                 getShareLink: function(row,column){
-                    this.shareLink =window.location.href.replace("/event","") + "/event/" + this.recommendations[row][column].id
+                    this.shareLink =window.location.href.replace("/event/"+this.event.id,"") + "/event/" + this.recommendations[row][column].id
                     this.share = true
                 },
                 link: function(event) {
