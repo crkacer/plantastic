@@ -162,7 +162,7 @@
                             </v-form>
                             <v-dialog v-model="success" persistent max-width="500">
                                 <v-card>
-                                    <v-card-title class="headline">Congratulation! You've successfully updated your profile</v-card-title>
+                                    <v-card-title class="headline">Congratulations! You've successfully updated your profile</v-card-title>
                                     <v-card-actions>
                                       <v-spacer></v-spacer>
                                       <v-btn href="/user/profile/" color="primary" flat >Awesome</v-btn>

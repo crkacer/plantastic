@@ -320,7 +320,7 @@
                                 <div class="text-xs-center"><v-btn round @click="FormSubmit" :class="{ green: valid, red: !valid }">Create</v-btn><v-btn round @click="clear">Clear</v-btn></div>
                                 <v-dialog v-model="success" persistent max-width="500">
                                     <v-card>
-                                        <v-card-title class="headline">Congratulation! You've successfully created an event</v-card-title>
+                                        <v-card-title class="headline">Congratulations! You've successfully created an event</v-card-title>
                                         <v-card-actions>
                                           <v-spacer></v-spacer>
                                           <v-btn href="/user/manage-event" color="primary" flat >Awesome</v-btn>

@@ -502,7 +502,7 @@
                 </v-container>
                 <v-dialog v-model="success" persistent max-width="600">
                     <v-card>
-                        <v-card-title class="headline">Congratulation! You've successfully updated an event</v-card-title>
+                        <v-card-title class="headline">Congratulations! You've successfully updated an event</v-card-title>
                         <v-card-actions>
                           <v-spacer></v-spacer>
                           <v-btn :href="redirect" color="primary" flat >Awesome</v-btn>
