@@ -139,7 +139,7 @@
                         </v-form>
                     </v-stepper-content>
                     <v-stepper-content step="3">
-                        <v-card-text class="headline">Congratulation! You're ready</v-card-text>
+                        <v-card-text class="headline">Congratulations! You're ready</v-card-text>
                         <v-btn color="primary" href="/login">Awesome</v-btn>
                     </v-stepper-content>
                 </v-stepper>
