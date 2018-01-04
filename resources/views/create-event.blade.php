@@ -320,7 +320,7 @@
                                 <div class="text-xs-center"><v-btn round @click="FormSubmit" :class="{ green: valid, red: !valid }">Create</v-btn><v-btn round @click="clear">Clear</v-btn></div>
                                 <v-dialog v-model="success" persistent max-width="500">
                                     <v-card>
-                                        <v-card-title class="headline">Congratulations! You've successfully created an event</v-card-title>
+                                        <v-card-title class="headline">Congratulation! You've successfully created an event</v-card-title>
                                         <v-card-actions>
                                           <v-spacer></v-spacer>
                                           <v-btn href="/user/manage-event" color="primary" flat >Awesome</v-btn>
@@ -338,12 +338,11 @@
 
 @section('script')
     <script>
+        //Category variables
         var allCat = <?php echo json_encode($all_categories); ?>;
+        //Type of event variables
         var allType = <?php echo json_encode($all_types); ?>;
-        console.log(allCat);
-        console.log(allType);
-        
-        
+        //Initialize Google Map API
         function initMAP() {
             var uluru = {lat: 43.6532, lng: -79.3832};
             const google = window.google
@@ -352,7 +351,7 @@
                 center: uluru
             });
             
-            
+            //Implement Autocomplete
             var element = vm.$refs.autocomplete.$el
             
             element = element.querySelector('input');
@@ -390,19 +389,25 @@
                 }
             },
             data: {
+                //bind with date time menu
                 m1: false,
                 m2: false,
                 m3: false,
                 m4: false,
+                //toggle on/off picture
                 showfullpic1: false,
                 showfullpic2: false,
+                //show success message
                 success: false,
+                //all Categories
                 allCategories: allCat,
+                //all Types
                 allTypes: allType,
                 EventCategories: [],
                 EventTypes: [],
                 autocomplete: '',
                 valid: false,
+                //temporary Event holder
                 tempEvent: {
                     imgURL: '',
                     imageName: '',
@@ -423,19 +428,23 @@
                     latitude: 0,
                     longtitude: 0
                 },
+                //rules for capacity, cannot be null, and has to be between 10000 and 1
                 capacityRules: [
                     (v) => !!v || 'Please enter the event capacity',
                     (v) => (!isNaN(v) && v <= 10000 && v >= 1) || 'Your capacity should be a number and within 1 to 5000'
                 ],
+                //rules for price, cannot be null, and has to be a natural number
                 priceRules: [
                     (v) => !!v || 'Please enter price for the event',
                     (v) => (!isNaN(v) && v >= 0) || 'Your price should be a valid number' 
                 ]
         },
         methods: {
+            //get address
             getAddressData: function (addressData, placeResultData, id) {
                 this.address = addressData;
             },
+            //binding start dates
             allowedStartDates: function (date){
                 if(vm.tempEvent.endDate != null){
                    if(this.compare(date,vm.tempEvent.endDate) == 0 || this.compare(date,vm.tempEvent.endDate) == -1){
@@ -446,6 +455,7 @@
                 }
                 
             },
+            //binding end date
             allowedEndDates: function(date){
                 if(vm.tempEvent.startDate != null){
                     if(this.compare(date,vm.tempEvent.startDate) == 0 || this.compare(date,vm.tempEvent.startDate) == 1){
@@ -456,7 +466,7 @@
                 }
                
             },
-            
+            //binding start hour accordingly
             allowedStartHours: function(value){
                 if(vm.tempEvent.endDate != null && vm.tempEvent.startDate != null){
                     if(this.compare(vm.tempEvent.endDate, vm.tempEvent.startDate)==0){
@@ -473,6 +483,7 @@
                     return 0
                 }
             },
+            //binding end hour according to start hour
             allowedEndHours: function(value){
                 if(vm.tempEvent.endDate != null && vm.tempEvent.startDate != null){
                     if(this.compare(vm.tempEvent.endDate, vm.tempEvent.startDate) == 0){
@@ -488,6 +499,7 @@
                     return 0
                 }
             },
+            //convert to date-time object
             convertToDateObject : function (dateString){
                     return (
                         dateString.constructor === Date ? dateString :
@@ -497,6 +509,7 @@
                                         NaN
                     )
             },
+            //compare 2 dates
             compare: function(a,b){
                 return (
                     isFinite(a=this.convertToDateObject(a).valueOf()) &&
@@ -504,7 +517,8 @@
                         (a>b)-(a<b):
                         NaN
                 )
-            },
+            }, 
+            //find category id
             findCategoryID: function(category){
                 for(var i = 0; i < this.allCategories.length; i++){
                     if(this.allCategories[i].text == category){
@@ -512,6 +526,7 @@
                     }
                 }
             },
+            //find type id
             findTypeID: function(type){
                 for(var i = 0; i < this.allTypes.length; i++){
                     if(this.allTypes[i].text == type){
@@ -519,6 +534,7 @@
                     }
                 }
             },
+            //submit the form
             FormSubmit: function () {
                 if (this.$refs.form.validate()) {
                     //this.$refs.form.$el.submit()
@@ -548,7 +564,6 @@
                     if (this.$refs.form.validate()) {
                         axios.post('/event/create', form,config)
                           .then(function (response) {
-                            console.log(response.data);
                             if(response.data == 0){
                                 vm.success = true
                             }
@@ -564,6 +579,7 @@
                 this.valid=false
                 this.$refs.form.reset()
             },
+            //get form data form data
             getFormData(files){
                 const data = new FormData()
                 for (let file of files) {
@@ -571,12 +587,14 @@
                 }
                 return data
             },
+            //called when input get focused
             onFocus(){
                 if (!this.disabled) {
                     debugger
                     this.$refs.fileInput.click()
                 }
             },
+            //apply for changing pictures
             changeFile($event){
                 const files = $event.target.files || $event.dataTransfer.files
                 const form = this.getFormData(files)
@@ -601,16 +619,19 @@
                 this.$emit('input', this.tempEvent.imageName)
                 this.$emit('formData', form)
             },
+            //increase capacity
             increase: function(){
                 if(this.tempEvent.capacity < 10000){
                     this.tempEvent.capacity++
                 }
             },
+            //decrease capacity
             decrease: function(){
                 if(this.tempEvent.capacity > 1){
                     this.tempEvent.capacity--
                 }
             },
+            //save date-time after chosen
             saveEvent: function(){
                 if(this.tempEvent.startDate != null){
                     this.m1 = false
@@ -637,10 +658,13 @@
             
         },
         mounted: function() {
+            //assign image to file
             this.tempEvent.imageName = this.fileValue
+            //populate category 
             for(var i = 0; i < this.allCategories.length; i++){
                 this.EventCategories.push(this.allCategories[i].text)
             }
+            //populate type
             for(var k = 0; k < this.allTypes.length; k++){
                 this.EventTypes.push(this.allTypes[k].text)
             }

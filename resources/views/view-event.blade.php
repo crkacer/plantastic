@@ -196,7 +196,7 @@
         var allCat = <?php echo json_encode($all_cat); ?>;
         var user_login = <?php echo json_encode($user_login); ?>;
         var attended = <?php echo $attended; ?>;
-    
+        //Initialize GG MAP API
         function initMap() {
             var uluru = {lat: event.lat, lng: event.lng};
             var map = new google.maps.Map(document.getElementById('map'), {
@@ -211,18 +211,29 @@
         var vm = new Vue({
             el: '#app',
             data: {
+                //start date of the event in format
                 fullStartDate: '',
+                //end date of the event in format
                 fullEndDate: '',
+                //to check if user already attend to event
                 attended: attended,
+                //types of event
                 types: allType,
+                //categories of event
                 categories: allCat,
+                //login of the user
                 user_login: user_login,
+                //event object
                 event: event,
+                //toggle on/off sharing
                 share:false,
+                //share link
                 shareLink:'',
+                //recommendations for other events of the same types
                 recommendations: suggestions
             },
             methods: {
+                //get link to share
                 getShareLink: function(row,column){
                     this.shareLink =window.location.href.replace("/event/"+this.event.id,"") + "/event/" + this.recommendations[row][column].id
                     this.share = true
@@ -243,6 +254,7 @@
                                         NaN
                     )
                 },
+                //using axios post to make user attend event
                 join: function(){
                     axios.post('/event/attend', {
                         user: this.user_login.id,
@@ -267,6 +279,7 @@
                 getCatURL: function(id){
                     return "/category/" + id
                 },
+                //get the status of the event
                 getStatus: function(d){
                     var nowTime = Date.now()
                     var comparison = this.compare(d,nowTime)

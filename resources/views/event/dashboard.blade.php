@@ -502,7 +502,7 @@
                 </v-container>
                 <v-dialog v-model="success" persistent max-width="600">
                     <v-card>
-                        <v-card-title class="headline">Congratulations! You've successfully updated an event</v-card-title>
+                        <v-card-title class="headline">Congratulation! You've successfully updated an event</v-card-title>
                         <v-card-actions>
                           <v-spacer></v-spacer>
                           <v-btn :href="redirect" color="primary" flat >Awesome</v-btn>
@@ -1009,13 +1009,17 @@
                 weekday: "long", year: "numeric", month: "short",
                 day: "numeric", hour: "2-digit", minute: "2-digit"
             }
-            
+            //populate full date format
             this.fullDate = this.convertToDateObject(this.event.startdate + " " + this.event.starttime).toLocaleTimeString("en-us", formats)
+            //get link
             this.event.viewLink = window.location.href.replace("/dashboard","")
+            //get Image Name in the occassion of updating
             this.tempEvent.imageName = this.fileValue
+            //populate all categories
             for(var i = 0; i < this.allCategories.length; i++){
                 this.EventCategories.push(this.allCategories[i].text)
             }
+            //populate all types
             for(var k = 0; k < this.allTypes.length; k++){
                 this.EventTypes.push(this.allTypes[k].text)
             }

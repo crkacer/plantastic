@@ -23,13 +23,13 @@ class EventController extends Controller
         $event->event_type_name = $event_type_name;
         // dump($event->enddate);
         $selectedEvent = $event;
-        
+
         $selectedEvent->startdate = date_format(date_create($event->startdate),"Y-m-d");
         $selectedEvent->enddate = date_format(date_create($event->enddate),"Y-m-d");
         $selectedEvent->starttime = date_format(date_create($event->starttime),"H:i");
         $selectedEvent->endtime = date_format(date_create($event->endtime),"H:i");
-        
-        
+
+
         $types = [];
         $categories = [];
         $all_events_types = EventType::all();
@@ -43,7 +43,7 @@ class EventController extends Controller
         }
 
 
-        
+
         $similarEvent = [];
         $similarEvent = Event::where('category_id', $event->category_id)->take(20)->get();
         // dump($event);
@@ -58,7 +58,7 @@ class EventController extends Controller
             }
             $event_type_name = EventType::where('id', $similarEvent[$i]['event_type_id'])->first()->name;
             $category_name = Category::where('id', $similarEvent[$i]['category_id'])->first()->name;
-            
+
             array_push($temp, [
                 'id' => $similarEvent[$i]['id'],
                 'location' => $similarEvent[$i]['location'],
@@ -83,9 +83,9 @@ class EventController extends Controller
                 'category_name' => $category_name
             ]);
         }
-        
+
         array_push($pag,$temp);
-        
+
         // Handle event attendance
         $attended = 0;
         if (Auth::check()) {
@@ -95,10 +95,10 @@ class EventController extends Controller
                 $attended = 1;
             }
         }
-        
+
         $template = 'view-event';
         if ($event->template == "B") $template = 'view-event2';
-        
+
         return view($template, [
             'event' => $selectedEvent,
             'attended' => $attended,
@@ -112,7 +112,7 @@ class EventController extends Controller
     }
 
     public function getIndexEvent($id) {
-        
+
         $attended = false;
         if (Auth::check()) {
             $user = Auth::user();
@@ -121,18 +121,19 @@ class EventController extends Controller
                 $attended = true;
             }
         }
-        
+
         return view('view-event2', [
             'user_login' => Auth::user(),
             'attended' => $attended
         ]);
     }
-    
+
+
     public function attendEvent(Request $request) {
         $data = $request->all();
         $user = $data['user'];
         $event = $data['event'];
-        
+
         $e = Event::where('id', intval($event))->first();
         if ($e->registered_amount < $e->capacity) {
             $e->registered_amount ++;
@@ -141,27 +142,27 @@ class EventController extends Controller
             $attend->user_id = intval($user);
             $attend->event_id = intval($event);
             $attend->save();
-            
+
             return 1;
         }
         return 0;
     }
 
     public function getDashboard($id) {
-        
+
         $all_events_types = EventType::all();
         $all_categories = Category::all();
         $types = [];
         $categories = [];
-        
+
         foreach ($all_events_types as $t) {
             array_push($types, ['id' => $t->id, 'text' => $t->name, 'url' => "/event-type/" . $t->id]);
         }
         foreach ($all_categories as $c) {
             array_push($categories, ['id' => $c->id, 'text' => $c->name, 'url' => "/category/" . $c->id]);
         }
-        
-        
+
+
         $event = Event::where('id', $id)->first();
         if ($event != null) {
             $event->startdate = date_format(date_create($event->startdate),"Y-m-d");
@@ -176,7 +177,7 @@ class EventController extends Controller
             $person->DOB = date_format(date_create($person->DOB), "Y-m-d");
             array_push($peopleAttended, $person);
         }
-        
+
         $category = Category::where('id', $event->category_id)->first()->name;
         $event_type = EventType::where('id', $event->event_type_id)->first()->name;
 
@@ -193,35 +194,35 @@ class EventController extends Controller
 
 
     public function createEvent() {
-        
+
         $all_events_types = EventType::all();
         $all_categories = Category::all();
         $types = [];
         $categories = [];
-        
+
         foreach ($all_events_types as $t) {
             array_push($types, ['id' => $t->id, 'text' => $t->name]);
         }
         foreach ($all_categories as $c) {
             array_push($categories, ['id' => $c->id, 'text' => $c->name]);
         }
-        
-        
+
+
         return view('create-event', [
             'user_login' => Auth::user(),
             'all_categories' => $categories,
             'all_types' => $types
         ]);
     }
-    
+
     public function postCreateEvent(Request $request) {
-        
+
         $photo = $_FILES['photo'];
- 
-       
+
+
         // generate unique code
         $code = "0000000";
-        
+
         if ($_POST['uniqueCode'] == "Y") {
             $nextID = DB::table('events')->max('id') + 1;
             $code = "";
@@ -238,7 +239,7 @@ class EventController extends Controller
                 else $code .= $allowedChar[$temp];
             }
             $code .= $nextID;
-        }  
+        }
         $event = new Event();
         $event->location = $_POST['location'];
         $event->title = $_POST['title'];
@@ -280,16 +281,17 @@ class EventController extends Controller
             $event->background_photo = "/assets/img/event_background/" . $maxID . "/" . $_FILES['photo']['name'];
             $event->save();
             return 0;
-        }  
+        }
         $event->background_photo = "/assets/img/blur.jpg";
-        $event->save();  
+        $event->save();
         return 1;
 
     }
-    
-    
+
+
+
     public function deleteEvent(Request $request) {
-        
+
         $data = $request->all();
         $event = Event::where('id', intval($data['id']))->first();
         if ($event == null) {
@@ -302,19 +304,19 @@ class EventController extends Controller
         }
         // delete that event
         $event->delete();
-        
+
         return 0;
     }
-    
+
     public function editEvent() {
- 
+
         $event = Event::where('id', intval($_POST['id']))->first();
-        
+
         if ($_POST['uniqueCode'] == "N") {
             $event->code = "0000000";
-        }  
-        
-        // if no need Code in the past, but need Code now then generate:    
+        }
+
+        // if no need Code in the past, but need Code now then generate:
         if ($_POST['uniqueCode'] == "Y" && $event->code == "0000000") {
             $nextID = $event->id;
             $code = "";
@@ -334,7 +336,7 @@ class EventController extends Controller
             $code .= $nextID;
             $event->code = $code;
         }
-        
+
         $event->location = $_POST['location'];
         $event->title = $_POST['title'];
         $event->startdate = $_POST['startdate'];
@@ -358,30 +360,30 @@ class EventController extends Controller
             $maxID = $event->id;
             $target_location = public_path('assets/img/event_background/') . $maxID;
             $target_file = $target_location . "/" . $_FILES['photo']['name'];
-    
+
             if (!is_dir($target_location)) {
                 mkdir($target_location, 0755);
             }
-    
+
             if (file_exists ($target_file)) {
                 unlink($target_file);
             }
-    
+
             $ok = move_uploaded_file($_FILES['photo']['tmp_name'], $target_file);
-    
+
             if ($ok) {
                 $event->background_photo = "/assets/img/event_background/" . $maxID . "/" . $_FILES['photo']['name'];
                 $event->save();
                 return 0;
-            }  
+            }
             $event->background_photo = "/assets/img/blur.jpg";
-            $event->save();  
+            $event->save();
             return 1;
         }
-        
+
         $event->save();
         return 0;
 
     }
-    
+
 }

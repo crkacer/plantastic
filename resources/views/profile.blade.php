@@ -162,7 +162,7 @@
                             </v-form>
                             <v-dialog v-model="success" persistent max-width="500">
                                 <v-card>
-                                    <v-card-title class="headline">Congratulations! You've successfully updated your profile</v-card-title>
+                                    <v-card-title class="headline">Congratulation! You've successfully updated your profile</v-card-title>
                                     <v-card-actions>
                                       <v-spacer></v-spacer>
                                       <v-btn href="/user/profile/" color="primary" flat >Awesome</v-btn>
@@ -196,28 +196,44 @@
                 }
             },
             data: {
+                //vue-modal to show if the change made to profile is a success
                 success: false,
+                //gender of the user
                 gender: '',
+                //control visibility
                 e1:true,
-                preview: '',
+                //menu for date and time
                 menu:false,
+                //user profile
                 user: user_login,
+                //social media link
                 socialMedia: '',
+                //age of user
                 age: '',
+                //full name
                 fullName: '',
+                //user profile picture file name
                 filename:'',
+                //URL of the picture
                 fileURL: '',
+                //name of user
                 name: '',
+                //first name of user
                 firstName:'',
+                //rules for first name
                 firstNameRules: [
                     (v) => !!v || 'First Name is required',
                 ],
+                //last name of the user
                 lastName:'',
-                    lastNameRules: [
+                //rules for last name
+                lastNameRules: [
                     (v) => !!v || 'Last Name is required',
                 ],
+                //date of birth of the user
                 dateofbirth:null,
-                    dobRules: [
+                //rules for date of birth
+                dobRules: [
                     (v) => !!v || 'Date of birth is required',
                 ],
                 valid: false,
@@ -233,16 +249,13 @@
                     (v) => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'
                 ],
                 select: null,
-                    items: [
-                    'Item 1',
-                    'Item 2',
-                    'Item 3',
-                    'Item 4'
-                ],
-                    checkbox: false,
-                    invalidCharacter: ['+','-','*','/','*','1','2','3','4','5','6','7','8','9','0']
+            
+                checkbox: false,
+                //Invalid character cannot be assigned for name 
+                invalidCharacter: ['+','-','*','/','*','1','2','3','4','5','6','7','8','9','0']
         },
         methods: {
+            //validate the user name
             firstNameValidation: function(){
                 if(this.firstNameRules.length >= 2){
                     this.firstNameRules.pop()
@@ -262,6 +275,7 @@
                     }
                 }
             },
+            //validate the user name
             lastNameValidation: function(){
                 if(this.lastNameRules.length >= 2){
                     this.lastNameRules.pop()

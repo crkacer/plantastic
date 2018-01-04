@@ -139,7 +139,7 @@
                         </v-form>
                     </v-stepper-content>
                     <v-stepper-content step="3">
-                        <v-card-text class="headline">Congratulations! You're ready</v-card-text>
+                        <v-card-text class="headline">Congratulation! You're ready</v-card-text>
                         <v-btn color="primary" href="/login">Awesome</v-btn>
                     </v-stepper-content>
                 </v-stepper>
@@ -150,6 +150,7 @@
 
 @section('script')
     <script>
+    //get each user tokens
         var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
         var vm = new Vue({
             el: '#app',
@@ -168,49 +169,60 @@
             },
             data: {
                 token: token,
+                //generate error messege when email is taken
                 isError: false,
+                //stands for step
                 s:0,
                 gender: 'male',
+                //visibility
                 e1:true,
+                //menu for date time
                 menu:false,
+                //first name
                 firstName:'',
+                //rules for firstname
                 firstNameRules: [
                     (v) => !!v || 'First Name is required',
-        ],
-        lastName:'',
-            lastNameRules: [
-            (v) => !!v || 'Last Name is required',
-        ],
-        dateofbirth:null,
-            dobRules: [
-            (v) => !!v || 'Date of birth is required',
-        ],
-        valid: false,
-            valid1: false,
-            password: '',
-            passwordRules: [
-            (v) => !!v || 'Password is required',
-            (v) => v && v.length >= 8 || 'Minimum 8 characters'
-        ],
-        email: '',
-            emailRules: [
-            (v) => !!v || 'E-mail is required',
-            (v) => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'
-        ],
-        select: null,
-            items: [
-            'Item 1',
-            'Item 2',
-            'Item 3',
-            'Item 4'
-        ],
-            checkbox: false,
-            invalidCharacter: ['+','-','*','/','*','1','2','3','4','5','6','7','8','9','0']
+                ],
+                //last name 
+                lastName:'',
+                //last name rules
+                lastNameRules: [
+                    (v) => !!v || 'Last Name is required',
+                ],
+                //date of birth
+                dateofbirth:null,
+                //date of birth rules
+                dobRules: [
+                    (v) => !!v || 'Date of birth is required',
+                ],
+                //validate if form is valid to continue
+                valid: false,
+                
+                valid1: false,
+                //password
+                password: '',
+                //rules for passwords
+                passwordRules: [
+                    (v) => !!v || 'Password is required',
+                    (v) => v && v.length >= 8 || 'Minimum 8 characters'
+                ],
+                //email
+                email: '',
+                //rules for emails
+                emailRules: [
+                    (v) => !!v || 'E-mail is required',
+                    (v) => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'
+                ],
+                checkbox: false,
+                invalidCharacter: ['+','-','*','/','*','1','2','3','4','5','6','7','8','9','0']
         },
         methods: {
+            //Go back to previous step
             GoBack: function() {
                 this.s--
             },
+            //Clear this instance of form
             clear () {
                 this.valid=false
                 this.$refs.form.reset()
@@ -276,6 +288,7 @@
                     }
                 }
             },
+            //send axios post request to validate email
             sendEmail: function(){
                 if (this.$refs.form.validate()) {
                     axios.post('/check-email', {
@@ -296,6 +309,7 @@
                 }
                 
             },
+            //send entire form
             sendForm: function(){
                 var form = new FormData()
                 form.append("email",vm.email);
@@ -343,6 +357,7 @@
 
         },
         mounted() {
+            //get date of birth to verify that user has to be 18 or over
             const day = new Date()
             const d = new Date()
             d.setFullYear(day.getFullYear() - 17)

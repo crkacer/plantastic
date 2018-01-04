@@ -27,19 +27,8 @@
 <body>
 <h2 class="title">Reset Password Confirmation: </h2>
 <div class="center">
-    <p>Hi {{ $user->firstname}} {{ $user->lastname}},</p> 
-
-    <p>A reset password request for your Plantastic Account - {{ $user->email}} - was recently submitted.</p>
-
-    <p>To get back into your account, you'll need to reset your password. Please log back into your Plantastic account using the following code: </p>
-
-    <p>Email:  {{ $user->email }}</p>
+    <p>Email:  {{ $email }}</p>
     <p>Password: {{ $password}}</p>
-
-    <p>Yours sincerely,</p>
-    <p>The Plantastic Accounts team</p>
-
-    
 </div>
 
 

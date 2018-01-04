@@ -103,20 +103,27 @@
 
 @section('script')
     <script>
+    //attended events list
     var attended = <?php echo json_encode($attended); ?>;
+    //created events list
     var created = <?php echo json_encode($created); ?>;
-
         var vm = new Vue({
             el: '#app',
             data: {
+                //filtering for search options
                 filter:'',
+                //modals to confirm
                 confirmModal: false,
+                //confirm variables
                 confirm: false,
+                //event that is pending to be executed
                 pendingEvent: {},
+                //pagination for attended
                 attendedPagination:{attendRowsPerPage: 5, attendPage:1},
                 pagination: {rowsPerPage:5, page:1},
                 active:null,
                 tabs: ['Created','Attended'],
+                //data tables headers
                 headers: [
                     {
                         text: 'Event Name',
@@ -158,6 +165,7 @@
                 attends: attended
             },
             methods: {
+                //convert date-time object
                 convertToDateObject : function (dateString){
                     return (
                         dateString.constructor === Date ? dateString :
@@ -167,18 +175,22 @@
                                         NaN
                     )
                 },
+                //refuse to delete event
                 decline: function(){
                     this.confirm = false
                     this.confirmModal = false
                 },
+                //accept to delete event
                 accept: function(){
                     this.confirm = true
                     this.confirmModal = false
                 },
+                //delete event
                 deleteEvent: function(item){
                     this.pendingEvent = item
                     this.confirmModal = true
                 },
+                //compare dates
                 compare: function(a,b){
                     return (
                         isFinite(a=this.convertToDateObject(a).valueOf()) &&
@@ -187,6 +199,7 @@
                             NaN
                     )
                 },
+                //get the status of the event according to compare method
                 getStatus: function(d){
                     var nowTime = Date.now()
                     var comparison = this.compare(d,nowTime)
@@ -207,9 +220,11 @@
                     }
                     return result
                 },
+                //return percentage for progress bar
                 calcPercentage: function(e){
                     return (e.registered_amount/e.capacity)*100
                 },
+                //return color for progress bar
                 getColor: function(event){
                     if(this.calcPercentage(event) <= 30){
                         return "green"
@@ -228,6 +243,7 @@
 
             },
             computed: {
+                //computing page for pagination
                 pages: function() {
                     return this.pagination.rowsPerPage ? Math.ceil(this.items.length / this.pagination.rowsPerPage) : 0
                 },
@@ -237,6 +253,7 @@
 
             },
             watch: {
+                //confirm to delete
                 confirm: function(isConfirm){
                     console.log(isConfirm)
                     if(isConfirm == true){
@@ -259,6 +276,7 @@
                 }
             },
             updated: function() {
+                //updating status
                 for(var i = 0; i < this.items.length; i++){
                     this.items[i].status = this.getStatus(this.items[i].enddate + " " + this.items[i].endtime)
                 }

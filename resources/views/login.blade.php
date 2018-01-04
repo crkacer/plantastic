@@ -79,21 +79,28 @@
         var vm = new Vue({
             el: '#app',
             data: {
+                //vue-model for alert box
                 isError:false,
+                //vue-model for displaying passwords or hidden
                 e1:true,
+                //vue-model for v-form 
                 valid: false,
+                //vue-model for password input
                 password: '',
+                //vue-model for rules attribute of password input
                 passwordRules: [
                     (v) => !!v || 'Password is required',
-            (v) => v && v.length >= 8 || 'Minimum 8 characters'
-        ],
-        email: '',
-            emailRules: [
-            (v) => !!v || 'E-mail is required',
-            (v) => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'
-        ],
-        select: null,
-            checkbox: false
+                    (v) => v && v.length >= 8 || 'Minimum 8 characters'
+                ],
+                //vue-model for email input
+                email: '',
+                //vue-model for rules attribute in email input box
+                emailRules: [
+                    (v) => !!v || 'E-mail is required',
+                    (v) => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'
+                ],
+                select: null,
+                checkbox: false
         },
         methods: {
             FormSubmit () {

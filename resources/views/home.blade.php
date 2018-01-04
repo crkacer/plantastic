@@ -143,16 +143,17 @@
 @section('script')
 
     <script>
+        
         var allType = <?php echo json_encode($event_type); ?>;
         var allCategory = <?php echo json_encode($category); ?>;
         var allEvent = <?php echo json_encode($pagi); ?>;
         var events = <?php echo json_encode($event); ?>;
-
+        //Initialize GG MAP API
         function initMap() {
             var infowindow = new google.maps.InfoWindow;
             var map = new google.maps.Map(document.getElementById('map'), {
                 zoom: 12,
-                center: {lat: events[0].lat, lng: events[0].lng}
+                center: {lat: events[1].lat, lng: events[1].lng}
             });
             
             for(var i = 0; i < events.length; i++){
@@ -183,13 +184,16 @@
                 types: allType
             },
             methods: {
+                //return the percentage for progress bar
                 calcPercentage: function(e){
                     return (e.registered_amount/e.capacity)*100
                 },
+                //return link to share
                 getShareLink: function(index){
                     this.shareLink = window.location.href.replace("/home","") + "/event/" + this.event[this.page-1][index].id
                     this.share = true
                 },
+                //return color for the progress bar
                 getColor: function(event){
                     if(this.calcPercentage(event) <= 30){
                         return "green"
@@ -199,6 +203,7 @@
                         return "red"
                     }
                 },
+            
                 link: function(event) {
                     return '/event/'+ event.id
                 },
@@ -210,6 +215,7 @@
                 }
             },
             computed:{
+                //pagination
                 pages: function() {
                     return this.event.length
                 }
