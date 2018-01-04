@@ -11,7 +11,7 @@
 |
 */
 
-// Guest routes
+// Guest routes (eg. routes without login requirement)
 Route::get('/', 'HomeController@index');
 
 Route::any('login/{error?}', 'LoginController@index');
@@ -37,7 +37,7 @@ Route::post('register', 'LoginController@postRegister');
 
 // User routes
 
-
+// routes protected with auth.user middleware (eg. required log in)
 Route::group(['middleware' => ['web', 'auth.user']], function () {
 
     // user routes

@@ -14,7 +14,7 @@ use Auth;
 class FilterController extends Controller
 {
     
-
+    // filter by category
     public function getByCategory($id) {
         
         $all_events = Event::where('category_id', $id)->get();
@@ -23,6 +23,7 @@ class FilterController extends Controller
         $types = [];
         $categories = [];
         $pag = [];
+        // get all event types and categories by format
         foreach ($all_events_types as $t) {
             array_push($types, ['id' => $t->id, 'text' => $t->name, 'url' => "/event-type/" . $t->id]);
         }
@@ -75,6 +76,7 @@ class FilterController extends Controller
         
     }
     
+    //filter by type
     public function getByType($id) {
         
         $all_events = Event::where('event_type_id', $id)->get();
@@ -83,6 +85,7 @@ class FilterController extends Controller
         $types = [];
         $categories = [];
         $pag = [];
+        // get all event types and categories by format
         foreach ($all_events_types as $t) {
             array_push($types, ['id' => $t->id, 'text' => $t->name, 'url' => "/event-type/" . $t->id]);
         }

@@ -15,14 +15,16 @@ class SearchController extends Controller
     public function index(Request $request) {
         
         
-        // search:
-        // name, location, category, type, date, time, 
+        
         $data = $request->all();
         $input = strtolower($data['input']);
         
         $events = Event::all();
         
         $all_events = [];
+        // filter by:
+        // name, location, category, type, date, time
+        // if it matches then add to the result array 
         foreach ($events as $e) {
             
             $category_name = Category::where('id', $e->category_id)->first()->name;
@@ -39,6 +41,7 @@ class SearchController extends Controller
         $types = [];
         $categories = [];
         $pag = [];
+        // get all event types and categories by format
         foreach ($all_events_types as $t) {
             array_push($types, ['id' => $t->id, 'text' => $t->name, 'url' => "/event-type/" . $t->id]);
         }

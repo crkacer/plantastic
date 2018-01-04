@@ -38,6 +38,7 @@ class HomeController extends Controller
         $types = [];
         $categories = [];
         $pag = [];
+        // get all event types and categories by format
         foreach ($all_events_types as $t) {
             array_push($types, ['id' => $t->id, 'text' => $t->name, 'url' => "/event-type/" . $t->id]);
         }
@@ -88,6 +89,7 @@ class HomeController extends Controller
         ]);
     }
 
+    // add data manually to database
     public function generateData () {
 
         $event = new Event();

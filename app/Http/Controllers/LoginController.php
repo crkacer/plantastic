@@ -22,6 +22,7 @@ class LoginController extends Controller
     public function index() {
         
         $error = "correct";
+        // handle user logged in but manually go through register route
         if (Auth::check()) return redirect('/home');
         if (\Request::input('email') && \Request::input('password')) {
             $userData = [
@@ -64,6 +65,7 @@ class LoginController extends Controller
                 // handle user already existed
 
             } else {
+                // if not then processing register
                 $user = new User;
                 $user->name = $userData['fname']." ". $userData['lname'];
                 $user->firstname = $userData['fname'];
@@ -88,7 +90,7 @@ class LoginController extends Controller
     }
 
     public function postRegister() {
-        
+        // handle register new user
         
         $email = $_POST['email'];
         $password = $_POST['password'];
@@ -121,6 +123,7 @@ class LoginController extends Controller
         
     }
 
+    // handle ajax request to check email existence
     public function checkEmail(Request $request) {
         
         $data = $request->all();
@@ -152,6 +155,7 @@ class LoginController extends Controller
         $user = User::where('email', $email)->first();
         if ($user != null) {
             
+            // generate random password for user
             $code = "";
             $allowedChar = [];
             for ($i = 0; $i<10; $i++) {
@@ -168,7 +172,7 @@ class LoginController extends Controller
 
             $user->password = Hash::make($code);
             
-
+            // send email to user with new password
             Mail::send('email.reset-password', [
                 'user' => $user,
                 'password' => $code
