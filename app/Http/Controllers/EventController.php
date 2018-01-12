@@ -111,22 +111,6 @@ class EventController extends Controller
         ]);
     }
 
-    public function getIndexEvent($id) {
-
-        $attended = false;
-        if (Auth::check()) {
-            $user = Auth::user();
-            $attend = Attendance::where([['event_id', $id], ['user_id', $user->id]])->first();
-            if ($attend != null) {
-                $attended = true;
-            }
-        }
-
-        return view('view-event2', [
-            'user_login' => Auth::user(),
-            'attended' => $attended
-        ]);
-    }
 
 
     public function attendEvent(Request $request) {
