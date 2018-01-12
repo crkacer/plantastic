@@ -19,7 +19,7 @@ Route::get('logout', 'LoginController@logout');
 
 
 
-Route::get('view-event/{id?}', 'EventController@getIndexEvent');
+// Route::get('view-event/{id?}', 'EventController@getIndexEvent');
 
 Route::get('event/dashboard/{id?}', 'EventController@getDashboard');
 
