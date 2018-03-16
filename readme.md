@@ -16,3 +16,13 @@
     <img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="">
   </a>  
 </p>
+
+
+
+# Instructions
+
+Our website demo is [here](http://35.231.98.205/ "Plantastic")
+
+Superuser account (For testing purpose):
+..*id: john.k@gmail.com
+..*pwd: 12345678 
